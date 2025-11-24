@@ -200,7 +200,7 @@ export function UserAuthForm({
 
       const res = await login(finalParams)
       if (res.code === '200' && res.result) {
-        toast.success('Login successful')
+        toast.success('登录成功')
         authLogin(res.result.TOKEN, res.result.userInfo)
 
         setShowGoogleAuthModal(false)

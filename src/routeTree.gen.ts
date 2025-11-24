@@ -38,6 +38,7 @@ import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as AuthenticatedOrdersReceiveListsRouteImport } from './routes/_authenticated/orders/receive-lists'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
@@ -190,6 +191,12 @@ const AuthenticatedSettingsAccountRoute =
     path: '/account',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedOrdersReceiveListsRoute =
+  AuthenticatedOrdersReceiveListsRouteImport.update({
+    id: '/orders/receive-lists',
+    path: '/orders/receive-lists',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
@@ -213,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/orders/receive-lists': typeof AuthenticatedOrdersReceiveListsRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -241,6 +249,7 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/orders/receive-lists': typeof AuthenticatedOrdersReceiveListsRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -274,6 +283,7 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/orders/receive-lists': typeof AuthenticatedOrdersReceiveListsRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -306,6 +316,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/orders/receive-lists'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -334,6 +345,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/orders/receive-lists'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -366,6 +378,7 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/orders/receive-lists'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
@@ -601,6 +614,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/orders/receive-lists': {
+      id: '/_authenticated/orders/receive-lists'
+      path: '/orders/receive-lists'
+      fullPath: '/orders/receive-lists'
+      preLoaderRoute: typeof AuthenticatedOrdersReceiveListsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -638,6 +658,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedOrdersReceiveListsRoute: typeof AuthenticatedOrdersReceiveListsRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
@@ -649,6 +670,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedOrdersReceiveListsRoute: AuthenticatedOrdersReceiveListsRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
