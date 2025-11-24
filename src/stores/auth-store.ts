@@ -1,53 +1,39 @@
 import { create } from 'zustand'
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
-
-const ACCESS_TOKEN = 'thisisjustarandomstring'
-
-interface AuthUser {
-  accountNo: string
-  email: string
-  role: string[]
-  exp: number
-}
+// import { useCountryStore } from './countryStore'
+// import { useMerchantStore } from './merchantStore'
+// import { router } from '@/main'
 
 interface AuthState {
-  auth: {
-    user: AuthUser | null
-    setUser: (user: AuthUser | null) => void
-    accessToken: string
-    setAccessToken: (accessToken: string) => void
-    resetAccessToken: () => void
-    reset: () => void
-  }
+  token: string | null
+  isAuthenticated: boolean
+  userInfo: Record<string, unknown> | null
+  login: (token: string,userInfo: Record<string, unknown>) => void
+  logout: () => void
 }
 
-export const useAuthStore = create<AuthState>()((set) => {
-  const cookieState = getCookie(ACCESS_TOKEN)
-  const initToken = cookieState ? JSON.parse(cookieState) : ''
-  return {
-    auth: {
-      user: null,
-      setUser: (user) =>
-        set((state) => ({ ...state, auth: { ...state.auth, user } })),
-      accessToken: initToken,
-      setAccessToken: (accessToken) =>
-        set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
-          return { ...state, auth: { ...state.auth, accessToken } }
-        }),
-      resetAccessToken: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return { ...state, auth: { ...state.auth, accessToken: '' } }
-        }),
-      reset: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return {
-            ...state,
-            auth: { ...state.auth, user: null, accessToken: '' },
-          }
-        }),
-    },
-  }
-})
+const initialToken = typeof localStorage !== 'undefined' ? localStorage.getItem('_token') : null
+const initialUserInfo = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('_userInfo') || 'null') : null
+
+export const useAuthStore = create<AuthState>((set) => ({
+  token: initialToken,
+  isAuthenticated: Boolean(initialToken),
+  userInfo: initialUserInfo,
+  login: (token: string,userInfo: Record<string, unknown>) => {
+    localStorage.setItem('_token', token)
+    localStorage.setItem('_userInfo', JSON.stringify(userInfo))
+    set({ token, isAuthenticated: true,userInfo })
+  },
+  logout: () => {
+    // 清除当前 store 状态
+    localStorage.removeItem('_token')
+    localStorage.removeItem('_userInfo')
+    set({ token: null, isAuthenticated: false,userInfo: null })
+    
+    // 重置其他 store
+    // useCountryStore.getState().clearSelectedCountry()
+    // useMerchantStore.getState().clearSelectedMerchant()
+
+    // 跳转到登录页
+    // router.navigate({ to: '/login' })
+  },
+}))
