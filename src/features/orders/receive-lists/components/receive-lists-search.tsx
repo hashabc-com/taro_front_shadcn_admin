@@ -97,10 +97,10 @@ export function ReceiveListsSearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 商户订单号 */}
-      <div className='max-w-[200px] flex-1'>
+      <div className='max-w-[200px] flex-1 min-w-[120px]'>
         <Input
           id='referenceno'
-          placeholder='请输入商户订单号'
+          placeholder='商户订单号'
           value={referenceno}
           onChange={(e) => setMerchantOrderNo(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -108,16 +108,16 @@ export function ReceiveListsSearch<TData>({
       </div>
 
       {/* 三方订单号 */}
-      <div className='max-w-[200px] flex-1'>
+      <div className='max-w-[200px] flex-1 min-w-[120px]'>
         <Input
           id='tripartiteOrder'
-          placeholder='请输入三方订单号'
+          placeholder='三方订单号'
           value={tripartiteOrder}
           onChange={(e) => setThirdPartyOrderNo(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
-      <div className='max-w-[200px] flex-1'>
+      <div className='max-w-[200px] flex-1 min-w-[120px]'>
         <Input
           id='transId'
           placeholder='平台订单号'
@@ -155,7 +155,7 @@ export function ReceiveListsSearch<TData>({
               variant='outline'
               className='w-full justify-start text-left font-normal'
             >
-              <CalendarIcon className='mr-2 h-4 w-4' />
+              <CalendarIcon className='mr-2 h-4 w-4 text-muted-foreground' />
               {dateRange.from ? (
                 dateRange.to ? (
                   <>
@@ -166,7 +166,7 @@ export function ReceiveListsSearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span>选择日期范围</span>
+                <span className='text-muted-foreground'>选择日期范围</span>
               )}
             </Button>
           </PopoverTrigger>

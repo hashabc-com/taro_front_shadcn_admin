@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { ReceiveLists } from '@/features/orders/receive-lists'
 
 const receiveListsSearchSchema = z.object({
-  page: z.number().optional().default(1),
+  pageNum: z.number().optional().default(1),
   pageSize: z.number().optional().default(10),
   referenceno: z.string().optional(),
   tripartiteOrder: z.string().optional(),

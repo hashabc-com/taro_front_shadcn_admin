@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { CountryMerchantSelector } from '@/components/country-merchant-selector'
 
 type HeaderProps = React.HTMLAttributes<HTMLElement> & {
   fixed?: boolean
@@ -35,14 +40,26 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
     >
       <div
         className={cn(
-          'relative flex h-full items-center gap-3 p-4 sm:gap-4',
+          'relative flex h-full items-center gap-2 p-4 sm:gap-4',
           offset > 10 &&
             fixed &&
             'after:bg-background/20 after:absolute after:inset-0 after:-z-10 after:backdrop-blur-lg'
         )}
       >
-        <SidebarTrigger variant='outline' className='max-md:scale-125' />
-        <Separator orientation='vertical' className='h-6' />
+        <SidebarTrigger variant='outline' className='max-md:scale-125 shrink-0' />
+        <Separator orientation='vertical' className='h-6 max-md:hidden' />
+        <Search className='max-md:hidden' />
+        <Separator orientation='vertical' className='h-6 max-md:hidden' />
+        <CountryMerchantSelector />
+        <div className='ms-auto flex items-center gap-2 sm:gap-4 shrink-0'>
+          {/* <div className='max-sm:hidden'> */}
+            <ThemeSwitch />
+          {/* </div> */}
+          <div className='max-sm:hidden'>
+            <ConfigDrawer />
+          </div>
+          <ProfileDropdown />
+        </div>
         {children}
       </div>
     </header>

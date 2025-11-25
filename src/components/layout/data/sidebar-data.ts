@@ -1,29 +1,29 @@
 import {
-  Construction,
+  // Construction,
   LayoutDashboard,
-  Monitor,
-  Bug,
+  // Monitor,
+  // Bug,
   ListTodo,
-  FileX,
+  // FileX,
   HelpCircle,
-  Lock,
+  // Lock,
   Bell,
   Package,
   Palette,
-  ServerOff,
+  // ServerOff,
   Settings,
   Wrench,
   UserCog,
-  UserX,
+  // UserX,
   Users,
   MessagesSquare,
-  ShieldCheck,
+  // ShieldCheck,
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
   ClipboardList
 } from 'lucide-react'
-import { ClerkLogo } from '@/assets/clerk-logo'
+// import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
@@ -89,88 +89,88 @@ export const sidebarData: SidebarData = {
             }
           ],
         },
-        {
-          title: 'Secured by Clerk',
-          icon: ClerkLogo,
-          items: [
-            {
-              title: 'Sign In',
-              url: '/clerk/sign-in',
-            },
-            {
-              title: 'Sign Up',
-              url: '/clerk/sign-up',
-            },
-            {
-              title: 'User Management',
-              url: '/clerk/user-management',
-            },
-          ],
-        },
+        // {
+        //   title: 'Secured by Clerk',
+        //   icon: ClerkLogo,
+        //   items: [
+        //     {
+        //       title: 'Sign In',
+        //       url: '/clerk/sign-in',
+        //     },
+        //     {
+        //       title: 'Sign Up',
+        //       url: '/clerk/sign-up',
+        //     },
+        //     {
+        //       title: 'User Management',
+        //       url: '/clerk/user-management',
+        //     },
+        //   ],
+        // },
       ],
     },
-    {
-      title: 'Pages',
-      items: [
-        {
-          title: 'Auth',
-          icon: ShieldCheck,
-          items: [
-            {
-              title: 'Sign In',
-              url: '/sign-in',
-            },
-            {
-              title: 'Sign In (2 Col)',
-              url: '/sign-in-2',
-            },
-            {
-              title: 'Sign Up',
-              url: '/sign-up',
-            },
-            {
-              title: 'Forgot Password',
-              url: '/forgot-password',
-            },
-            {
-              title: 'OTP',
-              url: '/otp',
-            },
-          ],
-        },
-        {
-          title: 'Errors',
-          icon: Bug,
-          items: [
-            {
-              title: 'Unauthorized',
-              url: '/errors/unauthorized',
-              icon: Lock,
-            },
-            {
-              title: 'Forbidden',
-              url: '/errors/forbidden',
-              icon: UserX,
-            },
-            {
-              title: 'Not Found',
-              url: '/errors/not-found',
-              icon: FileX,
-            },
-            {
-              title: 'Internal Server Error',
-              url: '/errors/internal-server-error',
-              icon: ServerOff,
-            },
-            {
-              title: 'Maintenance Error',
-              url: '/errors/maintenance-error',
-              icon: Construction,
-            },
-          ],
-        },
-      ],
-    },
+    // {
+    //   title: 'Pages',
+    //   items: [
+    //     {
+    //       title: 'Auth',
+    //       icon: ShieldCheck,
+    //       items: [
+    //         {
+    //           title: 'Sign In',
+    //           url: '/sign-in',
+    //         },
+    //         {
+    //           title: 'Sign In (2 Col)',
+    //           url: '/sign-in-2',
+    //         },
+    //         {
+    //           title: 'Sign Up',
+    //           url: '/sign-up',
+    //         },
+    //         {
+    //           title: 'Forgot Password',
+    //           url: '/forgot-password',
+    //         },
+    //         {
+    //           title: 'OTP',
+    //           url: '/otp',
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       title: 'Errors',
+    //       icon: Bug,
+    //       items: [
+    //         {
+    //           title: 'Unauthorized',
+    //           url: '/errors/unauthorized',
+    //           icon: Lock,
+    //         },
+    //         {
+    //           title: 'Forbidden',
+    //           url: '/errors/forbidden',
+    //           icon: UserX,
+    //         },
+    //         {
+    //           title: 'Not Found',
+    //           url: '/errors/not-found',
+    //           icon: FileX,
+    //         },
+    //         {
+    //           title: 'Internal Server Error',
+    //           url: '/errors/internal-server-error',
+    //           icon: ServerOff,
+    //         },
+    //         {
+    //           title: 'Maintenance Error',
+    //           url: '/errors/maintenance-error',
+    //           icon: Construction,
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // },
     {
       title: 'Other',
       items: [
@@ -198,11 +198,11 @@ export const sidebarData: SidebarData = {
               url: '/settings/notifications',
               icon: Bell,
             },
-            {
-              title: 'Display',
-              url: '/settings/display',
-              icon: Monitor,
-            },
+            // {
+            //   title: 'Display',
+            //   url: '/settings/display',
+            //   icon: Monitor,
+            // },
           ],
         },
         {
