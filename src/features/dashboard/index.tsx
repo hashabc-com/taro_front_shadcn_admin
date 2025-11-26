@@ -1,46 +1,26 @@
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardHeader,
+//   CardTitle,
+// } from '@/components/ui/card'
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // import { ConfigDrawer } from '@/components/config-drawer'
 // import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-// import { TopNav } from '@/components/layout/top-nav'
-// import { ProfileDropdown } from '@/components/profile-dropdown'
-// import { Search } from '@/components/search'
-// import { ThemeSwitch } from '@/components/theme-switch'
+import { ExchangeRatesProvider } from '@/components/exchange-rates-provider'
 import { Analytics } from './components/analytics'
-import { Overview } from './components/overview'
-import { RecentSales } from './components/recent-sales'
 
 export function Dashboard() {
   return (
-    <>
-      {/* ===== Top Heading ===== */}
-      {/* <Header>
-        <TopNav links={topNav} />
-        <div className='ms-auto flex items-center space-x-4'>
-          <Search />
-          <ThemeSwitch />
-          <ConfigDrawer />
-          <ProfileDropdown />
-        </div>
-      </Header> */}
-
-      {/* ===== Main ===== */}
+    <ExchangeRatesProvider>
       <Main>
-        <div className='mb-2 flex items-center justify-between space-y-2'>
+        <div className='mb-10 flex items-center justify-between space-y-2'>
           <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-          <div className='flex items-center space-x-2'>
-            <Button>Download</Button>
-          </div>
         </div>
-        <Tabs
+        <Analytics />
+        {/* <Tabs
           orientation='vertical'
           defaultValue='overview'
           className='space-y-4'
@@ -186,9 +166,9 @@ export function Dashboard() {
           <TabsContent value='analytics' className='space-y-4'>
             <Analytics />
           </TabsContent>
-        </Tabs>
+        </Tabs> */}
       </Main>
-    </>
+    </ExchangeRatesProvider>
   )
 }
 

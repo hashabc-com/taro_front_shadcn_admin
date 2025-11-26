@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button'
 import { useCountryStore, type Country } from '@/stores/country-store'
 import { useMerchantStore, type Merchant } from '@/stores/merchant-store'
 import { getCountryList, getMerchantList } from '@/api/common'
+import { CurrencySelector } from './currency-selector'
+import { Separator } from '@/components/ui/separator'
 
 export function CountryMerchantSelector() {
   const { selectedCountry, setSelectedCountry } = useCountryStore()
@@ -81,7 +83,8 @@ export function CountryMerchantSelector() {
           ))}
         </SelectContent>
       </Select>
-
+        <CurrencySelector />
+        <Separator orientation='vertical' className='h-6 max-md:hidden' />
       {/* 商户选择 */}
       <div className='flex items-center gap-1'>
         <Select

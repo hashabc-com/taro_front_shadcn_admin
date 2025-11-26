@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { ConfigDrawer } from '@/components/config-drawer'
+// import { ConfigDrawer } from '@/components/config-drawer'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { CountryMerchantSelector } from '@/components/country-merchant-selector'
 
@@ -56,7 +56,7 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
             <ThemeSwitch />
           {/* </div> */}
           <div className='max-sm:hidden'>
-            <ConfigDrawer />
+            {/* <ConfigDrawer /> */}
           </div>
           <ProfileDropdown />
         </div>

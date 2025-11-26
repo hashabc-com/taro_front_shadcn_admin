@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { useCurrencyConversionStore } from './index'
 
 export interface Country {
   id: number
@@ -19,7 +20,10 @@ export const useCountryStore = create<CountryState>()(
   persist(
     (set) => ({
       selectedCountry: null,
-      setSelectedCountry: (country) => set({ selectedCountry: country }),
+      setSelectedCountry: (country) => {
+        set({ selectedCountry: country })
+        useCurrencyConversionStore.getState().clearDisplayCurrency()
+      },
       clearSelectedCountry: () => set({ selectedCountry: null }),
     }),
     {

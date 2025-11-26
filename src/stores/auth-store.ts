@@ -1,6 +1,5 @@
 import { create } from 'zustand'
-// import { useCountryStore } from './countryStore'
-// import { useMerchantStore } from './merchantStore'
+import { useCountryStore,useMerchantStore } from './index'
 // import { router } from '@/main'
 
 interface AuthState {
@@ -30,8 +29,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ token: null, isAuthenticated: false,userInfo: null })
     
     // 重置其他 store
-    // useCountryStore.getState().clearSelectedCountry()
-    // useMerchantStore.getState().clearSelectedMerchant()
+    useCountryStore.getState().clearSelectedCountry()
+    useMerchantStore.getState().clearSelectedMerchant()
 
     // 跳转到登录页
     // router.navigate({ to: '/login' })

@@ -1,189 +1,158 @@
+import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { AnalyticsChart } from './analytics-chart'
+import { getAmountInformation, getChartDataOfDay } from '@/api/dashboard'
+import { DollarSign, Wallet, Lock, ArrowDownToLine, ArrowUpFromLine } from 'lucide-react'
+import { useCurrencyConversionStore } from '@/stores/currency-conversion-store'
+import { useCountryStore } from '@/stores/country-store'
+import { useExchangeRatesStore } from '@/stores/exchange-rates-store'
+import { formatCurrency } from '@/lib/currency'
+
+import ChartLineMultiple from './chart-line'
 
 export function Analytics() {
+  const displayCurrency = useCurrencyConversionStore((state) => state.displayCurrency)
+  const selectedCountry = useCountryStore((state) => state.selectedCountry)
+  const baseCurrency = selectedCountry?.currency || 'IDR'
+  const exchangeRates = useExchangeRatesStore()
+
+  // 获取账户金额信息
+  const { data: amountData } = useQuery({
+    queryKey: ['dashboard', 'amount-info', selectedCountry?.id],
+    queryFn: getAmountInformation,
+  })
+
+  // 获取交易统计
+  const { data: chartData } = useQuery({
+    queryKey: ['dashboard', 'chart-data', selectedCountry?.id],
+    queryFn: getChartDataOfDay,
+  })
+
+  // 客户端货币转换函数
+  const convertValue = useMemo(() => {
+    return (value: number | string) => {
+      if (!displayCurrency || displayCurrency === baseCurrency) {
+        return value
+      }
+      
+      const rate = exchangeRates.rates[displayCurrency]
+      if (!rate) return value
+      
+      const numValue = typeof value === 'string' ? parseFloat(value) : value
+      if (isNaN(numValue)) return value
+      
+      return numValue * rate
+    }
+  }, [displayCurrency, baseCurrency, exchangeRates.rates])
+
+  const amountInfo = amountData?.result || amountData?.data
+  const transactionStats = chartData?.result || chartData?.data
+
+  // 格式化金额显示
+  const formatAmount = (amount: string | number) => {
+    const convertedAmount = convertValue(amount)
+    const currency = displayCurrency || baseCurrency
+    return formatCurrency(convertedAmount, currency)
+  }
+
   return (
-    <div className='space-y-4'>
-      <Card>
-        <CardHeader>
-          <CardTitle>Traffic Overview</CardTitle>
-          <CardDescription>Weekly clicks and unique visitors</CardDescription>
-        </CardHeader>
-        <CardContent className='px-6'>
-          <AnalyticsChart />
-        </CardContent>
-      </Card>
-      <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+    <div className='space-y-3'>
+      {/* 收款/付款统计 */}
+      <ChartLineMultiple />
+
+      {/* 账户金额统计 */}
+      <div className='grid gap-3 sm:grid-cols-2 lg:grid-cols-3'>
         <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Total Clicks</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='text-muted-foreground h-4 w-4'
-            >
-              <path d='M3 3v18h18' />
-              <path d='M7 15l4-4 4 4 4-6' />
-            </svg>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1.5'>
+            <CardTitle className='text-base font-medium'>账户可用余额</CardTitle>
+            <Wallet className='text-muted-foreground h-4 w-4' />
           </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>1,248</div>
-            <p className='text-muted-foreground text-xs'>+12.4% vs last week</p>
+          <CardContent className='pb-3'>
+            <div className='text-xl font-bold'>
+              {formatAmount(amountInfo?.availableAmount || '0.00')}
+            </div>
+            <p className='text-muted-foreground text-xs'>
+              ${amountInfo?.availableAmountUsd || '0.00'}
+            </p>
           </CardContent>
         </Card>
+
         <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Unique Visitors
-            </CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='text-muted-foreground h-4 w-4'
-            >
-              <circle cx='12' cy='7' r='4' />
-              <path d='M6 21v-2a6 6 0 0 1 12 0v2' />
-            </svg>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1.5'>
+            <CardTitle className='text-base font-medium'>待结算金额</CardTitle>
+            <DollarSign className='text-muted-foreground h-4 w-4' />
           </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>832</div>
-            <p className='text-muted-foreground text-xs'>+5.8% vs last week</p>
+          <CardContent className='pb-3'>
+            <div className='text-xl font-bold'>
+              {formatAmount(amountInfo?.frozenAmountTwo || '0.00')}
+            </div>
+            <p className='text-muted-foreground text-xs'>
+              ${amountInfo?.frozenAmountUsd || '0.00'}
+            </p>
           </CardContent>
         </Card>
+
         <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Bounce Rate</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='text-muted-foreground h-4 w-4'
-            >
-              <path d='M3 12h6l3 6 3-6h6' />
-            </svg>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1.5'>
+            <CardTitle className='text-base font-medium'>冻结金额</CardTitle>
+            <Lock className='text-muted-foreground h-4 w-4' />
           </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>42%</div>
-            <p className='text-muted-foreground text-xs'>-3.2% vs last week</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Avg. Session</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='text-muted-foreground h-4 w-4'
-            >
-              <circle cx='12' cy='12' r='10' />
-              <path d='M12 6v6l4 2' />
-            </svg>
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>3m 24s</div>
-            <p className='text-muted-foreground text-xs'>+18s vs last week</p>
+          <CardContent className='pb-3'>
+            <div className='text-xl font-bold'>
+              {formatAmount(amountInfo?.rechargeAmountTwo || '0.00')}
+            </div>
+            <p className='text-muted-foreground text-xs'>
+              ${amountInfo?.rechargeAmountUsd || '0.00'}
+            </p>
           </CardContent>
         </Card>
       </div>
-      <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-        <Card className='col-span-1 lg:col-span-4'>
-          <CardHeader>
-            <CardTitle>Referrers</CardTitle>
-            <CardDescription>Top sources driving traffic</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <SimpleBarList
-              items={[
-                { name: 'Direct', value: 512 },
-                { name: 'Product Hunt', value: 238 },
-                { name: 'Twitter', value: 174 },
-                { name: 'Blog', value: 104 },
-              ]}
-              barClass='bg-primary'
-              valueFormatter={(n) => `${n}`}
-            />
+
+      {/* 充值和提现金额 */}
+      <div className='grid gap-3 sm:grid-cols-2'>
+        <Card className='border-l-4 border-l-blue-500'>
+          <CardContent className='pt-4 pb-3'>
+            <div className='flex items-center justify-between'>
+              <div className='space-y-1'>
+                <p className='text-sm text-muted-foreground'>充值金额</p>
+                <div className='text-2xl font-bold'>
+                  {formatAmount(transactionStats?.rechargeAmount || '0.00')}
+                </div>
+                <p className='text-xs text-muted-foreground'>
+                  ${transactionStats?.rechargeAmountUsd || '0.00'}
+                </p>
+              </div>
+              <div className='flex h-12 w-12 items-center justify-center rounded-full bg-blue-100'>
+                <ArrowDownToLine className='h-6 w-6 text-blue-600' />
+              </div>
+            </div>
           </CardContent>
         </Card>
-        <Card className='col-span-1 lg:col-span-3'>
-          <CardHeader>
-            <CardTitle>Devices</CardTitle>
-            <CardDescription>How users access your app</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <SimpleBarList
-              items={[
-                { name: 'Desktop', value: 74 },
-                { name: 'Mobile', value: 22 },
-                { name: 'Tablet', value: 4 },
-              ]}
-              barClass='bg-muted-foreground'
-              valueFormatter={(n) => `${n}%`}
-            />
+
+        <Card className='border-l-4 border-l-green-500'>
+          <CardContent className='pt-4 pb-3'>
+            <div className='flex items-center justify-between'>
+              <div className='space-y-1'>
+                <p className='text-sm text-muted-foreground'>提现金额</p>
+                <div className='text-2xl font-bold'>
+                  {formatAmount(transactionStats?.withdrawalAmount || '0.00')}
+                </div>
+                <p className='text-xs text-muted-foreground'>
+                  ${transactionStats?.withdrawalAmountUsd || '0.00'}
+                </p>
+              </div>
+              <div className='flex h-12 w-12 items-center justify-center rounded-full bg-green-100'>
+                <ArrowUpFromLine className='h-6 w-6 text-green-600' />
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
-}
-
-function SimpleBarList({
-  items,
-  valueFormatter,
-  barClass,
-}: {
-  items: { name: string; value: number }[]
-  valueFormatter: (n: number) => string
-  barClass: string
-}) {
-  const max = Math.max(...items.map((i) => i.value), 1)
-  return (
-    <ul className='space-y-3'>
-      {items.map((i) => {
-        const width = `${Math.round((i.value / max) * 100)}%`
-        return (
-          <li key={i.name} className='flex items-center justify-between gap-3'>
-            <div className='min-w-0 flex-1'>
-              <div className='text-muted-foreground mb-1 truncate text-xs'>
-                {i.name}
-              </div>
-              <div className='bg-muted h-2.5 w-full rounded-full'>
-                <div
-                  className={`h-2.5 rounded-full ${barClass}`}
-                  style={{ width }}
-                />
-              </div>
-            </div>
-            <div className='ps-2 text-xs font-medium tabular-nums'>
-              {valueFormatter(i.value)}
-            </div>
-          </li>
-        )
-      })}
-    </ul>
   )
 }
