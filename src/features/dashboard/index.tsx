@@ -9,12 +9,10 @@
 // import { ConfigDrawer } from '@/components/config-drawer'
 // import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ExchangeRatesProvider } from '@/components/exchange-rates-provider'
 import { Analytics } from './components/analytics'
 
 export function Dashboard() {
   return (
-    <ExchangeRatesProvider>
       <Main>
         <div className='mb-10 flex items-center justify-between space-y-2'>
           <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
@@ -168,7 +166,6 @@ export function Dashboard() {
           </TabsContent>
         </Tabs> */}
       </Main>
-    </ExchangeRatesProvider>
   )
 }
 

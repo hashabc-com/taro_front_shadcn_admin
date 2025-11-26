@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast as message } from 'sonner'
 import {useAuthStore} from '@/stores'
-import { useExchangeRatesStore } from '@/stores/exchange-rates-store'
-import { useCurrencyConversionStore } from '@/stores/currency-conversion-store'
-import { useCountryStore } from '@/stores/country-store'
-import { CURRENCY_FIELDS } from '@/lib/currency'
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 
 // 定义响应数据的通用结构
@@ -140,30 +136,6 @@ class Request {
         if(response.data.code == 401){
           useAuthStore.getState().logout()
         }
-
-        // 自动货币转换
-        const displayCurrency = useCurrencyConversionStore.getState().displayCurrency
-        const baseCurrency = useCountryStore.getState().selectedCountry?.currency || 'IDR'
-        //  console.log('转换0000======>',response.data)
-         console.log('转换0000======>',displayCurrency,baseCurrency)
-        // 如果显示货币与基准货币不同，进行转换
-        // && displayCurrency !== baseCurrency
-        if (response.data?.result) {
-          const exchangeRates = useExchangeRatesStore.getState()
-           console.log('转换1111======>')
-          // 确保汇率数据可用且基准货币匹配
-          if (exchangeRates.baseCurrency === baseCurrency && Object.keys(exchangeRates.rates).length > 0) {
-            const toRate = exchangeRates.rates[displayCurrency || baseCurrency]
-             console.log('转换2222======>')
-            if (toRate) {
-              const a = this.convertCurrencyFields(response.data.result, toRate)
-              console.log('费率======>',toRate)
-              console.log('转换======>',a)
-              // 递归转换响应数据中的货币字段
-              response.data.result = a
-            }
-          }
-        }
          
         return response
         // return {...response,data:response.data.result}
@@ -217,52 +189,6 @@ class Request {
       msg = error.message
     }
     message.error(msg)
-  }
-
-  // 递归转换响应数据中的货币字段
-  private convertCurrencyFields(data: any, rate: number): any {
-    // 处理 null 或 undefined
-    if (data === null || data === undefined) {
-      return data
-    }
-
-    // 处理数组
-    if (Array.isArray(data)) {
-      return data.map(item => this.convertCurrencyFields(item, rate))
-    }
-
-    // 处理对象
-    if (typeof data === 'object') {
-      const converted: any = {}
-      
-      for (const key in data) {
-        if (Object.prototype.hasOwnProperty.call(data, key)) {
-          // 检查是否是需要转换的货币字段
-          if (CURRENCY_FIELDS.includes(key as any)) {
-            const value = data[key]
-            // 只转换数字类型的字段
-            if (typeof value === 'number') {
-              converted[key] = value * rate
-            } else if (typeof value === 'string' && !isNaN(Number(value))) {
-              // 如果是数字字符串，转换后保留字符串类型
-              converted[key] = (Number(value) * rate).toString()
-            } else {
-              converted[key] = value
-            }
-            console.log('key==========>',key,Intl.NumberFormat().format(converted[key]))
-            converted[key] = Intl.NumberFormat().format(converted[key])
-          } else {
-            // 递归处理嵌套对象
-            converted[key] = this.convertCurrencyFields(data[key], rate)
-          }
-        }
-      }
-      
-      return converted
-    }
-
-    // 其他类型直接返回
-    return data
   }
 
   // 通用请求方法

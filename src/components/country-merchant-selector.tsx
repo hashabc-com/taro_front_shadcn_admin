@@ -14,9 +14,10 @@ import { useMerchantStore, type Merchant } from '@/stores/merchant-store'
 import { getCountryList, getMerchantList } from '@/api/common'
 import { CurrencySelector } from './currency-selector'
 import { Separator } from '@/components/ui/separator'
+import { toast } from 'sonner'
 
 export function CountryMerchantSelector() {
-  const { selectedCountry, setSelectedCountry } = useCountryStore()
+  const { selectedCountry, setSelectedCountry, setRates } = useCountryStore()
   const { selectedMerchant, setSelectedMerchant } = useMerchantStore()
 
   // 获取国家列表
@@ -42,21 +43,34 @@ export function CountryMerchantSelector() {
     [merchantsData]
   )
 
-  // 第一次进来默认选中第一个国家
-  useEffect(() => {
-    if (!selectedCountry && countries.length > 0) {
-      setSelectedCountry(countries[0])
-    }
-  }, [countries, selectedCountry, setSelectedCountry])
-
   // 当国家变化时，清空商户选择
-  const handleCountryChange = (countryId: string) => {
-    const country = countries.find((c) => c.id.toString() === countryId)
+  const handleCountryChange = async (countryId: string) => {
+    const country = countries.find((c) => c.id.toString() == countryId)
     if (country) {
+      try {
+        const response = await fetch(`https://open.er-api.com/v6/latest/${country?.currency}`)
+        const data = await response.json()
+        
+        if (data.result === 'success' && data.rates) {
+          setRates(data.rates)
+          console.log(`汇率已更新 [基准: ${country?.currency}]`)
+        }
+      } catch {
+        toast.error('获取汇率失败')
+      }
       setSelectedCountry(country)
       setSelectedMerchant(null) // 清空商户选择
     }
   }
+
+  // 第一次进来默认选中第一个国家
+  useEffect(() => {
+    if (!selectedCountry && countries.length > 0) {
+      setSelectedCountry(countries[0])
+      handleCountryChange(countries[0].id)
+    }
+  }, [countries, selectedCountry, setSelectedCountry])
+
 
   const handleMerchantChange = (merchantId: string) => {
     const merchant = merchants.find((m) => m.appid?.toString() === merchantId)
