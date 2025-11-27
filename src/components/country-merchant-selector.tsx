@@ -78,7 +78,7 @@ export function CountryMerchantSelector() {
       setSelectedMerchant(merchant)
     }
   }
-
+  console.log('countries====>',countries)
   return (
     <div className='flex items-center gap-2'>
       {/* 国家选择 */}
@@ -87,12 +87,36 @@ export function CountryMerchantSelector() {
         onValueChange={handleCountryChange}
       >
         <SelectTrigger className='w-full sm:w-[140px] h-9'>
-          <SelectValue placeholder='选择国家' />
+          <SelectValue placeholder='选择国家'>
+            {selectedCountry && (
+              <div className='flex items-center gap-2'>
+                <img 
+                  src={`/images/${selectedCountry.code}.svg`} 
+                  alt={selectedCountry.code}
+                  className='w-4 h-4'
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+                <span>{selectedCountry.country}</span>
+              </div>
+            )}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {countries.map((country) => (
             <SelectItem key={country.id} value={country.id.toString()}>
-              {country.country}
+              <div className='flex items-center gap-2'>
+                <img 
+                  src={`/images/${country.code}.svg`} 
+                  alt={country.code}
+                  className='w-4 h-4'
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+                <span>{country.country}</span>
+              </div>
             </SelectItem>
           ))}
         </SelectContent>
