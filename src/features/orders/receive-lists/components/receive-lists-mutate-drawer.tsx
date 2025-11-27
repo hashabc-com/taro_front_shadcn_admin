@@ -9,14 +9,32 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
-import { type Order } from '../data/schema'
-import { statuses } from '../data/data'
+import { type Order } from '../schema'
+import { CheckCircle, Clock, XCircle } from 'lucide-react'
 
 type MutateDrawerProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   currentRow?: Order
 }
+
+export const statuses = [
+  {
+    label: '成功',
+    value: '0' as const,
+    icon: CheckCircle,
+  },
+  {
+    label: '待处理',
+    value: '1' as const,
+    icon: Clock,
+  },
+  {
+    label: '失败',
+    value: '2' as const,
+    icon: XCircle,
+  },
+]
 
 export function MutateDrawer({
   open,
@@ -81,8 +99,8 @@ export function MutateDrawer({
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>金额</label>
               <div className='flex flex-col gap-1'>
-                <div className='text-base font-semibold'>{currentRow.amountTwo}</div>
-                <div className='text-muted-foreground text-sm'>${currentRow.amountUSD.toFixed(2)} USD</div>
+                <div className='text-base font-semibold'>{currentRow.amount}</div>
+                {/* <div className='text-muted-foreground text-sm'>${currentRow.amountUSD.toFixed(2)} USD</div> */}
               </div>
             </div>
 
@@ -90,8 +108,8 @@ export function MutateDrawer({
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>手续费</label>
               <div className='flex flex-col gap-1'>
-                <div className='text-base font-semibold'>{currentRow.serviceAmountTwo}</div>
-                <div className='text-muted-foreground text-sm'>${currentRow.serviceAmountUSD.toFixed(2)} USD</div>
+                <div className='text-base font-semibold'>{currentRow.serviceAmount}</div>
+                {/* <div className='text-muted-foreground text-sm'>${currentRow.serviceAmountUSD.toFixed(2)} USD</div> */}
               </div>
             </div>
 

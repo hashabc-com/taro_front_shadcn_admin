@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 // import { labels } from '../data/data'
-import { orderSchema } from '../data/schema'
+import { orderSchema } from '../schema'
 import { useReceiveLists } from './receive-lists-provider'
 
 type DataTableRowActionsProps<TData> = {

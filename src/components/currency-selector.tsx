@@ -15,7 +15,7 @@ export function CurrencySelector() {
 
   return (
     <Select value={displayCurrency ?? ''} onValueChange={setDisplayCurrency}>
-      <SelectTrigger className='h-9 w-[140px]'>
+      <SelectTrigger className='h-9 w-full sm:w-[140px]'>
         <SelectValue placeholder='选择货币' />
       </SelectTrigger>
       <SelectContent>

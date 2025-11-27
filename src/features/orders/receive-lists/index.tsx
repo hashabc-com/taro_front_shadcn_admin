@@ -6,6 +6,8 @@ import { ReceiveListsTable } from './components/receive-lists-table'
 import { getOrderList } from '@/api/order'
 import { ReceiveListsDialogs } from './components/receive-lists-dialogs'
 import { useCountryStore,useMerchantStore } from '@/stores'
+import {type Order} from './schema'
+import { useConvertAmount } from '@/hooks/use-convert-amount'
 
 const route = getRouteApi('/_authenticated/orders/receive-lists')
 
@@ -15,14 +17,22 @@ export function ReceiveLists() {
   // 获取当前选中的国家
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
+  const convertAmount = useConvertAmount()
 
   const { data, isLoading } = useQuery({
     queryKey: ['orders', 'receive-lists', search, selectedCountry?.code,selectedMerchant?.appid],
     queryFn: () => getOrderList(search),
     enabled: !!selectedCountry,
   })
-  const orders = data?.result?.listRecord || []
+  const orders = data?.result?.listRecord?.map((item: Order) => ({
+    ...item,
+    amount: convertAmount(item.amount),
+    serviceAmount: convertAmount(item.serviceAmount),
+  })) || []
   const totalRecord = data?.result?.totalRecord || 0
+  
+
+
   // console.log('orders', orders)
   return (
     <ReceiveListsProvider>

@@ -47,9 +47,9 @@ export function Analytics() {
             <div className='text-xl font-bold'>
               {convertAmount(amountInfo?.availableAmount || '0.00')}
             </div>
-            <p className='text-muted-foreground text-xs'>
+            {/* <p className='text-muted-foreground text-xs'>
               ${amountInfo?.availableAmountUsd || '0.00'}
-            </p>
+            </p> */}
           </CardContent>
         </Card>
 
@@ -62,9 +62,9 @@ export function Analytics() {
             <div className='text-xl font-bold'>
               {convertAmount(amountInfo?.frozenAmountTwo || '0.00')}
             </div>
-            <p className='text-muted-foreground text-xs'>
+            {/* <p className='text-muted-foreground text-xs'>
               ${amountInfo?.frozenAmountUsd || '0.00'}
-            </p>
+            </p> */}
           </CardContent>
         </Card>
 
@@ -77,9 +77,9 @@ export function Analytics() {
             <div className='text-xl font-bold'>
               {convertAmount(amountInfo?.rechargeAmountTwo || '0.00')}
             </div>
-            <p className='text-muted-foreground text-xs'>
+            {/* <p className='text-muted-foreground text-xs'>
               ${amountInfo?.rechargeAmountUsd || '0.00'}
-            </p>
+            </p> */}
           </CardContent>
         </Card>
       </div>
@@ -94,9 +94,9 @@ export function Analytics() {
                 <div className='text-2xl font-bold'>
                   {convertAmount(transactionStats?.rechargeAmount || '0.00')}
                 </div>
-                <p className='text-xs text-muted-foreground'>
+                {/* <p className='text-xs text-muted-foreground'>
                   ${transactionStats?.rechargeAmountUsd || '0.00'}
-                </p>
+                </p> */}
               </div>
               <div className='flex h-12 w-12 items-center justify-center rounded-full bg-blue-100'>
                 <ArrowDownToLine className='h-6 w-6 text-blue-600' />
@@ -113,9 +113,9 @@ export function Analytics() {
                 <div className='text-2xl font-bold'>
                   {convertAmount(transactionStats?.withdrawalAmount || '0.00')}
                 </div>
-                <p className='text-xs text-muted-foreground'>
+                {/* <p className='text-xs text-muted-foreground'>
                   ${transactionStats?.withdrawalAmountUsd || '0.00'}
-                </p>
+                </p> */}
               </div>
               <div className='flex h-12 w-12 items-center justify-center rounded-full bg-green-100'>
                 <ArrowUpFromLine className='h-6 w-6 text-green-600' />

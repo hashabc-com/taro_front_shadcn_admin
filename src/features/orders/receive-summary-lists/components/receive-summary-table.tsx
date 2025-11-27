@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import {
-  type SortingState,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
@@ -24,21 +19,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { type Order } from '../schema'
-import { tasksColumns as columns } from './receive-lists-columns'
-import { ReceiveListsSearch } from './receive-lists-search'
+import { tasksColumns as columns } from './receive-summary-columns'
+import { ReceiveListsSearch } from './receive-summary-search'
+import { useReceiveSummaryData } from '../hooks/use-receive-summary-data'
 
-const route = getRouteApi('/_authenticated/orders/receive-lists')
+const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
 
-type DataTableProps = {
-  data: Order[]
-  totalRecord?: number
-  isLoading: boolean
-}
 
-export function ReceiveListsTable({ data, isLoading }: DataTableProps) {
-  // Local UI-only states
-  const [sorting, setSorting] = useState<SortingState>([])
+export function ReceiveSummaryTable() {
+  
+  const { orders:data, isLoading } = useReceiveSummaryData()
+
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   // Synced with URL states (updated to match route search schema defaults)
@@ -54,18 +45,12 @@ export function ReceiveListsTable({ data, isLoading }: DataTableProps) {
     data,
     columns,
     state: {
-      sorting,
       columnVisibility,
       pagination,
     },
-    onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange,
   })
 
@@ -74,11 +59,6 @@ export function ReceiveListsTable({ data, isLoading }: DataTableProps) {
     ensurePageInRange(pageCount)
   }, [pageCount, ensurePageInRange])
 
-  // if (isLoading) {
-  //   return (
-
-  //   )
-  // }
   return (
     <div className='flex flex-1 flex-col gap-4'>
       <ReceiveListsSearch table={table} />

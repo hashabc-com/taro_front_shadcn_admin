@@ -136,8 +136,7 @@ class Request {
         if(response.data.code == 401){
           useAuthStore.getState().logout()
         }
-         
-        return response
+        return  response
         // return {...response,data:response.data.result}
       },
       (error: any) => {

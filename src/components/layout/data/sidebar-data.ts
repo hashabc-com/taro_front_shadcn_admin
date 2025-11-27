@@ -25,6 +25,7 @@ import {
 } from 'lucide-react'
 // import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
+import { useAuthStore } from '@/stores'
 
 export const sidebarData: SidebarData = {
   user: {
@@ -34,9 +35,9 @@ export const sidebarData: SidebarData = {
   },
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: useAuthStore.getState().userInfo?.name as string || 'Default Team',
       logo: Command,
-      plan: 'Vite + ShadcnUI',
+      plan: '',
     },
     {
       name: 'Acme Inc',
@@ -86,7 +87,15 @@ export const sidebarData: SidebarData = {
             {
               title: '收款订单明细',
               url: '/orders/receive-lists',
-            }
+            },
+            {
+              title: '收款汇总',
+              url: '/orders/receive-summary-lists',
+            },
+            {
+              title: '付款订单明细',
+              url: '/orders/payment-lists',
+            },
           ],
         },
         // {

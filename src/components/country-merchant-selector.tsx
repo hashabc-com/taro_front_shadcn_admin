@@ -86,7 +86,7 @@ export function CountryMerchantSelector() {
         value={selectedCountry?.id.toString()}
         onValueChange={handleCountryChange}
       >
-        <SelectTrigger className='w-[140px] h-9'>
+        <SelectTrigger className='w-full sm:w-[140px] h-9'>
           <SelectValue placeholder='选择国家' />
         </SelectTrigger>
         <SelectContent>
@@ -106,7 +106,7 @@ export function CountryMerchantSelector() {
           onValueChange={handleMerchantChange}
           disabled={!selectedCountry}
         >
-          <SelectTrigger className='w-[140px] h-9'>
+          <SelectTrigger className='w-full sm:w-[140px] h-9'>
             <SelectValue placeholder='选择商户' />
           </SelectTrigger>
           <SelectContent>

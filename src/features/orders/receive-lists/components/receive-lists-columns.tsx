@@ -1,7 +1,7 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
-import { statuses } from '../data/data'
-import { type Order } from '../data/schema'
+import { statuses } from './receive-lists-mutate-drawer'
+import { type Order } from '../schema'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const tasksColumns: ColumnDef<Order>[] = [
@@ -25,28 +25,28 @@ export const tasksColumns: ColumnDef<Order>[] = [
     ),
   },
   {
-    accessorKey: 'amountTwo',
+    accessorKey: 'amount',
     header: '金额',
     enableSorting: false,
     cell: ({ row }) => (
       <div className='flex flex-col gap-1'>
-        <span className='font-medium'>{row.getValue('amountTwo')}</span>
-        <span className='text-muted-foreground text-xs'>
+        <span className='font-medium'>{row.getValue('amount')}</span>
+        {/* <span className='text-muted-foreground text-xs'>
           ${row.original.amountUSD.toFixed(2)} USD
-        </span>
+        </span> */}
       </div>
     ),
   },
   {
-    accessorKey: 'serviceAmountTwo',
+    accessorKey: 'serviceAmount',
     header: '手续费',
     enableSorting: false,
     cell: ({ row }) => (
       <div className='flex flex-col gap-1'>
-        <span className='font-medium'>{row.getValue('serviceAmountTwo')}</span>
-        <span className='text-muted-foreground text-xs'>
+        <span className='font-medium'>{row.getValue('serviceAmount')}</span>
+        {/* <span className='text-muted-foreground text-xs'>
           ${row.original.serviceAmountUSD.toFixed(2)} USD
-        </span>
+        </span> */}
       </div>
     ),
   },

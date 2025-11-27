@@ -6,7 +6,6 @@ import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Input } from '@/components/ui/input'
 import {
   Popover,
   PopoverContent,
@@ -20,9 +19,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
-import { statuses } from './receive-lists-mutate-drawer'
+import { useQuery } from '@tanstack/react-query'
+import { getPaymentChannels,type IPaymentChannel } from '@/api/common'
 
-const route = getRouteApi('/_authenticated/orders/receive-lists')
+const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
 
 type ReceiveListsSearchProps<TData> = {
   table: Table<TData>
@@ -38,31 +38,26 @@ export function ReceiveListsSearch<TData>({
 }: ReceiveListsSearchProps<TData>) {
   const navigate = route.useNavigate()
   const search = route.useSearch()
-
-  const [referenceno, setMerchantOrderNo] = useState(
-    search.referenceno || ''
-  )
-  const [tripartiteOrder, setThirdPartyOrderNo] = useState(
-    search.tripartiteOrder || ''
-  )
-  const [transId, setTransId] = useState(
-    search.transId || ''
-  )
-  const [status, setStatus] = useState(search.status || '')
+  const [channel, setChannel] = useState(search.channel)
   const [dateRange, setDateRange] = useState<DateRange>({
     from: search.startTime ? new Date(search.startTime) : undefined,
     to: search.endTime ? new Date(search.endTime) : undefined,
   })
 
+  const { data: paymentChannels } = useQuery({
+    queryKey: ['common', 'payment-channels'],
+    queryFn: () => getPaymentChannels('pay_channel'),
+  })
+  const hasFilters =
+    channel ||
+    dateRange.from ||
+    dateRange.to
   const handleSearch = () => {
     navigate({
       search: (prev) => ({
         ...prev,
-        page: 1, // 重置到第一页
-        referenceno: referenceno || undefined,
-        tripartiteOrder: tripartiteOrder || undefined,
-        transId: transId || undefined,
-        status: status || undefined,
+        pageNum: 1, // 重置到第一页
+        channel: channel || undefined,
         startTime: dateRange.from
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
@@ -72,82 +67,22 @@ export function ReceiveListsSearch<TData>({
   }
 
   const handleReset = () => {
-    setMerchantOrderNo('')
-    setThirdPartyOrderNo('')
-    setTransId('')
-    setStatus('')
+    setChannel('')
     setDateRange({ from: undefined, to: undefined })
 
     navigate({
       search: (prev) => ({
-        page: 1,
+        pageNum: 1,
         pageSize: prev.pageSize,
       }),
     })
   }
 
-  const hasFilters =
-    referenceno ||
-    tripartiteOrder ||
-    transId ||
-    status ||
-    dateRange.from ||
-    dateRange.to
-
+  
   return (
     <div className='flex flex-wrap items-center gap-3'>
-      {/* 商户订单号 */}
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
-        <Input
-          id='referenceno'
-          placeholder='商户订单号'
-          value={referenceno}
-          onChange={(e) => setMerchantOrderNo(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-
-      {/* 三方订单号 */}
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
-        <Input
-          id='tripartiteOrder'
-          placeholder='三方订单号'
-          value={tripartiteOrder}
-          onChange={(e) => setThirdPartyOrderNo(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
-        <Input
-          id='transId'
-          placeholder='平台订单号'
-          value={transId}
-          onChange={(e) => setTransId(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-
-      {/* 交易状态 */}
-      <div className='max-w-[120px]'>
-        <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger id='status'>
-            <SelectValue placeholder='交易状态' />
-          </SelectTrigger>
-          <SelectContent>
-            {statuses.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                <div className='flex items-center gap-2'>
-                  {item.icon && <item.icon className='size-4' />}
-                  {item.label}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
       {/* 日期范围 */}
-      <div className='max-w-[220px]'>
+      <div className='max-w-[230px]'>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -185,6 +120,24 @@ export function ReceiveListsSearch<TData>({
             />
           </PopoverContent>
         </Popover>
+      </div>
+
+      
+      {/* 交易状态 */}
+      <div className='max-w-[120px]'>
+        <Select value={channel} onValueChange={setChannel}>
+          <SelectTrigger id='channel'>
+            <SelectValue placeholder='全部渠道' />
+          </SelectTrigger>
+          <SelectContent>
+            {/* <SelectItem value='all'>全部渠道</SelectItem> */}
+            {paymentChannels?.result.map((item: IPaymentChannel) => (
+              <SelectItem key={item.itemValue} value={item.itemValue}>
+                {item.itemName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* 操作按钮 */}
