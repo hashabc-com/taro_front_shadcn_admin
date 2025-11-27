@@ -18,16 +18,16 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { tasksColumns as columns } from './receive-summary-columns'
-import { ReceiveListsSearch } from './receive-summary-search'
-import { useReceiveSummaryData } from '../hooks/use-receive-summary-data'
+import { columns } from './settlement-lists-columns'
+import { SettlementListsSearch } from './settlement-lists-search'
+import { useSettlementListData } from '../hooks/use-settlement-lists-data'
 
-const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
+const route = getRouteApi('/_authenticated/fund/settlement-lists')
 
 
-export function ReceiveSummaryTable() {
+export function SettlementListTable() {
   
-  const { orders:data, isLoading,totalRecord } = useReceiveSummaryData()
+  const { data, isLoading,totalRecord } = useSettlementListData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -40,11 +40,10 @@ export function ReceiveSummaryTable() {
     })
 
   const pageCount = useMemo(() => {
-      const pageSize = pagination.pageSize ?? 10
-      // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
-      return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
-    }, [totalRecord, pagination.pageSize])
-
+    const pageSize = pagination.pageSize ?? 10
+    // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
+    return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
+  }, [totalRecord, pagination.pageSize])
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
@@ -62,11 +61,11 @@ export function ReceiveSummaryTable() {
 
   useEffect(() => {
     ensurePageInRange(pageCount)
-  }, [pageCount, ensurePageInRange])
+  }, [pageCount, ensurePageInRange, totalRecord, isLoading])
 
   return (
     <div className='flex flex-1 flex-col gap-4'>
-      <ReceiveListsSearch table={table} />
+      <SettlementListsSearch table={table} />
       {isLoading ? (
           <div className='overflow-hidden rounded-md border'>
             <div className='space-y-3 p-4'>

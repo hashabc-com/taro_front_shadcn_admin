@@ -23,6 +23,7 @@ export function ReceiveLists() {
     queryKey: ['orders', 'receive-lists', search, selectedCountry?.code,selectedMerchant?.appid],
     queryFn: () => getOrderList(search),
     enabled: !!selectedCountry,
+    placeholderData:(prev) => prev ?? undefined
   })
   const orders = data?.result?.listRecord?.map((item: Order) => ({
     ...item,

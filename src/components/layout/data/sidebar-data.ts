@@ -21,7 +21,8 @@ import {
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
-  ClipboardList
+  ClipboardList,
+  Calculator
 } from 'lucide-react'
 // import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
@@ -95,6 +96,26 @@ export const sidebarData: SidebarData = {
             {
               title: '付款订单明细',
               url: '/orders/payment-lists',
+            },
+          ],
+        },
+        {
+          title: '资金管理',
+          icon: Calculator,
+          items: [
+            {
+              title: '结算记录',
+              url: '/fund/settlement-lists',
+            },
+          ],
+        },
+        {
+          title: '商户管理',
+          icon: Calculator,
+          items: [
+            {
+              title: '商户信息',
+              url: '/merchant/info-lists',
             },
           ],
         },

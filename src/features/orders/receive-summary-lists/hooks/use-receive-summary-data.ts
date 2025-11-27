@@ -17,6 +17,7 @@ export function useReceiveSummaryData() {
     queryKey: ['orders', 'receive-summary', search, selectedCountry?.code, selectedMerchant?.appid],
     queryFn: () => getReceiveSummary(search),
     enabled: !!selectedCountry,
+    placeholderData:(prev) => prev ?? undefined
   })
 
   const orders = data?.result?.listRecord?.map((item: IOrderSummaryType) => ({

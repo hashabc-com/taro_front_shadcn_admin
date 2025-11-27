@@ -41,6 +41,7 @@ import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_auth
 import { Route as AuthenticatedOrdersReceiveSummaryListsRouteImport } from './routes/_authenticated/orders/receive-summary-lists'
 import { Route as AuthenticatedOrdersReceiveListsRouteImport } from './routes/_authenticated/orders/receive-lists'
 import { Route as AuthenticatedOrdersPaymentListsRouteImport } from './routes/_authenticated/orders/payment-lists'
+import { Route as AuthenticatedFundSettlementListsRouteImport } from './routes/_authenticated/fund/settlement-lists'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
@@ -211,6 +212,12 @@ const AuthenticatedOrdersPaymentListsRoute =
     path: '/orders/payment-lists',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedFundSettlementListsRoute =
+  AuthenticatedFundSettlementListsRouteImport.update({
+    id: '/fund/settlement-lists',
+    path: '/fund/settlement-lists',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
@@ -234,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/orders/payment-lists': typeof AuthenticatedOrdersPaymentListsRoute
   '/orders/receive-lists': typeof AuthenticatedOrdersReceiveListsRoute
   '/orders/receive-summary-lists': typeof AuthenticatedOrdersReceiveSummaryListsRoute
@@ -265,6 +273,7 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/orders/payment-lists': typeof AuthenticatedOrdersPaymentListsRoute
   '/orders/receive-lists': typeof AuthenticatedOrdersReceiveListsRoute
   '/orders/receive-summary-lists': typeof AuthenticatedOrdersReceiveSummaryListsRoute
@@ -301,6 +310,7 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/_authenticated/orders/payment-lists': typeof AuthenticatedOrdersPaymentListsRoute
   '/_authenticated/orders/receive-lists': typeof AuthenticatedOrdersReceiveListsRoute
   '/_authenticated/orders/receive-summary-lists': typeof AuthenticatedOrdersReceiveSummaryListsRoute
@@ -336,6 +346,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/fund/settlement-lists'
     | '/orders/payment-lists'
     | '/orders/receive-lists'
     | '/orders/receive-summary-lists'
@@ -367,6 +378,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/fund/settlement-lists'
     | '/orders/payment-lists'
     | '/orders/receive-lists'
     | '/orders/receive-summary-lists'
@@ -402,6 +414,7 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/fund/settlement-lists'
     | '/_authenticated/orders/payment-lists'
     | '/_authenticated/orders/receive-lists'
     | '/_authenticated/orders/receive-summary-lists'
@@ -661,6 +674,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrdersPaymentListsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/fund/settlement-lists': {
+      id: '/_authenticated/fund/settlement-lists'
+      path: '/fund/settlement-lists'
+      fullPath: '/fund/settlement-lists'
+      preLoaderRoute: typeof AuthenticatedFundSettlementListsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -698,6 +718,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedFundSettlementListsRoute: typeof AuthenticatedFundSettlementListsRoute
   AuthenticatedOrdersPaymentListsRoute: typeof AuthenticatedOrdersPaymentListsRoute
   AuthenticatedOrdersReceiveListsRoute: typeof AuthenticatedOrdersReceiveListsRoute
   AuthenticatedOrdersReceiveSummaryListsRoute: typeof AuthenticatedOrdersReceiveSummaryListsRoute
@@ -712,6 +733,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedFundSettlementListsRoute: AuthenticatedFundSettlementListsRoute,
   AuthenticatedOrdersPaymentListsRoute: AuthenticatedOrdersPaymentListsRoute,
   AuthenticatedOrdersReceiveListsRoute: AuthenticatedOrdersReceiveListsRoute,
   AuthenticatedOrdersReceiveSummaryListsRoute:

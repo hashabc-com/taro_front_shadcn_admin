@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import {
-  type SortingState,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
@@ -36,9 +30,9 @@ type DataTableProps = {
   isLoading: boolean
 }
 
-export function ReceiveListsTable({ data, isLoading }: DataTableProps) {
+export function ReceiveListsTable({ data, isLoading,totalRecord }: DataTableProps) {
   // Local UI-only states
-  const [sorting, setSorting] = useState<SortingState>([])
+  // const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   // Synced with URL states (updated to match route search schema defaults)
@@ -49,27 +43,33 @@ export function ReceiveListsTable({ data, isLoading }: DataTableProps) {
       pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
     })
 
+  const pageCount = useMemo(() => {
+      const pageSize = pagination.pageSize ?? 10
+      // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
+      return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
+    }, [totalRecord, pagination.pageSize])
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
     state: {
-      sorting,
       columnVisibility,
       pagination,
     },
-    onSortingChange: setSorting,
+    // onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
+    manualPagination: true,  
+    pageCount,
+    // getFilteredRowModel: getFilteredRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
+    // getSortedRowModel: getSortedRowModel(),
+    // getFacetedRowModel: getFacetedRowModel(),
+    // getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange,
   })
 
-  const pageCount = table.getPageCount()
   useEffect(() => {
     ensurePageInRange(pageCount)
   }, [pageCount, ensurePageInRange])

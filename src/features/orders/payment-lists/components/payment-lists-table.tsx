@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import {
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
@@ -28,7 +27,7 @@ const route = getRouteApi('/_authenticated/orders/payment-lists')
 
 export function PaymentListsTable() {
   
-  const { orders:data, isLoading } = usePaymentListsData()
+  const { orders:data, isLoading,totalRecord } = usePaymentListsData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -38,6 +37,12 @@ export function PaymentListsTable() {
       navigate: route.useNavigate(),
       pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
     })
+    
+const pageCount = useMemo(() => {
+    const pageSize = pagination.pageSize ?? 10
+    // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
+    return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
+  }, [totalRecord, pagination.pageSize])
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -49,11 +54,11 @@ export function PaymentListsTable() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,  
+    pageCount,
     onPaginationChange,
   })
 
-  const pageCount = table.getPageCount()
   useEffect(() => {
     ensurePageInRange(pageCount)
   }, [pageCount, ensurePageInRange])

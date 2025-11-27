@@ -1,10 +1,8 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
-import { statuses } from './receive-lists-mutate-drawer'
-import { type Order } from '../schema'
-import { DataTableRowActions } from './data-table-row-actions'
+import { statuses,type ISettlementListType } from '../schema'
 
-export const tasksColumns: ColumnDef<Order>[] = [
+export const columns: ColumnDef<ISettlementListType>[] = [
   {
     accessorKey: 'companyName',
     header: '商户',
@@ -17,11 +15,21 @@ export const tasksColumns: ColumnDef<Order>[] = [
     ),
   },
   {
-    accessorKey: 'pickupCenter',
-    header: '产品',
+    accessorKey: 'type',
+    header: '类型',
     enableSorting: false,
     cell: ({ row }) => (
-      <Badge variant='outline'>{row.getValue('pickupCenter')}</Badge>
+      <Badge variant='outline'>{row.getValue('type')}</Badge>
+    ),
+  },
+  {
+    accessorKey: 'createTime',
+    header: '操作日期',
+    enableSorting: false,
+    cell: ({ row }) => (
+      <div className='flex flex-col gap-1'>
+        <span className='font-medium'>{row.getValue('createTime')}</span>
+      </div>
     ),
   },
   {
@@ -31,38 +39,44 @@ export const tasksColumns: ColumnDef<Order>[] = [
     cell: ({ row }) => (
       <div className='flex flex-col gap-1'>
         <span className='font-medium'>{row.getValue('amount')}</span>
-        {/* <span className='text-muted-foreground text-xs'>
-          ${row.original.amountUSD.toFixed(2)} USD
-        </span> */}
       </div>
     ),
   },
   {
-    accessorKey: 'serviceAmount',
-    header: '手续费',
+    accessorKey: 'withdrawalType',
+    header: '提现币种',
     enableSorting: false,
-    cell: ({ row }) => (
-      <div className='flex flex-col gap-1'>
-        <span className='font-medium'>{row.getValue('serviceAmount')}</span>
-        {/* <span className='text-muted-foreground text-xs'>
-          ${row.original.serviceAmountUSD.toFixed(2)} USD
-        </span> */}
-      </div>
-    ),
+    cell: ({ row }) => row.getValue('withdrawalType'),
   },
   {
+    accessorKey: 'exchangeRate',
+    header: '汇率',
+    enableSorting: false,
+    cell: ({ row }) => row.getValue('exchangeRate'),
+  },
+  {
+    accessorKey: 'finalAmount',
+    header: '实际金额',
+    enableSorting: false,
+    cell: ({ row }) => row.getValue('finalAmount')
+  },
+  {
+    accessorKey: 'remark',
+    header: '备注',
+    enableSorting: false,
+    cell: ({ row }) => row.getValue('remark')
+  },
+{
     accessorKey: 'status',
-    header: '交易状态',
+    header: '审核状态',
     enableSorting: false,
     cell: ({ row }) => {
       const status = statuses.find(
         (status) => status.value === row.getValue('status')
       )
-
       if (!status) {
         return null
       }
-
       return (
         <div className='flex items-center gap-2'>
           {status.icon && (
@@ -72,11 +86,5 @@ export const tasksColumns: ColumnDef<Order>[] = [
         </div>
       )
     }
-  },
-  {
-    id: 'actions',
-    header: '操作',
-    enableSorting: false,
-    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ]
