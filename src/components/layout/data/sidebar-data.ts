@@ -3,12 +3,12 @@ import {
   LayoutDashboard,
   // Monitor,
   // Bug,
-  ListTodo,
+  // ListTodo,
   // FileX,
   HelpCircle,
   // Lock,
   Bell,
-  Package,
+  // Package,
   Palette,
   // ServerOff,
   Settings,
@@ -16,13 +16,13 @@ import {
   UserCog,
   // UserX,
   Users,
-  MessagesSquare,
+  // MessagesSquare,
   // ShieldCheck,
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
   ClipboardList,
-  Calculator
+  Calculator,
 } from 'lucide-react'
 // import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
@@ -56,31 +56,31 @@ export const sidebarData: SidebarData = {
       title: 'General',
       items: [
         {
-          title: 'Dashboard',
+          title: '仪表盘',
           url: '/',
           icon: LayoutDashboard,
         },
-        {
-          title: 'Tasks',
-          url: '/tasks',
-          icon: ListTodo,
-        },
-        {
-          title: 'Apps',
-          url: '/apps',
-          icon: Package,
-        },
-        {
-          title: 'Chats',
-          url: '/chats',
-          badge: '3',
-          icon: MessagesSquare,
-        },
-        {
-          title: 'Users',
-          url: '/users',
-          icon: Users,
-        },
+        // {
+        //   title: 'Tasks',
+        //   url: '/tasks',
+        //   icon: ListTodo,
+        // },
+        // {
+        //   title: 'Apps',
+        //   url: '/apps',
+        //   icon: Package,
+        // },
+        // {
+        //   title: 'Chats',
+        //   url: '/chats',
+        //   badge: '3',
+        //   icon: MessagesSquare,
+        // },
+        // {
+        //   title: 'Users',
+        //   url: '/users',
+        //   icon: Users,
+        // },
         {
           title: '订单管理',
           icon: ClipboardList,
@@ -111,7 +111,7 @@ export const sidebarData: SidebarData = {
         },
         {
           title: '商户管理',
-          icon: Calculator,
+          icon: Users,
           items: [
             {
               title: '商户信息',
@@ -205,7 +205,7 @@ export const sidebarData: SidebarData = {
       title: 'Other',
       items: [
         {
-          title: 'Settings',
+          title: '系统设置',
           icon: Settings,
           items: [
             {
@@ -236,7 +236,7 @@ export const sidebarData: SidebarData = {
           ],
         },
         {
-          title: 'Help Center',
+          title: '帮助中心',
           url: '/help-center',
           icon: HelpCircle,
         },
