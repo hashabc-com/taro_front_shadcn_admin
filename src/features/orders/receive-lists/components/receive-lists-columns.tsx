@@ -1,82 +1,90 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
-import { statuses } from './receive-lists-mutate-drawer'
 import { type Order } from '../schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { CheckCircle, Clock, XCircle } from 'lucide-react'
+import { getTranslation, type Language } from '@/lib/i18n'
 
-export const tasksColumns: ColumnDef<Order>[] = [
+export const getTasksColumns = (language: Language = 'zh'): ColumnDef<Order>[] => {
+  const t = (key: string) => getTranslation(language, key)
+  
+  return [
+{
+    accessorKey: 'createTime',
+    header: t('orders.receiveOrders.createTime')
+  },
   {
-    accessorKey: 'companyName',
-    header: '商户',
-    enableSorting: false,
-    enableHiding: false,
-    cell: ({ row }) => (
-      <div className='flex flex-col gap-1'>
-        <span className='font-medium'>{row.getValue('companyName')}</span>
-      </div>
-    ),
+    accessorKey: 'paymentDate',
+    header: t('orders.receiveOrders.collectionTime')
+  },
+{
+    accessorKey: 'referenceno',
+    header: t('orders.receiveOrders.merchantOrderNo')
+  },
+  {
+    accessorKey: 'transId',
+    header: t('orders.receiveOrders.platformOrderNo'),
+    enableHiding: false
   },
   {
     accessorKey: 'pickupCenter',
-    header: '产品',
-    enableSorting: false,
+    header: t('orders.receiveOrders.product'),
     cell: ({ row }) => (
       <Badge variant='outline'>{row.getValue('pickupCenter')}</Badge>
     ),
   },
   {
     accessorKey: 'amount',
-    header: '金额',
-    enableSorting: false,
-    cell: ({ row }) => (
-      <div className='flex flex-col gap-1'>
-        <span className='font-medium'>{row.getValue('amount')}</span>
-        {/* <span className='text-muted-foreground text-xs'>
-          ${row.original.amountUSD.toFixed(2)} USD
-        </span> */}
-      </div>
-    ),
+    header: `${t('orders.receiveOrders.amount')}`,
+    enableHiding: false
   },
   {
     accessorKey: 'serviceAmount',
-    header: '手续费',
-    enableSorting: false,
-    cell: ({ row }) => (
-      <div className='flex flex-col gap-1'>
-        <span className='font-medium'>{row.getValue('serviceAmount')}</span>
-        {/* <span className='text-muted-foreground text-xs'>
-          ${row.original.serviceAmountUSD.toFixed(2)} USD
-        </span> */}
-      </div>
-    ),
+    header: `${t('orders.receiveOrders.serviceFee')}`,
+    enableHiding: false
   },
-  {
+   {
     accessorKey: 'status',
-    header: '交易状态',
-    enableSorting: false,
+    header: t('orders.receiveOrders.status'),
     cell: ({ row }) => {
-      const status = statuses.find(
-        (status) => status.value === row.getValue('status')
-      )
-
-      if (!status) {
-        return null
+      const value = row.getValue('status') as string;
+      
+      if (value === '支付成功') {
+        return (
+          <div className='flex items-center text-green-600'>
+            <CheckCircle className='mr-1.5 h-4 w-4' />
+            <span className='font-medium'>{t('orders.receiveOrders.paymentSuccess')}</span>
+          </div>
+        );
+      } else if (value === '待支付') {
+        return (
+          <div className='flex items-center text-blue-600'>
+            <Clock className='mr-1.5 h-4 w-4' />
+            <span className='font-medium'>{t('orders.receiveOrders.pendingPayment')}</span>
+          </div>
+        );
+      } else if (value === '支付失败') {
+        return (
+          <div className='flex items-center text-red-600'>
+            <XCircle className='mr-1.5 h-4 w-4' />
+            <span className='font-medium'>{t('orders.receiveOrders.paymentFailed')}</span>
+          </div>
+        );
       }
-
-      return (
-        <div className='flex items-center gap-2'>
-          {status.icon && (
-            <status.icon className='text-muted-foreground size-4' />
-          )}
-          <span>{status.label}</span>
-        </div>
-      )
+      
+      return <span>{value}</span>;
     }
   },
+  // {
+  //   accessorKey: 'paymentDate',
+  //   header: '收款时间',
+  //   enableHiding: false,
+  //   cell: ({ row }) => row.getValue('paymentDate'),
+  // },
   {
     id: 'actions',
-    header: '操作',
-    enableSorting: false,
+    header: t('orders.receiveOrders.action'),
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ]
+}

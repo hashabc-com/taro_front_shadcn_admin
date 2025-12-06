@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { CheckCircle, Clock, XCircle } from 'lucide-react'
 
 // 订单数据结构
 export const orderSchema = z.object({
@@ -11,7 +12,8 @@ export const orderSchema = z.object({
   remark: z.string().nullable(),
   transId: z.string(),
   status: z.string(),
-  paymentDate: z.string().nullable(),
+  localPaymentDate: z.string().optional().nullable(),
+  paymentDate: z.string().optional().nullable(),
   serviceAmount: z.number().or(z.string()),
   taxRate: z.string(),
   createTime: z.string(),
@@ -22,13 +24,34 @@ export const orderSchema = z.object({
   amountTwo: z.string(),
   serviceAmountTwo: z.string(),
   notificationURL: z.string().nullable(),
-  tripartiteOrder: z.string(),
-  country: z.string(),
-  amountUSD: z.number(),
-  serviceAmountUSD: z.number(),
+  tripartiteOrder: z.string().optional(),
+  country: z.string().nullable(),
+  amountUSD: z.number().optional(),
+  serviceAmountUSD: z.number().optional(),
+  localTime: z.string().optional().nullable(),
 })
 
 export type Order = z.infer<typeof orderSchema>
+
+export function getStatuses(t: (key: string) => string) {
+  return [
+    {
+      label: t('orders.receiveOrders.paymentSuccess'),
+      value: '0' as const,
+      icon: CheckCircle,
+    },
+    {
+      label: t('orders.receiveOrders.pendingPayment'),
+      value: '1' as const,
+      icon: Clock,
+    },
+    {
+      label: t('orders.receiveOrders.paymentFailed'),
+      value: '2' as const,
+      icon: XCircle,
+    },
+  ]
+}
 
 // API 响应数据结构
 export const orderListResponseSchema = z.object({

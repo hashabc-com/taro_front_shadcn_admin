@@ -36,6 +36,14 @@
       font-size: 16px !important;
     }
   }
+  /* Table row height */
+  table tbody tr {
+    height: 49px;
+  }
+  
+  table thead tr {
+    height: 49px;
+  }
 }
 
 @utility container {

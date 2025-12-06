@@ -19,7 +19,8 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 import { type Order } from '../schema'
-import { tasksColumns as columns } from './receive-lists-columns'
+import { getTasksColumns } from './receive-lists-columns'
+import { useLanguage } from '@/context/language-provider'
 import { ReceiveListsSearch } from './receive-lists-search'
 
 const route = getRouteApi('/_authenticated/orders/receive-lists')
@@ -31,9 +32,10 @@ type DataTableProps = {
 }
 
 export function ReceiveListsTable({ data, isLoading,totalRecord }: DataTableProps) {
-  // Local UI-only states
-  // const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const { lang } = useLanguage()
+  
+  const columns = useMemo(() => getTasksColumns(lang), [lang])
 
   // Synced with URL states (updated to match route search schema defaults)
   const { pagination, onPaginationChange, ensurePageInRange } =
@@ -57,16 +59,10 @@ export function ReceiveListsTable({ data, isLoading,totalRecord }: DataTableProp
       columnVisibility,
       pagination,
     },
-    // onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,  
     pageCount,
-    // getFilteredRowModel: getFilteredRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
-    // getSortedRowModel: getSortedRowModel(),
-    // getFacetedRowModel: getFacetedRowModel(),
-    // getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange,
   })
 
@@ -74,11 +70,6 @@ export function ReceiveListsTable({ data, isLoading,totalRecord }: DataTableProp
     ensurePageInRange(pageCount)
   }, [pageCount, ensurePageInRange])
 
-  // if (isLoading) {
-  //   return (
-
-  //   )
-  // }
   return (
     <div className='flex flex-1 flex-col gap-4'>
       <ReceiveListsSearch table={table} />
@@ -146,7 +137,7 @@ export function ReceiveListsTable({ data, isLoading,totalRecord }: DataTableProp
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={table.getAllColumns().length}
                     className='h-24 text-center'
                   >
                     No results.

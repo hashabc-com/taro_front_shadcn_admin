@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useState, useEffect } from 'react'
 import { Link, useLocation } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import {
@@ -17,7 +17,7 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Badge } from '../ui/badge'
+import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +25,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu'
+} from '@/components/ui/dropdown-menu'
 import {
   type NavCollapsible,
   type NavItem,
@@ -64,18 +64,32 @@ function NavBadge({ children }: { children: ReactNode }) {
 
 function SidebarMenuLink({ item, href }: { item: NavLink; href: string }) {
   const { setOpenMobile } = useSidebar()
+  const isExternal = typeof item.url === 'string' && item.url.startsWith('http')
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
         asChild
-        isActive={checkIsActive(href, item)}
+        isActive={isExternal ? false : checkIsActive(href, item)}
         tooltip={item.title}
       >
-        <Link to={item.url} onClick={() => setOpenMobile(false)}>
-          {item.icon && <item.icon />}
-          <span>{item.title}</span>
-          {item.badge && <NavBadge>{item.badge}</NavBadge>}
-        </Link>
+        {isExternal ? (
+          <a
+            href={String(item.url)}
+            target='_blank'
+            rel='noopener noreferrer'
+            onClick={() => setOpenMobile(false)}
+          >
+            {item.icon && <item.icon />}
+            <span>{item.title}</span>
+            {item.badge && <NavBadge>{item.badge}</NavBadge>}
+          </a>
+        ) : (
+          <Link to={item.url} onClick={() => setOpenMobile(false)}>
+            {item.icon && <item.icon />}
+            <span>{item.title}</span>
+            {item.badge && <NavBadge>{item.badge}</NavBadge>}
+          </Link>
+        )}
       </SidebarMenuButton>
     </SidebarMenuItem>
   )
@@ -89,10 +103,23 @@ function SidebarMenuCollapsible({
   href: string
 }) {
   const { setOpenMobile } = useSidebar()
+  const isActive = checkIsActive(href, item, true)
+  const [isOpen, setIsOpen] = useState(isActive)
+  
+  // 当路由变化时,如果该菜单组包含当前激活的路由,则自动展开
+  useEffect(() => {
+    if (isActive) {
+      requestAnimationFrame(() => {
+        setIsOpen(true);
+      });
+    }
+  }, [isActive])
+  
   return (
     <Collapsible
       asChild
-      defaultOpen={checkIsActive(href, item, true)}
+      open={isOpen}
+      onOpenChange={setIsOpen}
       className='group/collapsible'
     >
       <SidebarMenuItem>
@@ -174,12 +201,25 @@ function SidebarMenuCollapsedDropdown({
 }
 
 function checkIsActive(href: string, item: NavItem, mainNav = false) {
-  return (
-    href === item.url || // /endpint?search=param
-    href.split('?')[0] === item.url || // endpoint
-    !!item?.items?.filter((i) => i.url === href).length || // if child nav is active
-    (mainNav &&
-      href.split('/')[1] !== '' &&
-      href.split('/')[1] === item?.url?.split('/')[1])
-  )
+  const currentPath = href.split('?')[0]
+  const itemPath = typeof item.url === 'string' ? item.url : ''
+  
+  // 检查当前路径是否匹配
+  if (currentPath === itemPath) return true
+  
+  // 检查子菜单是否有激活项
+  if (item?.items) {
+    const hasActiveChild = item.items.some((subItem) => {
+      const subPath = typeof subItem.url === 'string' ? subItem.url : ''
+      return currentPath === subPath || currentPath.startsWith(subPath + '/')
+    })
+    if (hasActiveChild) return true
+  }
+  
+  // 主导航的路径匹配检查
+  if (mainNav && currentPath.split('/')[1] !== '' && itemPath.split('/')[1] !== '') {
+    return currentPath.split('/')[1] === itemPath.split('/')[1]
+  }
+  
+  return false
 }

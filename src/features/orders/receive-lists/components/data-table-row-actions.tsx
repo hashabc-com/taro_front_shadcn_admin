@@ -1,23 +1,16 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-// import { Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  // DropdownMenuRadioGroup,
-  // DropdownMenuRadioItem,
-  // DropdownMenuSeparator,
-  // DropdownMenuShortcut,
-  // DropdownMenuSub,
-  // DropdownMenuSubContent,
-  // DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-// import { labels } from '../data/data'
 import { orderSchema } from '../schema'
 import { useReceiveLists } from './receive-lists-provider'
+import { Info } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -27,8 +20,9 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const task = orderSchema.parse(row.original)
-
+  const { t } = useLanguage()
   const { setOpen, setCurrentRow } = useReceiveLists()
+
 
   return (
     <DropdownMenu modal={false}>
@@ -41,42 +35,16 @@ export function DataTableRowActions<TData>({
           <span className='sr-only'>Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[160px]'>
+      <DropdownMenuContent align='end' className='w-auto'>
         <DropdownMenuItem
           onClick={() => {
             setCurrentRow(task)
             setOpen('info')
           }}
         >
-          查看更多
+          <Info className='mr-2 h-4 w-4' />
+          {t('orders.paymentOrders.viewMore')}
         </DropdownMenuItem>
-        {/* <DropdownMenuItem disabled>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem disabled>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={task.label}>
-              {labels.map((label) => (
-                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                  {label.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            setCurrentRow(task)
-            setOpen('delete')
-          }}
-        >
-          Delete
-          <DropdownMenuShortcut>
-            <Trash2 size={16} />
-          </DropdownMenuShortcut>
-        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   )

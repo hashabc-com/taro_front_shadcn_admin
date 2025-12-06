@@ -28,6 +28,11 @@ export interface Children {
   createTime: string
 }
 
+export interface IProductDict {
+  payinChannel: string[]
+  payoutChannel: string[]
+}
+
 
 
 // 获取国家列表
@@ -42,3 +47,8 @@ export const getMerchantList = () =>
 // 获取支付渠道
 export const getPaymentChannels = (type: 'withdraw_channel' | 'pay_channel') => 
   http.get(`/admin/interface/v1/channelDetails?type=${type}`)
+
+
+// 获取产品类型字典
+export const getProductDict = (country: string) =>
+  http.get<IProductDict>(`/customer/user/v1/getChannelTypeList?country=${country}`)

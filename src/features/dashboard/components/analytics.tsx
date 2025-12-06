@@ -7,25 +7,28 @@ import {
 } from '@/components/ui/card'
 import { getAmountInformation, getChartDataOfDay } from '@/api/dashboard'
 import { DollarSign, Wallet, Lock, ArrowDownToLine, ArrowUpFromLine } from 'lucide-react'
-import { useCountryStore } from '@/stores/country-store'
 import { useConvertAmount } from '@/hooks/use-convert-amount'
 import ChartLineMultiple from './chart-line'
+import { useMerchantStore,useCountryStore } from '@/stores'
+import { useLanguage } from '@/context/language-provider'
 
 export function Analytics() {
   const { selectedCountry } = useCountryStore()
+  const { selectedMerchant } = useMerchantStore()
+  const { t } = useLanguage()
   const convertAmount = useConvertAmount()
   // 获取账户金额信息
   const { data: amountData } = useQuery({
-    queryKey: ['dashboard', 'amount-info', selectedCountry?.id],
+    queryKey: ['dashboard', 'amount-info', selectedCountry?.code,selectedMerchant?.appid],
     queryFn: getAmountInformation,
-    enabled: !!selectedCountry?.id
+    enabled: !!selectedCountry?.code
   })
 
   // 获取交易统计
   const { data: chartData } = useQuery({
-    queryKey: ['dashboard', 'chart-data', selectedCountry?.id],
+    queryKey: ['dashboard', 'chart-data', selectedCountry?.code,selectedMerchant?.appid],
     queryFn: getChartDataOfDay,
-    enabled: !!selectedCountry?.id
+    enabled: !!selectedCountry?.code
   })
 
   const amountInfo = amountData?.result || amountData?.data
@@ -34,18 +37,18 @@ export function Analytics() {
   return (
     <div className='space-y-3'>
       {/* 收款/付款统计 */}
-      <ChartLineMultiple />
+      <ChartLineMultiple chartData={transactionStats?.data} />
 
       {/* 账户金额统计 */}
       <div className='grid gap-3 sm:grid-cols-2 lg:grid-cols-3'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1.5'>
-            <CardTitle className='text-base font-medium'>账户可用余额</CardTitle>
+            <CardTitle className='text-base font-medium'>{t('dashboard.availableBalance')}</CardTitle>
             <Wallet className='text-muted-foreground h-4 w-4' />
           </CardHeader>
           <CardContent className='pb-3'>
             <div className='text-xl font-bold'>
-              {convertAmount(amountInfo?.availableAmount || '0.00')}
+              {convertAmount(amountInfo?.availableAmount || 0)}
             </div>
             {/* <p className='text-muted-foreground text-xs'>
               ${amountInfo?.availableAmountUsd || '0.00'}
@@ -55,12 +58,12 @@ export function Analytics() {
 
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1.5'>
-            <CardTitle className='text-base font-medium'>待结算金额</CardTitle>
+            <CardTitle className='text-base font-medium'>{t('dashboard.pendingSettlement')}</CardTitle>
             <DollarSign className='text-muted-foreground h-4 w-4' />
           </CardHeader>
           <CardContent className='pb-3'>
             <div className='text-xl font-bold'>
-              {convertAmount(amountInfo?.frozenAmountTwo || '0.00')}
+              {convertAmount(amountInfo?.frozenAmount || 0)}
             </div>
             {/* <p className='text-muted-foreground text-xs'>
               ${amountInfo?.frozenAmountUsd || '0.00'}
@@ -70,12 +73,12 @@ export function Analytics() {
 
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1.5'>
-            <CardTitle className='text-base font-medium'>冻结金额</CardTitle>
+            <CardTitle className='text-base font-medium'>{t('dashboard.frozenAmount')}</CardTitle>
             <Lock className='text-muted-foreground h-4 w-4' />
           </CardHeader>
           <CardContent className='pb-3'>
             <div className='text-xl font-bold'>
-              {convertAmount(amountInfo?.rechargeAmountTwo || '0.00')}
+              {convertAmount(amountInfo?.rechargeAmount || 0)}
             </div>
             {/* <p className='text-muted-foreground text-xs'>
               ${amountInfo?.rechargeAmountUsd || '0.00'}
@@ -90,9 +93,9 @@ export function Analytics() {
           <CardContent className='pt-4 pb-3'>
             <div className='flex items-center justify-between'>
               <div className='space-y-1'>
-                <p className='text-sm text-muted-foreground'>充值金额</p>
+                <p className='text-sm text-muted-foreground'>{t('dashboard.rechargeAmount')}</p>
                 <div className='text-2xl font-bold'>
-                  {convertAmount(transactionStats?.rechargeAmount || '0.00')}
+                  {convertAmount(transactionStats?.rechargeAmount || 0)}
                 </div>
                 {/* <p className='text-xs text-muted-foreground'>
                   ${transactionStats?.rechargeAmountUsd || '0.00'}
@@ -109,9 +112,9 @@ export function Analytics() {
           <CardContent className='pt-4 pb-3'>
             <div className='flex items-center justify-between'>
               <div className='space-y-1'>
-                <p className='text-sm text-muted-foreground'>提现金额</p>
+                <p className='text-sm text-muted-foreground'>{t('dashboard.withdrawalAmount')}</p>
                 <div className='text-2xl font-bold'>
-                  {convertAmount(transactionStats?.withdrawalAmount || '0.00')}
+                  {convertAmount(transactionStats?.withdrawalAmount || 0)}
                 </div>
                 {/* <p className='text-xs text-muted-foreground'>
                   ${transactionStats?.withdrawalAmountUsd || '0.00'}

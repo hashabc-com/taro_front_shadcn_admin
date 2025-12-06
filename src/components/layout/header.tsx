@@ -7,6 +7,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 // import { ConfigDrawer } from '@/components/config-drawer'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { CountryMerchantSelector } from '@/components/country-merchant-selector'
+import { LanguageSwitch } from '@/components/language-switch'
 
 type HeaderProps = React.HTMLAttributes<HTMLElement> & {
   fixed?: boolean
@@ -51,13 +52,10 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
         <Search className='max-md:hidden' />
         <Separator orientation='vertical' className='h-6 max-md:hidden' />
         <CountryMerchantSelector />
-        <div className='ms-auto flex items-center gap-2 sm:gap-4 shrink-0'>
-          {/* <div className='max-sm:hidden'> */}
-            <ThemeSwitch />
-          {/* </div> */}
-          <div className='max-sm:hidden'>
-            {/* <ConfigDrawer /> */}
-          </div>
+        <div className='ms-auto flex items-center gap-2 sm:gap-2 shrink-0'>
+          <LanguageSwitch />
+          <Separator orientation='vertical' className='h-6 max-md:hidden' />
+          <ThemeSwitch />
           <ProfileDropdown />
         </div>
         {children}

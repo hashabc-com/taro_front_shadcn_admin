@@ -20,7 +20,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
-import { statuses } from './receive-lists-mutate-drawer'
+import { getStatuses } from '../schema'
+import {getProductDict} from '@/api/common'
+import { useQuery } from '@tanstack/react-query'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/orders/receive-lists')
 
@@ -36,51 +39,60 @@ type DateRange = {
 export function ReceiveListsSearch<TData>({
   table,
 }: ReceiveListsSearchProps<TData>) {
+  const { t } = useLanguage()
   const navigate = route.useNavigate()
   const search = route.useSearch()
-
   const [referenceno, setMerchantOrderNo] = useState(
     search.referenceno || ''
-  )
-  const [tripartiteOrder, setThirdPartyOrderNo] = useState(
-    search.tripartiteOrder || ''
   )
   const [transId, setTransId] = useState(
     search.transId || ''
   )
   const [status, setStatus] = useState(search.status || '')
+  const [pickupCenter, setPickupCenter] = useState(search.pickupCenter || '')
   const [dateRange, setDateRange] = useState<DateRange>({
     from: search.startTime ? new Date(search.startTime) : undefined,
     to: search.endTime ? new Date(search.endTime) : undefined,
   })
+  const {countryCode} = JSON.parse(localStorage.getItem('_userInfo') || '{}');
+
+  const { data } = useQuery({
+    queryKey: ['product-dict', countryCode],
+    queryFn: () => getProductDict(countryCode)
+  })
+
+  const payinChannel = data?.result?.payinChannel || [];
+
+  const statuses = getStatuses(t)
 
   const handleSearch = () => {
     navigate({
       search: (prev) => ({
         ...prev,
-        page: 1, // 重置到第一页
+        pageNum: 1, // 重置到第一页
         referenceno: referenceno || undefined,
-        tripartiteOrder: tripartiteOrder || undefined,
         transId: transId || undefined,
         status: status || undefined,
+        pickupCenter: pickupCenter || undefined,
         startTime: dateRange.from
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
         endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+        refresh: Date.now()
       }),
     })
   }
 
   const handleReset = () => {
     setMerchantOrderNo('')
-    setThirdPartyOrderNo('')
     setTransId('')
     setStatus('')
+    setPickupCenter('')
     setDateRange({ from: undefined, to: undefined })
 
     navigate({
       search: (prev) => ({
-        page: 1,
+        pageNum: 1,
         pageSize: prev.pageSize,
       }),
     })
@@ -88,7 +100,6 @@ export function ReceiveListsSearch<TData>({
 
   const hasFilters =
     referenceno ||
-    tripartiteOrder ||
     transId ||
     status ||
     dateRange.from ||
@@ -100,27 +111,16 @@ export function ReceiveListsSearch<TData>({
       <div className='max-w-[200px] flex-1 min-w-[120px]'>
         <Input
           id='referenceno'
-          placeholder='商户订单号'
+          placeholder={t('orders.receiveOrders.merchantOrderNo')}
           value={referenceno}
           onChange={(e) => setMerchantOrderNo(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-
-      {/* 三方订单号 */}
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
-        <Input
-          id='tripartiteOrder'
-          placeholder='三方订单号'
-          value={tripartiteOrder}
-          onChange={(e) => setThirdPartyOrderNo(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
       <div className='max-w-[200px] flex-1 min-w-[120px]'>
         <Input
           id='transId'
-          placeholder='平台订单号'
+          placeholder={t('orders.receiveOrders.platformOrderNo')}
           value={transId}
           onChange={(e) => setTransId(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -131,7 +131,7 @@ export function ReceiveListsSearch<TData>({
       <div className='max-w-[120px]'>
         <Select value={status} onValueChange={setStatus}>
           <SelectTrigger id='status'>
-            <SelectValue placeholder='交易状态' />
+            <SelectValue placeholder={t('orders.receiveOrders.status')} />
           </SelectTrigger>
           <SelectContent>
             {statuses.map((item) => (
@@ -145,9 +145,25 @@ export function ReceiveListsSearch<TData>({
           </SelectContent>
         </Select>
       </div>
-
+      {/* 产品 */}
+      <div className='max-w-[120px]'>
+        <Select value={pickupCenter} onValueChange={setPickupCenter}>
+          <SelectTrigger id='pickupCenter'>
+            <SelectValue placeholder={t('common.product')} />
+          </SelectTrigger>
+          <SelectContent>
+            {payinChannel.map((item) => (
+              <SelectItem key={item} value={item}>
+                <div className='flex items-center gap-2'>
+                  {item}
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       {/* 日期范围 */}
-      <div className='max-w-[220px]'>
+      <div className='max-w-[230px]'>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -165,7 +181,7 @@ export function ReceiveListsSearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>选择日期范围</span>
+                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -191,12 +207,12 @@ export function ReceiveListsSearch<TData>({
       <div className='flex gap-2 mt-0.5'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
-          搜索
+          {t('common.search')}
         </Button>
         {hasFilters && (
           <Button onClick={handleReset} variant='outline' size='sm'>
             <X className='mr-2 h-4 w-4' />
-            重置
+            {t('common.reset')}
           </Button>
         )}
       </div>

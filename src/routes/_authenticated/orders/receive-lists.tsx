@@ -7,6 +7,7 @@ const receiveListsSearchSchema = z.object({
   pageSize: z.number().optional().default(10),
   referenceno: z.string().optional(),
   tripartiteOrder: z.string().optional(),
+  pickupCenter: z.string().optional(),
   transId: z.string().optional(),
   status: z.string().optional(),
   startTime: z.string().optional(),
