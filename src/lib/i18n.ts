@@ -194,6 +194,7 @@ export const translations = {
         merchant: '商户',
         createTime: '创建时间',
         thirdPartyOrderNo: '三方订单号',
+        paymentCompany: '三方平台',
         paymentTime: '付款时间',
         transactionSummary: '交易摘要',
         product:'产品'
@@ -221,6 +222,10 @@ export const translations = {
         paymentInfo: '付款信息',
         otherInfo: '其他信息',
       },
+      collectionRate:{
+        pickupCenter:'支付类型',
+        channel:'支付渠道',
+      }
     },
     // 资金管理
     fund: {
@@ -576,7 +581,8 @@ export const translations = {
         thirdPartyOrderNo: 'Third Party Order No',
         paymentTime: 'Payment Time',
         transactionSummary: 'Transaction Summary',
-        product: 'Product'
+        product: 'Product',
+        paymentCompany: 'Payment Company',
       },
       transactionSummary: {
         title: 'Transaction Summary',
@@ -601,6 +607,10 @@ export const translations = {
         paymentInfo: 'Payment Information',
         otherInfo: 'Other Information',
       },
+      collectionRate:{
+        pickupCenter:'Payment Type',
+        channel:'Payment Channel',
+      }
     },
     // Fund Management
     fund: {

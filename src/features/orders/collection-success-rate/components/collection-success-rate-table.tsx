@@ -18,33 +18,32 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { getTasksColumns } from './payment-lists-columns'
-import { ReceiveListsSearch } from './payment-lists-search'
-import { usePaymentListsData } from '../hooks/use-payment-lists-data'
-import { useLanguage } from '@/context/language-provider'
+import { tasksColumns as columns } from './collection-success-rate-columns'
+import { CollectionSuccessRateSearch } from './collection-success-rate-search'
+import { useCollectionRateData } from '../hooks/use-collection-rate-data'
 
-const route = getRouteApi('/_authenticated/orders/payment-lists')
+const route = getRouteApi('/_authenticated/orders/collection-success-rate')
 
 
-export function PaymentListsTable() {
-  const { lang } = useLanguage()
-  const { orders:data, isLoading,totalRecord } = usePaymentListsData()
+export function ReceiveSummaryTable() {
+  
+  const { data, isLoading,totalRecord, summaryData } = useCollectionRateData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const columns = useMemo(() => getTasksColumns(lang), [lang])
 
+  // Synced with URL states (updated to match route search schema defaults)
   const { pagination, onPaginationChange, ensurePageInRange } =
     useTableUrlState({
       search: route.useSearch(),
       navigate: route.useNavigate(),
       pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
     })
-    
-const pageCount = useMemo(() => {
-    const pageSize = pagination.pageSize ?? 10
-    // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
-    return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
-  }, [totalRecord, pagination.pageSize])
+
+  const pageCount = useMemo(() => {
+      const pageSize = pagination.pageSize ?? 10
+      // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
+      return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
+    }, [totalRecord, pagination.pageSize])
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -67,7 +66,7 @@ const pageCount = useMemo(() => {
 
   return (
     <div className='flex flex-1 flex-col gap-4'>
-      <ReceiveListsSearch table={table} />
+      <CollectionSuccessRateSearch table={table} />
       {isLoading ? (
           <div className='overflow-hidden rounded-md border'>
             <div className='space-y-3 p-4'>
@@ -108,27 +107,44 @@ const pageCount = useMemo(() => {
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className={cn(
-                          cell.column.columnDef.meta?.className,
-                          cell.column.columnDef.meta?.tdClassName
-                        )}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
+                <>
+                  {table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && 'selected'}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className={cn(
+                            cell.column.columnDef.meta?.className,
+                            cell.column.columnDef.meta?.tdClassName
+                          )}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                  {/* 合计行 */}
+                  <TableRow className='bg-muted/50 font-semibold'>
+                    <TableCell colSpan={4} className='text-right'>
+                      合计
+                    </TableCell>
+                    <TableCell>
+                      {summaryData.orderTotal}
+                    </TableCell>
+                    <TableCell>
+                      {summaryData.successOrder}
+                    </TableCell>
+                    <TableCell>
+                      {summaryData.successRate}
+                    </TableCell>
                   </TableRow>
-                ))
+                </>
               ) : (
                 <TableRow>
                   <TableCell

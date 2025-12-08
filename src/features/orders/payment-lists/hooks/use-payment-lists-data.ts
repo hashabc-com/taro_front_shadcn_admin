@@ -22,8 +22,8 @@ export function usePaymentListsData() {
 
   const orders = data?.result?.listRecord?.map((item: IPaymentListsType) => ({
     ...item,
-    amount: convertAmount(item.amount || 0),
-    serviceAmount: convertAmount(item.serviceAmount || 0),
+    amount: convertAmount(item.amount || 0,false),
+    serviceAmount: convertAmount(item.serviceAmount || 0,false),
   })) || []
 
   const totalRecord = data?.result?.totalRecord || 0

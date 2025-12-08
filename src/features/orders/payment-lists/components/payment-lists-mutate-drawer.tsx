@@ -9,7 +9,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { type IPaymentListsType, statuses } from '../schema'
+import { type IPaymentListsType,statuses } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 type MutateDrawerProps = {
   open: boolean
@@ -22,16 +23,25 @@ export function MutateDrawer({
   onOpenChange,
   currentRow,
 }: MutateDrawerProps) {
+  const { t } = useLanguage()
   if (!currentRow) return null
 
-  const status = statuses.find((s) => s.value === currentRow.status)
+  const renderStatus = (value: string) => {
+    const statusesItem = statuses[value as unknown as keyof typeof statuses];
+    return (
+      <div className={`flex items-center text-${statusesItem.color}-600`}>
+        <statusesItem.icon className='mr-1.5 h-4 w-4' />
+        <span className='font-medium'>{t(statusesItem.i18n)}</span>
+      </div>
+    )
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className='flex flex-col sm:max-w-[540px]'>
         <SheetHeader className='text-start'>
-          <SheetTitle>订单详情</SheetTitle>
-          <SheetDescription>查看付款订单的详细信息</SheetDescription>
+          <SheetTitle>{t('orders.paymentOrders.orderDetails')}</SheetTitle>
+          <SheetDescription>{t('orders.paymentOrders.viewPaymentOrderDetails')}</SheetDescription>
         </SheetHeader>
 
         <div className='flex-1 space-y-6 overflow-y-auto px-4'>
@@ -39,115 +49,98 @@ export function MutateDrawer({
             {/* 商户信息 */}
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                商户
+                {t('orders.paymentOrders.merchant')}
               </label>
               <div className='flex flex-col gap-1'>
-                <div className='text-base font-medium'>
-                  {currentRow.companyName}
-                </div>
+                {currentRow.companyName}
               </div>
             </div>
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                付款账号
+                {t('orders.paymentOrders.merchantOrderNo')}
               </label>
-              <div className='font-mono text-base'>
-                {currentRow.accountNumber}
-              </div>
-            </div>
-            {/* 商户订单号 */}
-            <div className='space-y-2'>
-              <label className='text-muted-foreground text-sm font-medium'>
-                商户订单号
-              </label>
-              <div className='font-mono text-base'>
+              <div className='flex flex-col gap-1'>
                 {currentRow.transactionReferenceNo}
               </div>
             </div>
-
+            {/* 平台订单号 */}
+            <div className='space-y-2'>
+              <label className='text-muted-foreground text-sm font-medium'>
+                {t('orders.paymentOrders.platformOrderNo')}
+              </label>
+              <div className='flex flex-col gap-1'>
+                {currentRow.transactionid}
+              </div>
+            </div>
+            {/* 三方平台 */}
+            <div className='space-y-2'>
+              <label className='text-muted-foreground text-sm font-medium'>
+                {t('orders.paymentOrders.paymentCompany')}
+              </label>
+              <div className='flex flex-col gap-1'>
+                {currentRow.paymentCompany}
+              </div>
+            </div>
             {/* 产品 */}
             <div className='space-y-2'>
               <label className='text-muted-foreground block text-sm font-medium'>
-                产品
+                 {t('orders.paymentOrders.product')}
               </label>
               <Badge variant='outline' className='w-fit'>
                 {currentRow.pickupCenter}
               </Badge>
             </div>
-
-            {/* 平台订单号 */}
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                平台订单号
+                {t('orders.paymentOrders.receivingAccount')}
               </label>
-              <div className='font-mono text-base'>
-                {currentRow.transactionid}
+              <div className='flex flex-col gap-1'>
+                {currentRow.accountNumber}
               </div>
             </div>
-
-            {/* 三方订单号 */}
-            <div className='space-y-2'>
-              <label className='text-muted-foreground text-sm font-medium'>
-                三方订单号
-              </label>
-              <div className='font-mono text-base'>
-                {currentRow.certificateId}
-              </div>
-            </div>
-
+            
             {/* 金额 */}
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                金额
+                {t('orders.paymentOrders.amount')}
               </label>
               <div className='flex flex-col gap-1'>
-                <div className='text-base font-semibold'>
-                  {currentRow.amount}
-                </div>
+                {currentRow.amount}
               </div>
             </div>
 
             {/* 手续费 */}
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                手续费
+                {t('orders.paymentOrders.serviceFee')}
               </label>
               <div className='flex flex-col gap-1'>
-                <div className='text-base font-semibold'>
-                  {currentRow.serviceAmount}
-                </div>
+                {currentRow.serviceAmount}
               </div>
             </div>
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                创建时间
+                {t('orders.paymentOrders.createTime')}
               </label>
-              <div className='text-base'>{currentRow.createTime}</div>
+              <div className='flex flex-col gap-1'>{currentRow.createTime}</div>
             </div>
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                付款时间
+                {t('orders.paymentOrders.paymentTime')}
               </label>
-              <div className='text-base'>{currentRow.updateTime}</div>
+              <div className='flex flex-col gap-1'>{currentRow.updateTime}</div>
             </div>
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                交易摘要
+                {t('orders.paymentOrders.transactionSummary')}
               </label>
-              <div className='text-base'>{currentRow.address}</div>
+              <div className='flex flex-col gap-1'>{currentRow.address}</div>
             </div>
             {/* 交易状态 */}
-            <div className='space-y-2'>
-              <label className='text-muted-foreground text-sm font-medium'>
-                交易状态
-              </label>
+            <div className='flex flex-col gap-2'>
+              <label className='text-muted-foreground text-sm font-medium'>{t('orders.receiveOrders.status')}</label>
               <div className='flex items-center gap-2'>
-                {status?.icon && (
-                  <status.icon className='text-muted-foreground size-4' />
-                )}
-                <span className='text-base font-medium'>
-                  {status?.label || currentRow.status}
-                </span>
+                {renderStatus(currentRow.status || '')}
               </div>
             </div>
           </div>
@@ -156,7 +149,7 @@ export function MutateDrawer({
         <SheetFooter>
           <SheetClose asChild>
             <Button variant='outline' className='w-full'>
-              关闭
+              {t('common.close')}
             </Button>
           </SheetClose>
         </SheetFooter>

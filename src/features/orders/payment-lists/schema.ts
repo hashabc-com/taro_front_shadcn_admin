@@ -19,7 +19,7 @@ export const paymentListsSchema = z.object({
   transactionid: z.string().optional(),
   updateTime: z.string().optional(),
   accountNumber: z.string().optional(),
-  address: z.string().optional(),
+  address: z.string().optional().nullable(),
 })
 
 export type IPaymentListsType = z.infer<typeof paymentListsSchema>
@@ -43,22 +43,25 @@ export const paymentListsResponseSchema = z.object({
   totalAmountTotalUSD: z.number().nullable(),
 })
 
-export const statuses = [
-  {
+export const statuses = {
+  0:{
     label: '付款成功',
-    value: '0' as const,
     icon: CheckCircle,
+    color: 'green',
+    i18n:'orders.paymentOrders.paymentSuccess'
   },
-  {
+  1:{
     label: '待付款',
-    value: '1' as const,
     icon: Clock,
+    color: 'blue',
+    i18n:'orders.paymentOrders.pendingPayment'
   },
-  {
+  2:{
     label: '付款失败',
-    value: '2' as const,
     icon: XCircle,
+    color: 'red',
+    i18n:'orders.paymentOrders.paymentFailed'
   },
-]
+}
 
 export type PaymentListsResponse = z.infer<typeof paymentListsResponseSchema>

@@ -65,6 +65,14 @@ export const getSidebarData = (language: Language): SidebarData => {
               title: '付款订单明细',
               url: '/orders/payment-lists',
             },
+            {
+              title: '付款汇总',
+              url: '/orders/payment-summary-lists',
+            },
+            {
+              title: '代收成功率',
+              url: '/orders/collection-success-rate',
+            },
           ],
         },
         {

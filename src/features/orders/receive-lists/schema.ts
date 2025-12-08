@@ -28,7 +28,7 @@ export const orderSchema = z.object({
   country: z.string().nullable(),
   amountUSD: z.number().optional(),
   serviceAmountUSD: z.number().optional(),
-  localTime: z.string().optional().nullable(),
+  localTime: z.string().optional().nullable()
 })
 
 export type Order = z.infer<typeof orderSchema>

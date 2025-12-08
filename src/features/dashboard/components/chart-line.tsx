@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CartesianGrid, Line, LineChart, XAxis } from 'recharts'
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 import {
   Card,
   CardContent,
@@ -142,6 +142,11 @@ export default function ChartLineMultiple({chartData}: {chartData?: DayChartData
             tickMargin={8}
             tickFormatter={(value) => value.slice(5)}
             padding={{ left: 10, right: 10 }}
+          />
+          <YAxis
+            hide
+            scale={metric === 'count' ? 'auto' : 'sqrt'}
+            domain={['auto', 'auto']}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
           {

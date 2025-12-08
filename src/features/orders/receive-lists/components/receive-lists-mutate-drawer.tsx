@@ -29,21 +29,21 @@ export function MutateDrawer({
   if (!currentRow) return null
 
   const renderStatus = (value: string) => {
-    if (value === '支付成功') {
+    if (value == '0') {
         return (
           <div className='flex items-center text-green-600'>
             <CheckCircle className='mr-1.5 h-4 w-4' />
             <span className='font-medium'>{t('orders.receiveOrders.paymentSuccess')}</span>
           </div>
         );
-      } else if (value === '待支付') {
+      } else if (value == '1') {
         return (
           <div className='flex items-center text-blue-600'>
             <Clock className='mr-1.5 h-4 w-4' />
             <span className='font-medium'>{t('orders.receiveOrders.pendingPayment')}</span>
           </div>
         );
-      } else if (value === '支付失败') {
+      } else if (value == '2') {
         return (
           <div className='flex items-center text-red-600'>
             <XCircle className='mr-1.5 h-4 w-4' />
@@ -92,10 +92,10 @@ export function MutateDrawer({
               <div className='text-muted-foreground text-sm font-medium mb-0'>{t('orders.receiveOrders.product')}</div>
               <Badge variant='outline' className='w-fit'>{currentRow.pickupCenter}</Badge>
             </div>
-
+            {/* 三方订单号 */}
             <div className='flex flex-col gap-2'>
-              <label className='text-muted-foreground text-sm font-medium'>{t('orders.receiveOrders.merchantOrderNo')}</label>
-              <div className='font-mono text-base'>{currentRow.referenceno}</div>
+              <label className='text-muted-foreground text-sm font-medium'>{t('orders.receiveOrders.thirdPartyOrderNo')}</label>
+              <div className='font-mono text-base'>{currentRow.tripartiteOrder}</div>
             </div>
             {/* 平台订单号 */}
             <div className='flex flex-col gap-2'>

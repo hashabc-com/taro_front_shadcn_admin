@@ -1,6 +1,7 @@
 import http from '@/lib/http'
 import { type IOrderSummarySearch } from '@/routes/_authenticated/orders/receive-summary-lists'
 import { type IPaymentListsSearch } from '@/routes/_authenticated/orders/payment-lists'
+import { type ICollectionRateSearch } from '@/routes/_authenticated/orders/collection-success-rate'
 
 export interface IOrderListParams {
   pageNum: number
@@ -25,3 +26,18 @@ export const getReceiveSummary = (params: IOrderSummarySearch) =>
 // 获取付款订单明细
 export const getPaymentLists = (params: IPaymentListsSearch) => 
   http.get('/admin/disbursement/v1/list', params)
+
+// 获取付款汇总
+export const getPaymentSummary = (params: IOrderSummarySearch) => 
+  http.get('/admin/disbursement/v1/summaryList', params)
+
+// 准备导出收款订单
+export const prepareExportReceive = (params: {startTime?: string, endTime?: string}) =>
+  http.get('/admin/collection/prepareExportData', params)
+
+// 准备导出付款订单
+export const prepareExportPayment = (params: {startTime?: string, endTime?: string}) =>
+  http.get('/admin/disbursement/prepareExportData', params)
+
+// 获取代收成功率数据
+export const getCollectionSuccessRate = (params: ICollectionRateSearch) => http.get('/admin/collection/v1/orderdata', params)

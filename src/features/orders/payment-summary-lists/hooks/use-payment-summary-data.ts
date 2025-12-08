@@ -1,21 +1,21 @@
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { useCountryStore, useMerchantStore } from '@/stores'
-import { getReceiveSummary } from '@/api/order'
+import { getPaymentSummary } from '@/api/order'
 import { useConvertAmount } from '@/hooks/use-convert-amount'
 import { type IOrderSummaryType } from '../schema'
 
-const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
+const route = getRouteApi('/_authenticated/orders/payment-summary-lists')
 
-export function useReceiveSummaryData() {
+export function usePaymentSummaryData() {
   const search = route.useSearch()
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
   const convertAmount = useConvertAmount()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['orders', 'receive-summary', search, selectedCountry?.code, selectedMerchant?.appid],
-    queryFn: () => getReceiveSummary(search),
+    queryKey: ['orders', 'payment-summary', search, selectedCountry?.code, selectedMerchant?.appid],
+    queryFn: () => getPaymentSummary(search),
     enabled: !!selectedCountry,
     placeholderData:(prev) => prev ?? undefined
   })
@@ -38,7 +38,7 @@ export function useReceiveSummaryData() {
   }
 
   return {
-    orders,
+    data: orders,
     totalRecord,
     summaryData,
     isLoading,

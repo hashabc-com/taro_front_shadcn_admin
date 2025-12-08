@@ -50,5 +50,5 @@ export const getPaymentChannels = (type: 'withdraw_channel' | 'pay_channel') =>
 
 
 // 获取产品类型字典
-export const getProductDict = (country: string) =>
-  http.get<IProductDict>(`/customer/user/v1/getChannelTypeList?country=${country}`)
+export const getProductDict = () =>
+  http.get<IProductDict>(`/admin/user/v1/getChannelTypeList`)

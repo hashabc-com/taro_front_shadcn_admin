@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { X } from 'lucide-react'
 import {
@@ -44,7 +44,7 @@ export function CountryMerchantSelector() {
   )
 
   // 当国家变化时，清空商户选择
-  const handleCountryChange = async (countryId: string) => {
+  const handleCountryChange = useCallback(async (countryId: string) => {
     const country = countries.find((c) => c.id.toString() == countryId)
     if (country) {
       try {
@@ -61,7 +61,7 @@ export function CountryMerchantSelector() {
       setSelectedCountry(country)
       setSelectedMerchant(null) // 清空商户选择
     }
-  }
+  },[countries, setRates, setSelectedCountry, setSelectedMerchant])
 
   // 第一次进来默认选中第一个国家
   useEffect(() => {
@@ -69,8 +69,7 @@ export function CountryMerchantSelector() {
       setSelectedCountry(countries[0])
       handleCountryChange(countries[0].id)
     }
-  }, [countries, selectedCountry, setSelectedCountry])
-
+  }, [countries, handleCountryChange, selectedCountry, setSelectedCountry])
 
   const handleMerchantChange = (merchantId: string) => {
     const merchant = merchants.find((m) => m.appid?.toString() === merchantId)
@@ -78,7 +77,7 @@ export function CountryMerchantSelector() {
       setSelectedMerchant(merchant)
     }
   }
-  console.log('countries====>',countries)
+
   return (
     <div className='flex items-center gap-2'>
       {/* 国家选择 */}

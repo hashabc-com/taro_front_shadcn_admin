@@ -40,7 +40,9 @@ import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_a
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedOrdersReceiveSummaryListsRouteImport } from './routes/_authenticated/orders/receive-summary-lists'
 import { Route as AuthenticatedOrdersReceiveListsRouteImport } from './routes/_authenticated/orders/receive-lists'
+import { Route as AuthenticatedOrdersPaymentSummaryListsRouteImport } from './routes/_authenticated/orders/payment-summary-lists'
 import { Route as AuthenticatedOrdersPaymentListsRouteImport } from './routes/_authenticated/orders/payment-lists'
+import { Route as AuthenticatedOrdersCollectionSuccessRateRouteImport } from './routes/_authenticated/orders/collection-success-rate'
 import { Route as AuthenticatedMerchantInfoListsRouteImport } from './routes/_authenticated/merchant/info-lists'
 import { Route as AuthenticatedFundSettlementListsRouteImport } from './routes/_authenticated/fund/settlement-lists'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
@@ -207,10 +209,22 @@ const AuthenticatedOrdersReceiveListsRoute =
     path: '/orders/receive-lists',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedOrdersPaymentSummaryListsRoute =
+  AuthenticatedOrdersPaymentSummaryListsRouteImport.update({
+    id: '/orders/payment-summary-lists',
+    path: '/orders/payment-summary-lists',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedOrdersPaymentListsRoute =
   AuthenticatedOrdersPaymentListsRouteImport.update({
     id: '/orders/payment-lists',
     path: '/orders/payment-lists',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOrdersCollectionSuccessRateRoute =
+  AuthenticatedOrdersCollectionSuccessRateRouteImport.update({
+    id: '/orders/collection-success-rate',
+    path: '/orders/collection-success-rate',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedMerchantInfoListsRoute =
@@ -250,7 +264,9 @@ export interface FileRoutesByFullPath {
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
+  '/orders/collection-success-rate': typeof AuthenticatedOrdersCollectionSuccessRateRoute
   '/orders/payment-lists': typeof AuthenticatedOrdersPaymentListsRoute
+  '/orders/payment-summary-lists': typeof AuthenticatedOrdersPaymentSummaryListsRoute
   '/orders/receive-lists': typeof AuthenticatedOrdersReceiveListsRoute
   '/orders/receive-summary-lists': typeof AuthenticatedOrdersReceiveSummaryListsRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
@@ -283,7 +299,9 @@ export interface FileRoutesByTo {
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
+  '/orders/collection-success-rate': typeof AuthenticatedOrdersCollectionSuccessRateRoute
   '/orders/payment-lists': typeof AuthenticatedOrdersPaymentListsRoute
+  '/orders/payment-summary-lists': typeof AuthenticatedOrdersPaymentSummaryListsRoute
   '/orders/receive-lists': typeof AuthenticatedOrdersReceiveListsRoute
   '/orders/receive-summary-lists': typeof AuthenticatedOrdersReceiveSummaryListsRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
@@ -321,7 +339,9 @@ export interface FileRoutesById {
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/_authenticated/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
+  '/_authenticated/orders/collection-success-rate': typeof AuthenticatedOrdersCollectionSuccessRateRoute
   '/_authenticated/orders/payment-lists': typeof AuthenticatedOrdersPaymentListsRoute
+  '/_authenticated/orders/payment-summary-lists': typeof AuthenticatedOrdersPaymentSummaryListsRoute
   '/_authenticated/orders/receive-lists': typeof AuthenticatedOrdersReceiveListsRoute
   '/_authenticated/orders/receive-summary-lists': typeof AuthenticatedOrdersReceiveSummaryListsRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
@@ -358,7 +378,9 @@ export interface FileRouteTypes {
     | '/errors/$error'
     | '/fund/settlement-lists'
     | '/merchant/info-lists'
+    | '/orders/collection-success-rate'
     | '/orders/payment-lists'
+    | '/orders/payment-summary-lists'
     | '/orders/receive-lists'
     | '/orders/receive-summary-lists'
     | '/settings/account'
@@ -391,7 +413,9 @@ export interface FileRouteTypes {
     | '/errors/$error'
     | '/fund/settlement-lists'
     | '/merchant/info-lists'
+    | '/orders/collection-success-rate'
     | '/orders/payment-lists'
+    | '/orders/payment-summary-lists'
     | '/orders/receive-lists'
     | '/orders/receive-summary-lists'
     | '/settings/account'
@@ -428,7 +452,9 @@ export interface FileRouteTypes {
     | '/_authenticated/errors/$error'
     | '/_authenticated/fund/settlement-lists'
     | '/_authenticated/merchant/info-lists'
+    | '/_authenticated/orders/collection-success-rate'
     | '/_authenticated/orders/payment-lists'
+    | '/_authenticated/orders/payment-summary-lists'
     | '/_authenticated/orders/receive-lists'
     | '/_authenticated/orders/receive-summary-lists'
     | '/_authenticated/settings/account'
@@ -680,11 +706,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrdersReceiveListsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/orders/payment-summary-lists': {
+      id: '/_authenticated/orders/payment-summary-lists'
+      path: '/orders/payment-summary-lists'
+      fullPath: '/orders/payment-summary-lists'
+      preLoaderRoute: typeof AuthenticatedOrdersPaymentSummaryListsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/orders/payment-lists': {
       id: '/_authenticated/orders/payment-lists'
       path: '/orders/payment-lists'
       fullPath: '/orders/payment-lists'
       preLoaderRoute: typeof AuthenticatedOrdersPaymentListsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/orders/collection-success-rate': {
+      id: '/_authenticated/orders/collection-success-rate'
+      path: '/orders/collection-success-rate'
+      fullPath: '/orders/collection-success-rate'
+      preLoaderRoute: typeof AuthenticatedOrdersCollectionSuccessRateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/merchant/info-lists': {
@@ -740,7 +780,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedFundSettlementListsRoute: typeof AuthenticatedFundSettlementListsRoute
   AuthenticatedMerchantInfoListsRoute: typeof AuthenticatedMerchantInfoListsRoute
+  AuthenticatedOrdersCollectionSuccessRateRoute: typeof AuthenticatedOrdersCollectionSuccessRateRoute
   AuthenticatedOrdersPaymentListsRoute: typeof AuthenticatedOrdersPaymentListsRoute
+  AuthenticatedOrdersPaymentSummaryListsRoute: typeof AuthenticatedOrdersPaymentSummaryListsRoute
   AuthenticatedOrdersReceiveListsRoute: typeof AuthenticatedOrdersReceiveListsRoute
   AuthenticatedOrdersReceiveSummaryListsRoute: typeof AuthenticatedOrdersReceiveSummaryListsRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
@@ -756,7 +798,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedFundSettlementListsRoute: AuthenticatedFundSettlementListsRoute,
   AuthenticatedMerchantInfoListsRoute: AuthenticatedMerchantInfoListsRoute,
+  AuthenticatedOrdersCollectionSuccessRateRoute:
+    AuthenticatedOrdersCollectionSuccessRateRoute,
   AuthenticatedOrdersPaymentListsRoute: AuthenticatedOrdersPaymentListsRoute,
+  AuthenticatedOrdersPaymentSummaryListsRoute:
+    AuthenticatedOrdersPaymentSummaryListsRoute,
   AuthenticatedOrdersReceiveListsRoute: AuthenticatedOrdersReceiveListsRoute,
   AuthenticatedOrdersReceiveSummaryListsRoute:
     AuthenticatedOrdersReceiveSummaryListsRoute,

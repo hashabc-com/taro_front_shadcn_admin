@@ -1,94 +1,85 @@
 import { type ColumnDef } from '@tanstack/react-table'
+import { getTranslation, type Language } from '@/lib/i18n'
 import { Badge } from '@/components/ui/badge'
-import { statuses, type IPaymentListsType } from '../schema'
+import { type IPaymentListsType,statuses } from '../schema'
 import { DataTableRowActions } from './data-table-row-actions'
 
-export const tasksColumns: ColumnDef<IPaymentListsType>[] = [
-  {
-    accessorKey: 'companyName',
-    header: '商户',
-    enableSorting: false,
-    enableHiding: false,
-    cell: ({ row }) => (
-      <div className='flex flex-col gap-1'>
-        <span className='font-medium'>{row.getValue('companyName')}</span>
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'transactionReferenceNo',
-    header: '商户订单号',
-    enableSorting: false,
-    cell: ({ row }) => row.getValue('transactionReferenceNo'),
-  },
-  {
-    accessorKey: 'certificateId',
-    header: '三方订单号',
-    enableSorting: false,
-    cell: ({ row }) => row.getValue('certificateId'),
-  },
-{
-    accessorKey: 'pickupCenter',
-    header: '产品',
-    enableSorting: false,
-    cell: ({ row }) => (
-      <Badge variant='outline'>{row.getValue('pickupCenter')}</Badge>
-    ),
-  },
-  
-  {
-    accessorKey: 'amount',
-    header: '金额',
-    enableSorting: false,
-    cell: ({ row }) => (
-      <div className='flex flex-col gap-1'>
-        <span className='font-medium'>{row.getValue('amount')}</span>
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'serviceAmount',
-    header: '手续费',
-    enableSorting: false,
-    cell: ({ row }) => (
-      <div className='flex flex-col gap-1'>
-        <span className='font-medium'>{row.getValue('serviceAmount')}</span>
-      </div>
-    ),
-  },
-{
-    accessorKey: 'updateTime',
-    header: '付款时间',
-    enableSorting: false,
-    cell: ({ row }) => row.getValue('updateTime'),
-  },
-  {
-      accessorKey: 'status',
-      header: '交易状态',
+export const getTasksColumns = (
+  language: Language = 'zh'
+): ColumnDef<IPaymentListsType>[] => {
+  const t = (key: string) => getTranslation(language, key)
+  return [
+    {
+      accessorKey: 'companyName',
+      header: t('orders.paymentOrders.merchant'),
+      enableHiding: false,
+      cell: ({ row }) => row.getValue('companyName')
+    },
+    {
+      accessorKey: 'transactionReferenceNo',
+      header: t('orders.paymentOrders.merchantOrderNo'),
+      cell: ({ row }) => row.getValue('transactionReferenceNo'),
+    },
+    {
+      accessorKey: 'transactionid',
+      header: t('orders.paymentOrders.platformOrderNo'),
+    },
+    // {
+    //   accessorKey: 'certificateId',
+    //   header: t('orders.paymentOrders.thirdPartyOrderNo'),
+    // },
+    {
+      accessorKey: 'paymentCompany',
+      header: t('orders.paymentOrders.paymentCompany'),
+    },
+    {
+      accessorKey: 'pickupCenter',
+      header: t('orders.paymentOrders.product'),
       enableSorting: false,
+      cell: ({ row }) => (
+        <Badge variant='outline'>{row.getValue('pickupCenter')}</Badge>
+      ),
+    },
+    {
+      accessorKey: 'accountNumber',
+      header: t('orders.paymentOrders.receivingAccount'),
+    },
+    {
+      accessorKey: 'amount',
+      header: t('orders.paymentOrders.amount'),
+      cell: ({ row }) => row.getValue('amount'),
+    },
+    {
+      accessorKey: 'serviceAmount',
+      header: t('orders.paymentOrders.serviceFee'),
+      cell: ({ row }) => row.getValue('serviceAmount'),
+    },
+    {
+      accessorKey: 'updateTime',
+      header: t('orders.paymentOrders.paymentTime'),
+      enableSorting: false,
+      cell: ({ row }) => row.getValue('updateTime'),
+    },
+    {
+      accessorKey: 'status',
+      header: t('orders.paymentOrders.status'),
       cell: ({ row }) => {
-        const status = statuses.find(
-          (status) => status.value === row.getValue('status')
-        )
-  
-        if (!status) {
-          return null
-        }
-  
+        const statusesItem = statuses[row.getValue('status') as keyof typeof statuses];
         return (
-          <div className='flex items-center gap-2'>
-            {status.icon && (
-              <status.icon className='text-muted-foreground size-4' />
-            )}
-            <span>{status.label}</span>
-          </div>
+
+          <div className={`flex items-center text-${statusesItem.color}-600`}>
+              <statusesItem.icon className='mr-1.5 h-4 w-4' />
+              <span className='font-medium'>
+                {t(statusesItem.i18n)}
+              </span>
+            </div>
         )
       },
     },
     {
-        id: 'actions',
-        header: '操作',
-        enableSorting: false,
-        cell: ({ row }) => <DataTableRowActions row={row} />,
-    }
-]
+      id: 'actions',
+      header: t('orders.paymentOrders.action'),
+      cell: ({ row }) => <DataTableRowActions row={row} />,
+    },
+  ]
+}

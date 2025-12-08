@@ -3,10 +3,9 @@ import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { zhCN } from 'date-fns/locale'
-import { CalendarIcon, Search, X } from 'lucide-react'
+import { CalendarIcon, Download, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Input } from '@/components/ui/input'
 import {
   Popover,
   PopoverContent,
@@ -20,15 +19,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
-import { getStatuses } from '../schema'
-import {getProductDict} from '@/api/common'
 import { useQuery } from '@tanstack/react-query'
+import { getPaymentChannels,type IPaymentChannel } from '@/api/common'
 import { useLanguage } from '@/context/language-provider'
+import { toast } from 'sonner'
+import { prepareExportPayment } from '@/api/order'
 import { useCountryStore, useMerchantStore } from '@/stores'
 
-const route = getRouteApi('/_authenticated/orders/receive-lists')
+const route = getRouteApi('/_authenticated/orders/payment-summary-lists')
 
-type ReceiveListsSearchProps<TData> = {
+type PaymentListsSearchProps<TData> = {
   table: Table<TData>
 }
 
@@ -37,48 +37,37 @@ type DateRange = {
   to: Date | undefined
 }
 
-export function ReceiveListsSearch<TData>({
+export function PaymentSummarySearch<TData>({
   table,
-}: ReceiveListsSearchProps<TData>) {
-  const { t } = useLanguage()
+}: PaymentListsSearchProps<TData>) {
   const navigate = route.useNavigate()
   const search = route.useSearch()
-
+  
+  const { t } = useLanguage()
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
 
-  const [referenceno, setMerchantOrderNo] = useState(
-    search.referenceno || ''
-  )
-  const [transId, setTransId] = useState(
-    search.transId || ''
-  )
-  const [status, setStatus] = useState(search.status || '')
-  const [pickupCenter, setPickupCenter] = useState(search.pickupCenter || '')
+
+  const [channel, setChannel] = useState(search.channel)
   const [dateRange, setDateRange] = useState<DateRange>({
     from: search.startTime ? new Date(search.startTime) : undefined,
     to: search.endTime ? new Date(search.endTime) : undefined,
   })
 
-  const { data } = useQuery({
-    queryKey: ['product-dict',selectedCountry?.code,selectedMerchant?.appid],
-    queryFn: () => getProductDict(),
-    enabled: !!selectedCountry,
+  const { data: paymentChannels } = useQuery({
+    queryKey: ['common', 'payment-channels',selectedCountry?.code, selectedMerchant?.appid],
+    queryFn: () => getPaymentChannels('withdraw_channel'),
   })
-
-  const payinChannel = data?.result?.payinChannel || [];
-
-  const statuses = getStatuses(t)
-
+  const hasFilters =
+    channel ||
+    dateRange.from ||
+    dateRange.to
   const handleSearch = () => {
     navigate({
       search: (prev) => ({
         ...prev,
         pageNum: 1, // 重置到第一页
-        referenceno: referenceno || undefined,
-        transId: transId || undefined,
-        status: status || undefined,
-        pickupCenter: pickupCenter || undefined,
+        channel: channel || undefined,
         startTime: dateRange.from
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
@@ -89,10 +78,7 @@ export function ReceiveListsSearch<TData>({
   }
 
   const handleReset = () => {
-    setMerchantOrderNo('')
-    setTransId('')
-    setStatus('')
-    setPickupCenter('')
+    setChannel('')
     setDateRange({ from: undefined, to: undefined })
 
     navigate({
@@ -103,70 +89,18 @@ export function ReceiveListsSearch<TData>({
     })
   }
 
-  const hasFilters = pickupCenter ||
-    referenceno ||
-    transId ||
-    status ||
-    dateRange.from ||
-    dateRange.to
+   const handleExport = async () => {
+    const res = await prepareExportPayment({startTime: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd HH:mm:ss') : '', endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd HH:mm:ss') : ''})
+    if (res.code === '200') {
+      toast.success(t('common.exportTaskCreated'))
+    } else {
+      toast.error(res.message || t('common.exportFailed'))
+    }
+  }
 
+  
   return (
     <div className='flex flex-wrap items-center gap-3'>
-      {/* 商户订单号 */}
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
-        <Input
-          id='referenceno'
-          placeholder={t('orders.receiveOrders.merchantOrderNo')}
-          value={referenceno}
-          onChange={(e) => setMerchantOrderNo(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
-        <Input
-          id='transId'
-          placeholder={t('orders.receiveOrders.platformOrderNo')}
-          value={transId}
-          onChange={(e) => setTransId(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-
-      {/* 交易状态 */}
-      <div className='max-w-[120px]'>
-        <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger id='status'>
-            <SelectValue placeholder={t('orders.receiveOrders.status')} />
-          </SelectTrigger>
-          <SelectContent>
-            {statuses.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                <div className='flex items-center gap-2'>
-                  {item.icon && <item.icon className='size-4' />}
-                  {item.label}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      {/* 产品 */}
-      <div className='max-w-[120px]'>
-        <Select value={pickupCenter} onValueChange={setPickupCenter}>
-          <SelectTrigger id='pickupCenter'>
-            <SelectValue placeholder={t('common.product')} />
-          </SelectTrigger>
-          <SelectContent>
-            {payinChannel.map((item) => (
-              <SelectItem key={item} value={item}>
-                <div className='flex items-center gap-2'>
-                  {item}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
       {/* 日期范围 */}
       <div className='max-w-[230px]'>
         <Popover>
@@ -186,7 +120,7 @@ export function ReceiveListsSearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                <span className='text-muted-foreground'>选择日期范围</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -208,18 +142,40 @@ export function ReceiveListsSearch<TData>({
         </Popover>
       </div>
 
+      
+      {/* 交易状态 */}
+      <div className='max-w-[120px]'>
+        <Select value={channel} onValueChange={setChannel}>
+          <SelectTrigger id='channel'>
+            <SelectValue placeholder='全部渠道' />
+          </SelectTrigger>
+          <SelectContent>
+            {/* <SelectItem value='all'>全部渠道</SelectItem> */}
+            {paymentChannels?.result.map((item: IPaymentChannel) => (
+              <SelectItem key={item.itemValue} value={item.itemValue}>
+                {item.itemName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* 操作按钮 */}
       <div className='flex gap-2 mt-0.5'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
-          {t('common.search')}
+          搜索
         </Button>
         {hasFilters && (
           <Button onClick={handleReset} variant='outline' size='sm'>
             <X className='mr-2 h-4 w-4' />
-            {t('common.reset')}
+            重置
           </Button>
         )}
+        <Button onClick={handleExport} variant='outline' size='sm'>
+          <Download className='mr-2 h-4 w-4' />
+          {t('common.export')}
+        </Button>
       </div>
       <DataTableViewOptions table={table} />
     </div>

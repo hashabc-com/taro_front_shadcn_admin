@@ -9,22 +9,17 @@ export const getTasksColumns = (language: Language = 'zh'): ColumnDef<Order>[] =
   const t = (key: string) => getTranslation(language, key)
   
   return [
-{
-    accessorKey: 'createTime',
-    header: t('orders.receiveOrders.createTime')
+  {
+    accessorKey: 'companyName',
+    header: t('orders.receiveOrders.merchant')
   },
   {
-    accessorKey: 'paymentDate',
-    header: t('orders.receiveOrders.collectionTime')
+    accessorKey: 'createTime',
+    header: t('orders.receiveOrders.createTime')
   },
 {
     accessorKey: 'referenceno',
     header: t('orders.receiveOrders.merchantOrderNo')
-  },
-  {
-    accessorKey: 'transId',
-    header: t('orders.receiveOrders.platformOrderNo'),
-    enableHiding: false
   },
   {
     accessorKey: 'pickupCenter',
@@ -32,6 +27,11 @@ export const getTasksColumns = (language: Language = 'zh'): ColumnDef<Order>[] =
     cell: ({ row }) => (
       <Badge variant='outline'>{row.getValue('pickupCenter')}</Badge>
     ),
+  },
+  {
+    accessorKey: 'transId',
+    header: t('orders.receiveOrders.platformOrderNo'),
+    enableHiding: false
   },
   {
     accessorKey: 'amount',
@@ -49,21 +49,21 @@ export const getTasksColumns = (language: Language = 'zh'): ColumnDef<Order>[] =
     cell: ({ row }) => {
       const value = row.getValue('status') as string;
       
-      if (value === '支付成功') {
+      if (value == '0') {
         return (
           <div className='flex items-center text-green-600'>
             <CheckCircle className='mr-1.5 h-4 w-4' />
             <span className='font-medium'>{t('orders.receiveOrders.paymentSuccess')}</span>
           </div>
         );
-      } else if (value === '待支付') {
+      } else if (value == '1') {
         return (
           <div className='flex items-center text-blue-600'>
             <Clock className='mr-1.5 h-4 w-4' />
             <span className='font-medium'>{t('orders.receiveOrders.pendingPayment')}</span>
           </div>
         );
-      } else if (value === '支付失败') {
+      } else if (value == '2') {
         return (
           <div className='flex items-center text-red-600'>
             <XCircle className='mr-1.5 h-4 w-4' />

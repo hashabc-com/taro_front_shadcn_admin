@@ -27,7 +27,7 @@ const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
 
 export function ReceiveSummaryTable() {
   
-  const { orders:data, isLoading,totalRecord } = useReceiveSummaryData()
+  const { orders:data, isLoading,totalRecord, summaryData } = useReceiveSummaryData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -107,27 +107,47 @@ export function ReceiveSummaryTable() {
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className={cn(
-                          cell.column.columnDef.meta?.className,
-                          cell.column.columnDef.meta?.tdClassName
-                        )}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
+                <>
+                  {table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && 'selected'}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className={cn(
+                            cell.column.columnDef.meta?.className,
+                            cell.column.columnDef.meta?.tdClassName
+                          )}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                  {/* 合计行 */}
+                  <TableRow className='bg-muted/50 font-semibold'>
+                    <TableCell colSpan={3} className='text-right'>
+                      合计
+                    </TableCell>
+                    <TableCell>
+                      {summaryData.orderTotal}
+                    </TableCell>
+                    <TableCell>
+                      {summaryData.amountTotal}
+                    </TableCell>
+                    <TableCell>
+                      {summaryData.amountServiceTotal}
+                    </TableCell>
+                    <TableCell>
+                      {summaryData.totalAmountTotal}
+                    </TableCell>
                   </TableRow>
-                ))
+                </>
               ) : (
                 <TableRow>
                   <TableCell

@@ -8,19 +8,22 @@ import { ReceiveListsDialogs } from './components/receive-lists-dialogs'
 import {type Order} from './schema'
 import { useConvertAmount } from '@/hooks/use-convert-amount'
 import { useLanguage } from '@/context/language-provider'
+import { useCountryStore, useMerchantStore } from '@/stores'
 
 const route = getRouteApi('/_authenticated/orders/receive-lists')
 
 export function ReceiveLists() {
   const { t } = useLanguage()
   const search = route.useSearch()
-  
   const convertAmount = useConvertAmount()
 
+  const { selectedCountry } = useCountryStore()
+    const { selectedMerchant } = useMerchantStore()
+
   const { data, isLoading } = useQuery({
-    queryKey: ['orders', 'receive-lists', search],
+    queryKey: ['orders', 'receive-lists', search,selectedCountry?.code,selectedMerchant?.appid],
     queryFn: () => getOrderList(search),
-    // enabled: !!selectedCountry,
+    enabled: !!selectedCountry,
     placeholderData:(prev) => prev ?? undefined
   })
   const orders = data?.result?.listRecord?.map((item: Order) => ({

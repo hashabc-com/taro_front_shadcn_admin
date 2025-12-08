@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { zhCN } from 'date-fns/locale'
-import { CalendarIcon, Search, X } from 'lucide-react'
+import { CalendarIcon,Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
@@ -21,6 +21,40 @@ import {
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
 import { statuses } from '../schema'
+
+// const statuses = {
+//   0:{
+//     label: '付款成功',
+//     icon: CheckCircle,
+//   },
+//   1:{
+//     label: '待付款',
+//     icon: Clock,
+//   },
+//   2:{
+//     label: '付款失败',
+//     icon: XCircle,
+//   },
+// }
+ 
+
+// const statuses = [
+//   {
+//     label: '付款成功',
+//     value: '0' as const,
+//     icon: CheckCircle,
+//   },
+//   {
+//     label: '待付款',
+//     value: '1' as const,
+//     icon: Clock,
+//   },
+//   {
+//     label: '付款失败',
+//     value: '2' as const,
+//     icon: XCircle,
+//   },
+// ]
 
 const route = getRouteApi('/_authenticated/orders/payment-lists')
 
@@ -145,14 +179,16 @@ export function ReceiveListsSearch<TData>({
             <SelectValue placeholder='交易状态' />
           </SelectTrigger>
           <SelectContent>
-            {statuses.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                <div className='flex items-center gap-2'>
-                  {item.icon && <item.icon className='size-4' />}
-                  {item.label}
-                </div>
+            {Object.keys(statuses).map((key) => {
+              const item = statuses[key as unknown as keyof typeof statuses];
+              return (
+                <SelectItem key={key} value={key}>
+                  <div className='flex items-center gap-2'>
+                    {item.icon && <item.icon className='size-4' />}
+                    {item.label}
+                  </div>
               </SelectItem>
-            ))}
+            )})}
           </SelectContent>
         </Select>
       </div>
