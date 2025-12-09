@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCountryStore } from '@/stores/country-store'
 import { useAccountAmount } from '../hooks/use-account-amount'
 import { useExchangeRate } from '../hooks/use-exchange-rate'
@@ -27,7 +27,7 @@ export default function AccountSettlement() {
 
   // 更新汇率表单
   const [rateForm, setRateForm] = useState({
-    ...rateData,
+    name:'',
     gauthCode: '',
   })
 
@@ -35,15 +35,16 @@ export default function AccountSettlement() {
   const [rateDialogOpen, setRateDialogOpen] = useState(false)
 
   // 同步汇率数据
-//   useEffect(() => {
-//     console.log('rateData changed:', rateData)
-//     if (rateData) {
-//       setRateForm(prev => ({
-//         ...prev,
-//         name: rateData.name || '',
-//       }))
-//     }
-//   }, [rateData])
+  useEffect(() => {
+    if (rateData) {
+      setTimeout(() => {
+        setRateForm(prev => ({
+        ...prev,
+        name: rateData.name || '',
+      }))
+      }, 10);
+    }
+  }, [rateData])
 
   // 更新汇率
   const handleUpdateRate = async () => {
@@ -60,10 +61,11 @@ export default function AccountSettlement() {
     const res = await updateExchangeRate({
         name: rateForm.name,
         gauthCode: rateForm.gauthCode,
+        data: rateData?.provinceCode
     })
     if(res.code == 200){
       toast.success('更新费率成功')
-      setRateForm((prev: object) => ({ ...prev, gauthCode: '' }))
+      setRateForm({ name: rateForm.name || rateData.name, gauthCode: '' })
       setRateDialogOpen(false)
       refetchRate()
     }else{
@@ -157,7 +159,7 @@ export default function AccountSettlement() {
                 id="rate"
                 placeholder="请输入费率"
                 value={rateForm.name}
-                onChange={(e) => setRateForm((prev: object) => ({ ...prev, name: e.target.value }))}
+                onChange={(e) => setRateForm({name: e.target.value, gauthCode: rateForm.gauthCode})}
               />
             </div>
 
@@ -167,7 +169,7 @@ export default function AccountSettlement() {
                 id="gauthCode"
                 placeholder="请输入谷歌验证码"
                 value={rateForm.gauthCode}
-                onChange={(e) => setRateForm((prev: object) => ({ ...prev, gauthCode: e.target.value }))}
+                onChange={(e) => setRateForm({name: rateForm.name, gauthCode: e.target.value})}
                 maxLength={6}
               />
             </div>

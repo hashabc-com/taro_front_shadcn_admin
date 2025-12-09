@@ -91,7 +91,7 @@ export const addWithdraw = (data: IWithdrawData) =>
   http.post('/admin/bill/v1/addWithdraw', data)
 
 // 更新汇率
-export const updateExchangeRate = (data: { name: string; gauthCode: string }) => 
+export const updateExchangeRate = (data: { name: string; gauthCode: string, data: string }) => 
   http.post('/admin/bill/v1/setExchangeRate', data)
 
 // 获取汇率
