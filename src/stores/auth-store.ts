@@ -2,11 +2,16 @@ import { create } from 'zustand'
 import { useCountryStore,useMerchantStore } from './index'
 // import { router } from '@/main'
 
+type IUserInfo = {
+  id: number
+  name: string
+}
+
 interface AuthState {
   token: string | null
   isAuthenticated: boolean
-  userInfo: Record<string, unknown> | null
-  login: (token: string,userInfo: Record<string, unknown>) => void
+  userInfo: IUserInfo | null
+  login: (token: string,userInfo: IUserInfo) => void
   logout: () => void
 }
 
@@ -17,7 +22,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   token: initialToken,
   isAuthenticated: Boolean(initialToken),
   userInfo: initialUserInfo,
-  login: (token: string,userInfo: Record<string, unknown>) => {
+  login: (token: string,userInfo: IUserInfo) => {
     localStorage.setItem('_token', token)
     localStorage.setItem('_userInfo', JSON.stringify(userInfo))
     set({ token, isAuthenticated: true,userInfo })

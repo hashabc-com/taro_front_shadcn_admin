@@ -46,6 +46,9 @@ import { Route as AuthenticatedOrdersCollectionSuccessRateRouteImport } from './
 import { Route as AuthenticatedMerchantInfoListsRouteImport } from './routes/_authenticated/merchant/info-lists'
 import { Route as AuthenticatedFundSettlementListsRouteImport } from './routes/_authenticated/fund/settlement-lists'
 import { Route as AuthenticatedFundRechargeWithdrawRouteImport } from './routes/_authenticated/fund/recharge-withdraw'
+import { Route as AuthenticatedFundMerchantDailySummaryRouteImport } from './routes/_authenticated/fund/merchant-daily-summary'
+import { Route as AuthenticatedFundCountryDailySummaryRouteImport } from './routes/_authenticated/fund/country-daily-summary'
+import { Route as AuthenticatedFundAccountSettlementRouteImport } from './routes/_authenticated/fund/account-settlement'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
@@ -246,6 +249,24 @@ const AuthenticatedFundRechargeWithdrawRoute =
     path: '/fund/recharge-withdraw',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedFundMerchantDailySummaryRoute =
+  AuthenticatedFundMerchantDailySummaryRouteImport.update({
+    id: '/fund/merchant-daily-summary',
+    path: '/fund/merchant-daily-summary',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFundCountryDailySummaryRoute =
+  AuthenticatedFundCountryDailySummaryRouteImport.update({
+    id: '/fund/country-daily-summary',
+    path: '/fund/country-daily-summary',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFundAccountSettlementRoute =
+  AuthenticatedFundAccountSettlementRouteImport.update({
+    id: '/fund/account-settlement',
+    path: '/fund/account-settlement',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
@@ -269,6 +290,9 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
+  '/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
+  '/fund/merchant-daily-summary': typeof AuthenticatedFundMerchantDailySummaryRoute
   '/fund/recharge-withdraw': typeof AuthenticatedFundRechargeWithdrawRoute
   '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
@@ -305,6 +329,9 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
+  '/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
+  '/fund/merchant-daily-summary': typeof AuthenticatedFundMerchantDailySummaryRoute
   '/fund/recharge-withdraw': typeof AuthenticatedFundRechargeWithdrawRoute
   '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
@@ -346,6 +373,9 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
+  '/_authenticated/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
+  '/_authenticated/fund/merchant-daily-summary': typeof AuthenticatedFundMerchantDailySummaryRoute
   '/_authenticated/fund/recharge-withdraw': typeof AuthenticatedFundRechargeWithdrawRoute
   '/_authenticated/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/_authenticated/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
@@ -386,6 +416,9 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/fund/account-settlement'
+    | '/fund/country-daily-summary'
+    | '/fund/merchant-daily-summary'
     | '/fund/recharge-withdraw'
     | '/fund/settlement-lists'
     | '/merchant/info-lists'
@@ -422,6 +455,9 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/fund/account-settlement'
+    | '/fund/country-daily-summary'
+    | '/fund/merchant-daily-summary'
     | '/fund/recharge-withdraw'
     | '/fund/settlement-lists'
     | '/merchant/info-lists'
@@ -462,6 +498,9 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/fund/account-settlement'
+    | '/_authenticated/fund/country-daily-summary'
+    | '/_authenticated/fund/merchant-daily-summary'
     | '/_authenticated/fund/recharge-withdraw'
     | '/_authenticated/fund/settlement-lists'
     | '/_authenticated/merchant/info-lists'
@@ -761,6 +800,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFundRechargeWithdrawRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/fund/merchant-daily-summary': {
+      id: '/_authenticated/fund/merchant-daily-summary'
+      path: '/fund/merchant-daily-summary'
+      fullPath: '/fund/merchant-daily-summary'
+      preLoaderRoute: typeof AuthenticatedFundMerchantDailySummaryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fund/country-daily-summary': {
+      id: '/_authenticated/fund/country-daily-summary'
+      path: '/fund/country-daily-summary'
+      fullPath: '/fund/country-daily-summary'
+      preLoaderRoute: typeof AuthenticatedFundCountryDailySummaryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fund/account-settlement': {
+      id: '/_authenticated/fund/account-settlement'
+      path: '/fund/account-settlement'
+      fullPath: '/fund/account-settlement'
+      preLoaderRoute: typeof AuthenticatedFundAccountSettlementRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -798,6 +858,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedFundAccountSettlementRoute: typeof AuthenticatedFundAccountSettlementRoute
+  AuthenticatedFundCountryDailySummaryRoute: typeof AuthenticatedFundCountryDailySummaryRoute
+  AuthenticatedFundMerchantDailySummaryRoute: typeof AuthenticatedFundMerchantDailySummaryRoute
   AuthenticatedFundRechargeWithdrawRoute: typeof AuthenticatedFundRechargeWithdrawRoute
   AuthenticatedFundSettlementListsRoute: typeof AuthenticatedFundSettlementListsRoute
   AuthenticatedMerchantInfoListsRoute: typeof AuthenticatedMerchantInfoListsRoute
@@ -817,6 +880,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedFundAccountSettlementRoute:
+    AuthenticatedFundAccountSettlementRoute,
+  AuthenticatedFundCountryDailySummaryRoute:
+    AuthenticatedFundCountryDailySummaryRoute,
+  AuthenticatedFundMerchantDailySummaryRoute:
+    AuthenticatedFundMerchantDailySummaryRoute,
   AuthenticatedFundRechargeWithdrawRoute:
     AuthenticatedFundRechargeWithdrawRoute,
   AuthenticatedFundSettlementListsRoute: AuthenticatedFundSettlementListsRoute,

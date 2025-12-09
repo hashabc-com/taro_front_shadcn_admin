@@ -1,7 +1,8 @@
 import http from '@/lib/http'
 import { type ISettlementListSearch } from '@/routes/_authenticated/fund/settlement-lists'  
 import { type IRechargeWithdrawSearch } from '@/routes/_authenticated/fund/recharge-withdraw'
-
+import { type ICountryDailySummarySearch } from '@/routes/_authenticated/fund/country-daily-summary'
+import { type IMerchantDailySummarySearch } from '@/routes/_authenticated/fund/merchant-daily-summary'
 
 interface IRechargeWithdrawal {
   merchantId: string
@@ -18,6 +19,31 @@ interface IRechargeWithdrawal {
   remark?: string
 }
 
+interface IRechargeData {
+  currencyType: string
+  customerAppid: string
+  exchangeRate: number
+  finalAmount: number
+  rechargeAmount: number
+  rechargeKey: string
+  remark: string
+  gauthCode: string
+  userid?: number
+  country: string
+}
+
+interface IWithdrawData {
+  customerAppid: string
+  rechargeAmount: number
+  exchangeRate: number
+  currencyType: string
+  userid?: number
+  finalAmount: number | string
+  remark: string
+  rechargeKey: string
+  gauthCode: string
+  country: string
+}
 
 
 // 获取结算记录列表
@@ -43,3 +69,31 @@ export const approveWithdrawal = (data: IRechargeWithdrawal) =>
 // 审批充值申请
 export const approveRecharge = (data: IRechargeWithdrawal) => 
   http.post('/admin/recharge/v1/approveRecharge', data)
+
+// 获取商户每日汇总列表
+export const getMerchantDailySummary = (params: IMerchantDailySummarySearch) => 
+  http.get('/admin/financial/v1/findByPage', params)
+
+// 获取国家每日汇总列表
+export const getCountryDailySummary = (params: ICountryDailySummarySearch) => 
+  http.get('/admin/financial/v1/findCountryByPage', params)
+
+// 获取账户金额信息
+export const getAccountAmount = () => 
+  http.get('/admin/bill/v1/getAmountInformation')
+
+// 添加充值记录
+export const addRechargeRecord = (data: IRechargeData) => 
+  http.post('/admin/bill/v1/addRechargeRecord', data)
+
+// 添加提现记录
+export const addWithdraw = (data: IWithdrawData) => 
+  http.post('/admin/bill/v1/addWithdraw', data)
+
+// 更新汇率
+export const updateExchangeRate = (data: { name: string; gauthCode: string }) => 
+  http.post('/admin/bill/v1/setExchangeRate', data)
+
+// 获取汇率
+export const getExchangeRate = () => 
+  http.get('/admin/home/v1/getExchangeRate')

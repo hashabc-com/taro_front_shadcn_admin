@@ -87,6 +87,18 @@ export const getSidebarData = (language: Language): SidebarData => {
               title: '申请审批',
               url: '/fund/recharge-withdraw',
             },
+            {
+              title: '账户结算',
+              url: '/fund/account-settlement',
+            },
+            {
+              title: '商户每日汇总',
+              url: '/fund/merchant-daily-summary',
+            },
+            {
+              title: '国家每日汇总',
+              url: '/fund/country-daily-summary',
+            },
           ],
         },
         {
