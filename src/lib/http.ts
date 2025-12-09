@@ -202,6 +202,17 @@ class Request {
     params?: any,
     config?: RequestConfig
   ): Promise<ResponseData<T>> {
+    // 如果是 blob 响应类型，直接返回 blob
+    if (config?.responseType === 'blob') {
+      const response = await this.instance.request({
+        method: 'GET',
+        url,
+        params,
+        ...config,
+      })
+      return response.data as any
+    }
+    
     return this.request<T>({
       method: 'GET',
       url,

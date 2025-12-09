@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
 import { statuses, types } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/fund/settlement-lists')
 
@@ -37,6 +38,7 @@ export function SettlementListsSearch<TData>({
 }: SettlementListsSearchProps<TData>) {
   const navigate = route.useNavigate()
   const search = route.useSearch()
+  const { t } = useLanguage()
   const [status, setStatus] = useState(search.status || '')
   const [type, setType] = useState(search.type || '')
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -56,6 +58,7 @@ export function SettlementListsSearch<TData>({
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
         endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+        refresh: Date.now()
       }),
     })
   }
@@ -129,21 +132,24 @@ export function SettlementListsSearch<TData>({
           </SelectContent>
         </Select>
       </div>
-        <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger id='status'>
-            <SelectValue placeholder='交易状态' />
-          </SelectTrigger>
-          <SelectContent>
-            {statuses.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
+      <Select value={status} onValueChange={setStatus}>
+        <SelectTrigger id='status'>
+          <SelectValue placeholder='交易状态' />
+        </SelectTrigger>
+        <SelectContent>
+          {Object.keys(statuses).map((key) => {
+            const item = statuses[key as unknown as keyof typeof statuses]
+            return (
+              <SelectItem key={key} value={key}>
                 <div className='flex items-center gap-2'>
                   {item.icon && <item.icon className='size-4' />}
-                  {item.label}
+                  {t(item.label)}
                 </div>
               </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+            )
+          })}
+        </SelectContent>
+      </Select>
 
       {/* 操作按钮 */}
       <div className='mt-0.5 flex gap-2'>

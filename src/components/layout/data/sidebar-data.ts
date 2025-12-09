@@ -83,6 +83,10 @@ export const getSidebarData = (language: Language): SidebarData => {
               title: '结算记录',
               url: '/fund/settlement-lists',
             },
+            {
+              title: '申请审批',
+              url: '/fund/recharge-withdraw',
+            },
           ],
         },
         {

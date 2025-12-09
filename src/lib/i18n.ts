@@ -307,6 +307,9 @@ export const translations = {
         underReview: '审核中',
         credited: '入账',
         payment: '付款',
+        reviewNotApproved: '审核未通过',
+        reviewApproved: '审核通过',
+        reviewing: '审核中',
       },
     },
     // 密钥管理
@@ -692,6 +695,9 @@ export const translations = {
         underReview: 'Under Review',
         credited: 'Credited',
         payment: 'Payment',
+        reviewNotApproved: 'Review Not Approved',
+        reviewApproved: 'Review Approved',
+        reviewing: 'Reviewing',
       },
     },
     // Secret Management

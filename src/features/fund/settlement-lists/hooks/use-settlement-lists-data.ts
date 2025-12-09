@@ -22,8 +22,8 @@ export function useSettlementListData() {
 
   const dataList = data?.result?.listRecord?.map((item: ISettlementListType) => ({
     ...item,
-    amount: convertAmount(item.amount),
-    serviceAmount: convertAmount(item.serviceAmount),
+    rechargeAmount: convertAmount(item.rechargeAmount,false),
+    finalAmount: convertAmount(item.finalAmount,false)
   })) || []
 
   const totalRecord = data?.result?.totalRecord || 0

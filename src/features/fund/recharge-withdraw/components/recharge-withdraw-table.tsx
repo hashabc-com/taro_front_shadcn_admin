@@ -18,17 +18,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { getTasksColumns } from './settlement-lists-columns'
-import { SettlementListsSearch } from './settlement-lists-search'
-import { useSettlementListData } from '../hooks/use-settlement-lists-data'
+import { getTasksColumns } from './recharge-withdraw-columns'
+import { RechargeWithdrawSearch } from './recharge-withdraw-search'
+import { useRechargeWithdrawData } from '../hooks/use-recharge-withdraw-data'
 import { useLanguage } from '@/context/language-provider'
 
-const route = getRouteApi('/_authenticated/fund/settlement-lists')
+const route = getRouteApi('/_authenticated/fund/recharge-withdraw')
 
 
-export function SettlementListTable() {
+export function RechargeWithdrawTable() {
   const { lang } = useLanguage()
-  const { data, isLoading,totalRecord } = useSettlementListData()
+  const { data, isLoading,totalRecord } = useRechargeWithdrawData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -68,7 +68,7 @@ export function SettlementListTable() {
 
   return (
     <div className='flex flex-1 flex-col gap-4'>
-      <SettlementListsSearch table={table} />
+      <RechargeWithdrawSearch table={table} />
       {isLoading ? (
           <div className='overflow-hidden rounded-md border'>
             <div className='space-y-3 p-4'>

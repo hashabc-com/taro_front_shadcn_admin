@@ -45,6 +45,7 @@ import { Route as AuthenticatedOrdersPaymentListsRouteImport } from './routes/_a
 import { Route as AuthenticatedOrdersCollectionSuccessRateRouteImport } from './routes/_authenticated/orders/collection-success-rate'
 import { Route as AuthenticatedMerchantInfoListsRouteImport } from './routes/_authenticated/merchant/info-lists'
 import { Route as AuthenticatedFundSettlementListsRouteImport } from './routes/_authenticated/fund/settlement-lists'
+import { Route as AuthenticatedFundRechargeWithdrawRouteImport } from './routes/_authenticated/fund/recharge-withdraw'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
@@ -239,6 +240,12 @@ const AuthenticatedFundSettlementListsRoute =
     path: '/fund/settlement-lists',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedFundRechargeWithdrawRoute =
+  AuthenticatedFundRechargeWithdrawRouteImport.update({
+    id: '/fund/recharge-withdraw',
+    path: '/fund/recharge-withdraw',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
@@ -262,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/fund/recharge-withdraw': typeof AuthenticatedFundRechargeWithdrawRoute
   '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
   '/orders/collection-success-rate': typeof AuthenticatedOrdersCollectionSuccessRateRoute
@@ -297,6 +305,7 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/fund/recharge-withdraw': typeof AuthenticatedFundRechargeWithdrawRoute
   '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
   '/orders/collection-success-rate': typeof AuthenticatedOrdersCollectionSuccessRateRoute
@@ -337,6 +346,7 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/fund/recharge-withdraw': typeof AuthenticatedFundRechargeWithdrawRoute
   '/_authenticated/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
   '/_authenticated/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
   '/_authenticated/orders/collection-success-rate': typeof AuthenticatedOrdersCollectionSuccessRateRoute
@@ -376,6 +386,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/fund/recharge-withdraw'
     | '/fund/settlement-lists'
     | '/merchant/info-lists'
     | '/orders/collection-success-rate'
@@ -411,6 +422,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/fund/recharge-withdraw'
     | '/fund/settlement-lists'
     | '/merchant/info-lists'
     | '/orders/collection-success-rate'
@@ -450,6 +462,7 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/fund/recharge-withdraw'
     | '/_authenticated/fund/settlement-lists'
     | '/_authenticated/merchant/info-lists'
     | '/_authenticated/orders/collection-success-rate'
@@ -741,6 +754,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFundSettlementListsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/fund/recharge-withdraw': {
+      id: '/_authenticated/fund/recharge-withdraw'
+      path: '/fund/recharge-withdraw'
+      fullPath: '/fund/recharge-withdraw'
+      preLoaderRoute: typeof AuthenticatedFundRechargeWithdrawRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -778,6 +798,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedFundRechargeWithdrawRoute: typeof AuthenticatedFundRechargeWithdrawRoute
   AuthenticatedFundSettlementListsRoute: typeof AuthenticatedFundSettlementListsRoute
   AuthenticatedMerchantInfoListsRoute: typeof AuthenticatedMerchantInfoListsRoute
   AuthenticatedOrdersCollectionSuccessRateRoute: typeof AuthenticatedOrdersCollectionSuccessRateRoute
@@ -796,6 +817,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedFundRechargeWithdrawRoute:
+    AuthenticatedFundRechargeWithdrawRoute,
   AuthenticatedFundSettlementListsRoute: AuthenticatedFundSettlementListsRoute,
   AuthenticatedMerchantInfoListsRoute: AuthenticatedMerchantInfoListsRoute,
   AuthenticatedOrdersCollectionSuccessRateRoute:

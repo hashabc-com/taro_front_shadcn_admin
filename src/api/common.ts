@@ -52,3 +52,32 @@ export const getPaymentChannels = (type: 'withdraw_channel' | 'pay_channel') =>
 // 获取产品类型字典
 export const getProductDict = () =>
   http.get<IProductDict>(`/admin/user/v1/getChannelTypeList`)
+
+// 获取图片
+export const getImg = async (params: { mediaId: string; type: boolean }): Promise<string> => {
+  try {
+    const blob = await http.get('/admin/pic/getMedia', params, { responseType: 'blob' }) as never
+    return window.URL.createObjectURL(blob)
+  } catch (error) {
+    console.error('Get image failed:', error)
+    return ''
+  }
+}
+
+// 下载图片
+export const downloadImg = async (params: { mediaId: string; type: boolean }, filename: string) => {
+  try {
+    const blob = await http.get('/admin/pic/getMedia', params, { responseType: 'blob' }) as never
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${filename}.jpeg`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('Download failed:', error)
+    throw error
+  }
+}

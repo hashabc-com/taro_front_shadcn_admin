@@ -11,27 +11,47 @@ export const settlementListSchema = z.object({
   amount: z.number(),
   serviceAmount: z.number(),
   totalAmount: z.number(),
+  finalAmount: z.number(),
+  rechargeAmount: z.number(),
 })
 
 export type ISettlementListType = z.infer<typeof settlementListSchema>
 
-export const statuses = [
-  {
-    label: '审核未通过',
-    value: '0' as const,
-    icon: CheckCircle,
-  },
-  {
-    label: '审核通过',
-    value: '1' as const,
-    icon: Clock,
-  },
-  {
-    label: '审核中',
-    value: '2' as const,
+// export const statuses = [
+//   {
+//     label: '审核未通过',
+//     value: '0' as const,
+//     icon: CheckCircle,
+//   },
+//   {
+//     label: '审核通过',
+//     value: '1' as const,
+//     icon: Clock,
+//   },
+//   {
+//     label: '审核中',
+//     value: '2' as const,
+//     icon: XCircle,
+//   },
+// ]
+
+export const statuses = {
+  0:{
     icon: XCircle,
+    color: 'red',
+    label:'fund.settlement.reviewNotApproved'
   },
-]
+  1:{
+    icon: CheckCircle,
+    color: 'green',
+    label:'fund.settlement.reviewApproved'
+  },
+  2:{
+    icon: Clock,
+    color: 'blue',
+    label:'fund.settlement.reviewing'
+  },
+}
 
 export const types = [
   {
