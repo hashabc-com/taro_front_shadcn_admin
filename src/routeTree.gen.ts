@@ -50,6 +50,9 @@ import { Route as AuthenticatedFundMerchantDailySummaryRouteImport } from './rou
 import { Route as AuthenticatedFundCountryDailySummaryRouteImport } from './routes/_authenticated/fund/country-daily-summary'
 import { Route as AuthenticatedFundAccountSettlementRouteImport } from './routes/_authenticated/fund/account-settlement'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedBusinessMonthlySummaryRouteImport } from './routes/_authenticated/business/monthly-summary'
+import { Route as AuthenticatedBusinessMerchantBindRouteImport } from './routes/_authenticated/business/merchant-bind'
+import { Route as AuthenticatedBusinessDailySummaryRouteImport } from './routes/_authenticated/business/daily-summary'
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
   id: '/clerk',
@@ -273,6 +276,24 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBusinessMonthlySummaryRoute =
+  AuthenticatedBusinessMonthlySummaryRouteImport.update({
+    id: '/business/monthly-summary',
+    path: '/business/monthly-summary',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBusinessMerchantBindRoute =
+  AuthenticatedBusinessMerchantBindRouteImport.update({
+    id: '/business/merchant-bind',
+    path: '/business/merchant-bind',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBusinessDailySummaryRoute =
+  AuthenticatedBusinessDailySummaryRouteImport.update({
+    id: '/business/daily-summary',
+    path: '/business/daily-summary',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -289,6 +310,9 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
+  '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
+  '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
+  '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
   '/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
@@ -328,6 +352,9 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
+  '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
+  '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
+  '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
   '/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
@@ -372,6 +399,9 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
+  '/_authenticated/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
+  '/_authenticated/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
   '/_authenticated/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
@@ -415,6 +445,9 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/business/daily-summary'
+    | '/business/merchant-bind'
+    | '/business/monthly-summary'
     | '/errors/$error'
     | '/fund/account-settlement'
     | '/fund/country-daily-summary'
@@ -454,6 +487,9 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/business/daily-summary'
+    | '/business/merchant-bind'
+    | '/business/monthly-summary'
     | '/errors/$error'
     | '/fund/account-settlement'
     | '/fund/country-daily-summary'
@@ -497,6 +533,9 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/'
+    | '/_authenticated/business/daily-summary'
+    | '/_authenticated/business/merchant-bind'
+    | '/_authenticated/business/monthly-summary'
     | '/_authenticated/errors/$error'
     | '/_authenticated/fund/account-settlement'
     | '/_authenticated/fund/country-daily-summary'
@@ -828,6 +867,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/business/monthly-summary': {
+      id: '/_authenticated/business/monthly-summary'
+      path: '/business/monthly-summary'
+      fullPath: '/business/monthly-summary'
+      preLoaderRoute: typeof AuthenticatedBusinessMonthlySummaryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/business/merchant-bind': {
+      id: '/_authenticated/business/merchant-bind'
+      path: '/business/merchant-bind'
+      fullPath: '/business/merchant-bind'
+      preLoaderRoute: typeof AuthenticatedBusinessMerchantBindRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/business/daily-summary': {
+      id: '/_authenticated/business/daily-summary'
+      path: '/business/daily-summary'
+      fullPath: '/business/daily-summary'
+      preLoaderRoute: typeof AuthenticatedBusinessDailySummaryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -857,6 +917,9 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedBusinessDailySummaryRoute: typeof AuthenticatedBusinessDailySummaryRoute
+  AuthenticatedBusinessMerchantBindRoute: typeof AuthenticatedBusinessMerchantBindRoute
+  AuthenticatedBusinessMonthlySummaryRoute: typeof AuthenticatedBusinessMonthlySummaryRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedFundAccountSettlementRoute: typeof AuthenticatedFundAccountSettlementRoute
   AuthenticatedFundCountryDailySummaryRoute: typeof AuthenticatedFundCountryDailySummaryRoute
@@ -879,6 +942,12 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedBusinessDailySummaryRoute:
+    AuthenticatedBusinessDailySummaryRoute,
+  AuthenticatedBusinessMerchantBindRoute:
+    AuthenticatedBusinessMerchantBindRoute,
+  AuthenticatedBusinessMonthlySummaryRoute:
+    AuthenticatedBusinessMonthlySummaryRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedFundAccountSettlementRoute:
     AuthenticatedFundAccountSettlementRoute,

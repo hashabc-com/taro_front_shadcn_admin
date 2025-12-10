@@ -9,6 +9,7 @@ import {
   GalleryVerticalEnd,
   ClipboardList,
   Calculator,
+  Briefcase,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 import { getTranslation, type Language } from '@/lib/i18n'
@@ -108,6 +109,24 @@ export const getSidebarData = (language: Language): SidebarData => {
             {
               title: '商户信息',
               url: '/merchant/info-lists',
+            },
+          ],
+        },
+        {
+          title: '商务管理',
+          icon: Briefcase,
+          items: [
+            {
+              title: '商户绑定列表',
+              url: '/business/merchant-bind',
+            },
+            {
+              title: '商务日汇总',
+              url: '/business/daily-summary',
+            },
+            {
+              title: '商务月汇总',
+              url: '/business/monthly-summary',
             },
           ],
         },
