@@ -10,6 +10,7 @@ import {
   ClipboardList,
   Calculator,
   Briefcase,
+  FileText,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 import { getTranslation, type Language } from '@/lib/i18n'
@@ -127,6 +128,20 @@ export const getSidebarData = (language: Language): SidebarData => {
             {
               title: '商务月汇总',
               url: '/business/monthly-summary',
+            },
+          ],
+        },
+        {
+          title: '日志管理',
+          icon: FileText,
+          items: [
+            {
+              title: '消息记录表',
+              url: '/logs/message-record',
+            },
+            {
+              title: '风控规则记录',
+              url: '/logs/risk-control',
             },
           ],
         },
