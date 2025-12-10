@@ -2,13 +2,32 @@ import { z } from 'zod'
 
 // 商户信息数据结构
 export const merchantInfoSchema = z.object({
+  id: z.number(),
+  account: z.string(),
   companyName: z.string(),
-  paymentCompany: z.string(),
-  dealTime: z.string(),
-  billCount: z.number(),
-  amount: z.number(),
-  serviceAmount: z.number(),
-  totalAmount: z.number(),
+  country: z.string(),
+  appid: z.string(),
+  secretKey: z.string(),
+  status: z.number(), // 0: 启用, 1: 禁用
+  createTime: z.string(),
+  paymentCompany: z.string().optional(),
+  dealTime: z.string().optional(),
+  billCount: z.number().optional(),
+  amount: z.number().optional(),
+  serviceAmount: z.number().optional(),
+  totalAmount: z.number().optional(),
+  freezeType: z.number().optional(),
+  accountFreezeDay: z.number().nullable().optional(),
+  provice: z.string().optional(),
+  zipcode: z.number().nullable().optional(),
+  payoutServiceFee: z.number().nullable().optional(),
+  payoutServiceRate: z.number().nullable().optional(),
+  collectionServiceFee: z.number().nullable().optional(),
+  collectionServiceRate: z.number().nullable().optional(),
+  phoneNumber: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  mobile: z.string().nullable().optional(),
+  bankServiceFree: z.number().nullable().optional(),
 })
 
 export type IMerchantInfoType = z.infer<typeof merchantInfoSchema>

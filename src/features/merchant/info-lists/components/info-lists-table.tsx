@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -19,15 +20,32 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 import { useMerchantInfoData } from '../hooks/use-info-lists-data'
-import { columns } from './info-lists-columns'
+import { getColumns } from './info-lists-columns'
 import { MerchantInfoSearch } from './info-lists-search'
+import { EditMerchantDialog } from './edit-merchant-dialog'
+import { ChangePasswordDialog } from './change-password-dialog'
+import { UnbindKeyDialog, AddIpDialog } from './merchant-dialogs'
+import { RateConfigDialog } from './rate-config-dialog'
+import { updateCustomer, getAutoLoginToken } from '@/api/merchant'
+import { type IMerchantInfoType } from '../schema'
 
 const route = getRouteApi('/_authenticated/merchant/info-lists')
 
+const isProduction = import.meta.env.MODE === 'production'
+
 export function MerchantInfoTable() {
-  const { data, isLoading, totalRecord } = useMerchantInfoData()
+  const { data, isLoading, totalRecord, refetch } = useMerchantInfoData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [currentMerchant, setCurrentMerchant] =
+    useState<IMerchantInfoType | null>(null)
+
+  // Dialog states
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false)
+  const [unbindKeyDialogOpen, setUnbindKeyDialogOpen] = useState(false)
+  const [addIpDialogOpen, setAddIpDialogOpen] = useState(false)
+  const [rateConfigDialogOpen, setRateConfigDialogOpen] = useState(false)
 
   // Synced with URL states
   const { pagination, onPaginationChange, ensurePageInRange } =
@@ -42,7 +60,82 @@ export function MerchantInfoTable() {
     return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
   }, [totalRecord, pagination.pageSize])
 
-  // eslint-disable-next-line react-hooks/incompatible-library
+  // Action handlers
+  const handleEdit = (merchant: IMerchantInfoType) => {
+    setCurrentMerchant(merchant)
+    setEditDialogOpen(true)
+  }
+
+  const handleChangePassword = (merchant: IMerchantInfoType) => {
+    setCurrentMerchant(merchant)
+    setPasswordDialogOpen(true)
+  }
+
+  const handleToggleStatus = async (merchant: IMerchantInfoType) => {
+    const newStatus = merchant.status === 0 ? 1 : 0
+    try {
+      const res = await updateCustomer({
+        ...merchant,
+        status: newStatus,
+      })
+
+      if (res) {
+        toast.success(`${merchant.companyName} 状态更新成功`)
+        refetch()
+      } else {
+        toast.error('状态更新失败')
+      }
+    } catch (_error) {
+      toast.error('状态更新失败')
+    }
+  }
+
+  const handleUnbindKey = (merchant: IMerchantInfoType) => {
+    setCurrentMerchant(merchant)
+    setUnbindKeyDialogOpen(true)
+  }
+
+  const handleBindIp = (merchant: IMerchantInfoType) => {
+    setCurrentMerchant(merchant)
+    setAddIpDialogOpen(true)
+  }
+
+  const handleRateConfig = (merchant: IMerchantInfoType) => {
+    setCurrentMerchant(merchant)
+    setRateConfigDialogOpen(true)
+  }
+
+  const handleAutoLogin = async (merchant: IMerchantInfoType) => {
+    try {
+      const res = await getAutoLoginToken(merchant.appid)
+      const baseUrl = isProduction
+        ? 'https://merchant.taropay.com'
+        : 'https://merchant-test.taropay.com'
+      window.open(`${baseUrl}?token=${res.result}`, '_blank')
+    } catch (_error) {
+      toast.error('获取登录令牌失败')
+    }
+  }
+
+  const handleSuccess = () => {
+    refetch()
+  }
+
+  const columns = useMemo(
+    () =>
+      getColumns({
+        onEdit: handleEdit,
+        onChangePassword: handleChangePassword,
+        onToggleStatus: handleToggleStatus,
+        onUnbindKey: handleUnbindKey,
+        onBindIp: handleBindIp,
+        onRateConfig: handleRateConfig,
+        onAutoLogin: handleAutoLogin,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
   const table = useReactTable({
     data,
     columns,
@@ -131,7 +224,7 @@ export function MerchantInfoTable() {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    No results.
+                    暂无数据
                   </TableCell>
                 </TableRow>
               )}
@@ -141,6 +234,39 @@ export function MerchantInfoTable() {
       )}
 
       <DataTablePagination table={table} className='mt-auto' />
+
+      {/* Dialogs */}
+      <EditMerchantDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        merchant={currentMerchant}
+        isAdd={false}
+        onSuccess={handleSuccess}
+      />
+      <ChangePasswordDialog
+        open={passwordDialogOpen}
+        onOpenChange={setPasswordDialogOpen}
+        merchant={currentMerchant}
+        onSuccess={handleSuccess}
+      />
+      <UnbindKeyDialog
+        open={unbindKeyDialogOpen}
+        onOpenChange={setUnbindKeyDialogOpen}
+        merchant={currentMerchant}
+        onSuccess={handleSuccess}
+      />
+      <AddIpDialog
+        open={addIpDialogOpen}
+        onOpenChange={setAddIpDialogOpen}
+        merchant={currentMerchant}
+        onSuccess={handleSuccess}
+      />
+      <RateConfigDialog
+        open={rateConfigDialogOpen}
+        onOpenChange={setRateConfigDialogOpen}
+        merchant={currentMerchant}
+        onSuccess={handleSuccess}
+      />
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { zhCN } from 'date-fns/locale'
-import { CalendarIcon, Search, X, RotateCw } from 'lucide-react'
+import { CalendarIcon, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -12,7 +12,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
-import { useMerchantInfoData } from '../hooks/use-info-lists-data'
 
 const route = getRouteApi('/_authenticated/merchant/info-lists')
 
@@ -30,7 +29,6 @@ export function MerchantInfoSearch<TData>({
 }: MerchantInfoSearchProps<TData>) {
   const navigate = route.useNavigate()
   const search = route.useSearch()
-  const { refetch } = useMerchantInfoData()
   
   const [dateRange, setDateRange] = useState<DateRange>({
     from: search.startTime ? new Date(search.startTime) : undefined,
@@ -48,6 +46,7 @@ export function MerchantInfoSearch<TData>({
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
         endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+        refresh: Date.now()
       }),
     })
   }
@@ -118,12 +117,9 @@ export function MerchantInfoSearch<TData>({
             重置
           </Button>
         )}
-        <Button onClick={() => refetch()} variant='outline' size='sm'>
-          <RotateCw className='mr-2 h-4 w-4' />
-          刷新
-        </Button>
       </div>
       <DataTableViewOptions table={table} />
     </div>
   )
 }
+

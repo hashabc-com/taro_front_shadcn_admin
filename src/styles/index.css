@@ -36,6 +36,11 @@
       font-size: 16px !important;
     }
   }
+   @media screen and (min-width: 1921px) {
+    html{
+      font-size: 20px;
+    }
+  }
   /* Table row height */
   table tbody tr {
     height: 49px;
