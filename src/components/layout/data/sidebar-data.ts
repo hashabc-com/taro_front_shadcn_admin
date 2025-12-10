@@ -44,10 +44,10 @@ export const getSidebarData = (language: Language): SidebarData => {
   ],
   navGroups: [
     {
-      title: 'General',
+      title: t('sidebar.general'),
       items: [
         {
-          title: '仪表盘',
+          title: t('sidebar.home'),
           url: '/',
           icon: LayoutDashboard,
         },
@@ -148,7 +148,7 @@ export const getSidebarData = (language: Language): SidebarData => {
       ],
     },
     {
-      title: 'Other',
+      title: t('sidebar.other'),
       items: [
         {
           title: t('sidebar.systemSettings'),

@@ -5,24 +5,28 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  useSidebar
 } from '@/components/ui/sidebar'
 // import { AppTitle } from './app-title'
 import { getSidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
-import { TeamSwitcher } from './team-switcher'
 import { useLanguage } from '@/context/language-provider'
+// import { TeamSwitcher } from './team-switcher'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
   const { lang } = useLanguage()
+  const { state } = useSidebar()
   const sidebarData = getSidebarData(lang)
-
-
+  
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
-        <TeamSwitcher teams={sidebarData.teams} />
+        <h2 className="text-2xl font-bold">
+          {state === 'collapsed' ? 'TP' : 'TaroPay'}
+        </h2>
+        {/* <TeamSwitcher teams={sidebarData.teams} /> */}
 
         {/* Replace <TeamSwitch /> with the following <AppTitle />
          /* if you want to use the normal app title instead of TeamSwitch dropdown */}

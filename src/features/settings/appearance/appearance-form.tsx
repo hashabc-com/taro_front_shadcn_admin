@@ -3,10 +3,11 @@ import { useForm } from 'react-hook-form'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { fonts } from '@/config/fonts'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+// import { showSubmittedData } from '@/lib/show-submitted-data'
 import { cn } from '@/lib/utils'
 import { useFont } from '@/context/font-provider'
 import { useTheme } from '@/context/theme-provider'
+import { useLanguage } from '@/context/language-provider'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Form,
@@ -18,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { toast } from 'sonner'
 
 const appearanceFormSchema = z.object({
   theme: z.enum(['light', 'dark']),
@@ -27,6 +29,7 @@ const appearanceFormSchema = z.object({
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>
 
 export function AppearanceForm() {
+  const { t } = useLanguage()
   const { font, setFont } = useFont()
   const { theme, setTheme } = useTheme()
 
@@ -44,8 +47,8 @@ export function AppearanceForm() {
   function onSubmit(data: AppearanceFormValues) {
     if (data.font != font) setFont(data.font)
     if (data.theme != theme) setTheme(data.theme)
-
-    showSubmittedData(data)
+    toast.success(t('settings.appearance.preferencesUpdatedToast'))
+    // showSubmittedData(data)
   }
 
   return (
@@ -56,7 +59,7 @@ export function AppearanceForm() {
           name='font'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Font</FormLabel>
+              <FormLabel>{t('settings.appearance.font')}</FormLabel>
               <div className='relative w-max'>
                 <FormControl>
                   <select
@@ -77,7 +80,7 @@ export function AppearanceForm() {
                 <ChevronDownIcon className='absolute end-3 top-2.5 h-4 w-4 opacity-50' />
               </div>
               <FormDescription className='font-manrope'>
-                Set the font you want to use in the dashboard.
+                {t('settings.appearance.fontDescription')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -88,9 +91,9 @@ export function AppearanceForm() {
           name='theme'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Theme</FormLabel>
+              <FormLabel>{t('settings.appearance.theme')}</FormLabel>
               <FormDescription>
-                Select the theme for the dashboard.
+                {t('settings.appearance.themeDescription')}
               </FormDescription>
               <FormMessage />
               <RadioGroup
@@ -120,7 +123,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      Light
+                      {t('settings.appearance.light')}
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -146,7 +149,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      Dark
+                      {t('settings.appearance.dark')}
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -155,7 +158,7 @@ export function AppearanceForm() {
           )}
         />
 
-        <Button type='submit'>Update preferences</Button>
+        <Button type='submit'>{t('settings.appearance.updatePreferences')}</Button>
       </form>
     </Form>
   )
