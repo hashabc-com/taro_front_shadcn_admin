@@ -42,9 +42,13 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         formData.append('id', role.id.toString());
         return deleteRole(formData)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['roles'] })
-      toast.success('删除成功')
+    onSuccess: (res) => {
+      if(res.code == 200){
+         queryClient.invalidateQueries({ queryKey: ['roles'] })
+         toast.success('删除成功')
+      }else{
+        toast.error(res.message || '删除失败')
+      }
       setDeleteDialogOpen(false)
     },
     onError: (error: unknown) => {

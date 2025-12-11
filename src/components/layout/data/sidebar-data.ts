@@ -167,6 +167,10 @@ export const getSidebarData = (language: Language): SidebarData => {
               title: '角色管理',
               url: '/system/role-manage',
             },
+            {
+              title: '账户管理',
+              url: '/system/account-manage',
+            },
           ],
         },
       ],

@@ -124,9 +124,13 @@ export function RuleEditDialog({
         ? createRuleConfig(payload as never)
         : updateRuleConfig(payload as never)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ruleConfigs'] })
-      toast.success(isAdd ? '创建成功' : '更新成功')
+    onSuccess: (res) => {
+      if(res.code == 200){
+        queryClient.invalidateQueries({ queryKey: ['ruleConfigs'] })
+        toast.success(isAdd ? '创建成功' : '更新成功')
+      }else{
+        toast.error(res.message || '操作失败')
+      }
       handleClose()
     },
     onError: (error: Error) => {

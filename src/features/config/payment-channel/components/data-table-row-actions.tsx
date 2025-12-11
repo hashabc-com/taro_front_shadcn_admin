@@ -31,9 +31,13 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         formData.append('status', String(status));
         return  updateChannelStatus(formData)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
-      toast.success('状态更新成功')
+    onSuccess: (res) => {
+      if(res.code == 200){
+        queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
+        toast.success('状态更新成功')
+      }else{
+        toast.error(res.message || '状态更新失败')
+      }
     },
     onError: (error: unknown) => {
       toast.error((error as Error).message || '操作失败')

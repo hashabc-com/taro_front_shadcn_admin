@@ -35,6 +35,7 @@ import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/c
 import { Route as ClerkauthSignUpRouteImport } from './routes/clerk/(auth)/sign-up'
 import { Route as ClerkauthSignInRouteImport } from './routes/clerk/(auth)/sign-in'
 import { Route as AuthenticatedSystemRoleManageRouteImport } from './routes/_authenticated/system/role-manage'
+import { Route as AuthenticatedSystemAccountManageRouteImport } from './routes/_authenticated/system/account-manage'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -189,6 +190,12 @@ const AuthenticatedSystemRoleManageRoute =
   AuthenticatedSystemRoleManageRouteImport.update({
     id: '/system/role-manage',
     path: '/system/role-manage',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSystemAccountManageRoute =
+  AuthenticatedSystemAccountManageRouteImport.update({
+    id: '/system/account-manage',
+    path: '/system/account-manage',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSettingsNotificationsRoute =
@@ -368,6 +375,7 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/system/account-manage': typeof AuthenticatedSystemAccountManageRoute
   '/system/role-manage': typeof AuthenticatedSystemRoleManageRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
@@ -415,6 +423,7 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/system/account-manage': typeof AuthenticatedSystemAccountManageRoute
   '/system/role-manage': typeof AuthenticatedSystemRoleManageRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
@@ -467,6 +476,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/system/account-manage': typeof AuthenticatedSystemAccountManageRoute
   '/_authenticated/system/role-manage': typeof AuthenticatedSystemRoleManageRoute
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
   '/clerk/(auth)/sign-up': typeof ClerkauthSignUpRoute
@@ -518,6 +528,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/system/account-manage'
     | '/system/role-manage'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
@@ -565,6 +576,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/system/account-manage'
     | '/system/role-manage'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
@@ -616,6 +628,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/system/account-manage'
     | '/_authenticated/system/role-manage'
     | '/clerk/(auth)/sign-in'
     | '/clerk/(auth)/sign-up'
@@ -827,6 +840,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSystemRoleManageRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/system/account-manage': {
+      id: '/_authenticated/system/account-manage'
+      path: '/system/account-manage'
+      fullPath: '/system/account-manage'
+      preLoaderRoute: typeof AuthenticatedSystemAccountManageRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/notifications': {
       id: '/_authenticated/settings/notifications'
       path: '/notifications'
@@ -1036,6 +1056,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOrdersPaymentSummaryListsRoute: typeof AuthenticatedOrdersPaymentSummaryListsRoute
   AuthenticatedOrdersReceiveListsRoute: typeof AuthenticatedOrdersReceiveListsRoute
   AuthenticatedOrdersReceiveSummaryListsRoute: typeof AuthenticatedOrdersReceiveSummaryListsRoute
+  AuthenticatedSystemAccountManageRoute: typeof AuthenticatedSystemAccountManageRoute
   AuthenticatedSystemRoleManageRoute: typeof AuthenticatedSystemRoleManageRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
@@ -1078,6 +1099,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOrdersReceiveListsRoute: AuthenticatedOrdersReceiveListsRoute,
   AuthenticatedOrdersReceiveSummaryListsRoute:
     AuthenticatedOrdersReceiveSummaryListsRoute,
+  AuthenticatedSystemAccountManageRoute: AuthenticatedSystemAccountManageRoute,
   AuthenticatedSystemRoleManageRoute: AuthenticatedSystemRoleManageRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,

@@ -298,9 +298,13 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
       }
       return isAdd ? createRole(payload as never) : updateRole(payload as never)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['roles'] })
-      toast.success(isAdd ? '添加成功' : '更新成功')
+    onSuccess: (res) => {
+      if(res.code == 200){
+        queryClient.invalidateQueries({ queryKey: ['roles'] })
+       toast.success(isAdd ? '添加成功' : '更新成功')
+      }else{
+        toast.error(res.message || '操作失败')
+      }
       handleClose()
     },
     onError: (error: unknown) => {

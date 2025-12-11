@@ -144,9 +144,13 @@ export function ChannelMutateDialog() {
       }
       return addPayChannel(data as never)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
-      toast.success(isEdit ? '更新成功' : '添加成功')
+    onSuccess: (res) => {
+      if(res.code == 200){
+        queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
+        toast.success(isEdit ? '更新成功' : '添加成功')
+      }else{
+        toast.error(res.message || '操作失败')
+      }
       handleClose()
     },
     onError: (error: unknown) => {
@@ -340,9 +344,13 @@ export function GlobalConfigDialog() {
 
   const mutation = useMutation({
     mutationFn: configChannel,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
-      toast.success('配置成功')
+    onSuccess: (res) => {
+      if(res.code == 200){
+        queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
+        toast.success('配置成功')
+      }else{
+        toast.error(res.message || '操作失败')
+      }
       handleClose()
     },
     onError: (error: unknown) => {
@@ -515,9 +523,13 @@ export function ChannelDetailDrawer() {
         formData.append('status', String(status));
         return  updatePaymentShopStatus(formData)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['payment-shops'] })
-      toast.success('状态更新成功')
+    onSuccess: (res) => {
+      if(res.code == 200){
+        queryClient.invalidateQueries({ queryKey: ['payment-shops'] })
+        toast.success('状态更新成功')
+      }else{
+        toast.error(res.message || '状态更新失败')
+      }
     },
     onError: (error: unknown) => {
       toast.error((error as Error).message || '操作失败')
