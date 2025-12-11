@@ -34,6 +34,7 @@ import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authentica
 import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/clerk/_authenticated/user-management'
 import { Route as ClerkauthSignUpRouteImport } from './routes/clerk/(auth)/sign-up'
 import { Route as ClerkauthSignInRouteImport } from './routes/clerk/(auth)/sign-in'
+import { Route as AuthenticatedSystemRoleManageRouteImport } from './routes/_authenticated/system/role-manage'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -52,6 +53,8 @@ import { Route as AuthenticatedFundMerchantDailySummaryRouteImport } from './rou
 import { Route as AuthenticatedFundCountryDailySummaryRouteImport } from './routes/_authenticated/fund/country-daily-summary'
 import { Route as AuthenticatedFundAccountSettlementRouteImport } from './routes/_authenticated/fund/account-settlement'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedConfigRiskControlRuleRouteImport } from './routes/_authenticated/config/risk-control-rule'
+import { Route as AuthenticatedConfigPaymentChannelRouteImport } from './routes/_authenticated/config/payment-channel'
 import { Route as AuthenticatedBusinessMonthlySummaryRouteImport } from './routes/_authenticated/business/monthly-summary'
 import { Route as AuthenticatedBusinessMerchantBindRouteImport } from './routes/_authenticated/business/merchant-bind'
 import { Route as AuthenticatedBusinessDailySummaryRouteImport } from './routes/_authenticated/business/daily-summary'
@@ -182,6 +185,12 @@ const ClerkauthSignInRoute = ClerkauthSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => ClerkauthRouteRoute,
 } as any)
+const AuthenticatedSystemRoleManageRoute =
+  AuthenticatedSystemRoleManageRouteImport.update({
+    id: '/system/role-manage',
+    path: '/system/role-manage',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsNotificationsRoute =
   AuthenticatedSettingsNotificationsRouteImport.update({
     id: '/notifications',
@@ -290,6 +299,18 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedConfigRiskControlRuleRoute =
+  AuthenticatedConfigRiskControlRuleRouteImport.update({
+    id: '/config/risk-control-rule',
+    path: '/config/risk-control-rule',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedConfigPaymentChannelRoute =
+  AuthenticatedConfigPaymentChannelRouteImport.update({
+    id: '/config/payment-channel',
+    path: '/config/payment-channel',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBusinessMonthlySummaryRoute =
   AuthenticatedBusinessMonthlySummaryRouteImport.update({
     id: '/business/monthly-summary',
@@ -327,6 +348,8 @@ export interface FileRoutesByFullPath {
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
+  '/config/payment-channel': typeof AuthenticatedConfigPaymentChannelRoute
+  '/config/risk-control-rule': typeof AuthenticatedConfigRiskControlRuleRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
   '/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
@@ -345,6 +368,7 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/system/role-manage': typeof AuthenticatedSystemRoleManageRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
@@ -371,6 +395,8 @@ export interface FileRoutesByTo {
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
+  '/config/payment-channel': typeof AuthenticatedConfigPaymentChannelRoute
+  '/config/risk-control-rule': typeof AuthenticatedConfigRiskControlRuleRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
   '/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
@@ -389,6 +415,7 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/system/role-manage': typeof AuthenticatedSystemRoleManageRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
@@ -420,6 +447,8 @@ export interface FileRoutesById {
   '/_authenticated/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/_authenticated/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/_authenticated/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
+  '/_authenticated/config/payment-channel': typeof AuthenticatedConfigPaymentChannelRoute
+  '/_authenticated/config/risk-control-rule': typeof AuthenticatedConfigRiskControlRuleRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
   '/_authenticated/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
@@ -438,6 +467,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/system/role-manage': typeof AuthenticatedSystemRoleManageRoute
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
   '/clerk/(auth)/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
@@ -468,6 +498,8 @@ export interface FileRouteTypes {
     | '/business/daily-summary'
     | '/business/merchant-bind'
     | '/business/monthly-summary'
+    | '/config/payment-channel'
+    | '/config/risk-control-rule'
     | '/errors/$error'
     | '/fund/account-settlement'
     | '/fund/country-daily-summary'
@@ -486,6 +518,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/system/role-manage'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
@@ -512,6 +545,8 @@ export interface FileRouteTypes {
     | '/business/daily-summary'
     | '/business/merchant-bind'
     | '/business/monthly-summary'
+    | '/config/payment-channel'
+    | '/config/risk-control-rule'
     | '/errors/$error'
     | '/fund/account-settlement'
     | '/fund/country-daily-summary'
@@ -530,6 +565,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/system/role-manage'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
@@ -560,6 +596,8 @@ export interface FileRouteTypes {
     | '/_authenticated/business/daily-summary'
     | '/_authenticated/business/merchant-bind'
     | '/_authenticated/business/monthly-summary'
+    | '/_authenticated/config/payment-channel'
+    | '/_authenticated/config/risk-control-rule'
     | '/_authenticated/errors/$error'
     | '/_authenticated/fund/account-settlement'
     | '/_authenticated/fund/country-daily-summary'
@@ -578,6 +616,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/system/role-manage'
     | '/clerk/(auth)/sign-in'
     | '/clerk/(auth)/sign-up'
     | '/clerk/_authenticated/user-management'
@@ -781,6 +820,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClerkauthSignInRouteImport
       parentRoute: typeof ClerkauthRouteRoute
     }
+    '/_authenticated/system/role-manage': {
+      id: '/_authenticated/system/role-manage'
+      path: '/system/role-manage'
+      fullPath: '/system/role-manage'
+      preLoaderRoute: typeof AuthenticatedSystemRoleManageRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/notifications': {
       id: '/_authenticated/settings/notifications'
       path: '/notifications'
@@ -907,6 +953,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/config/risk-control-rule': {
+      id: '/_authenticated/config/risk-control-rule'
+      path: '/config/risk-control-rule'
+      fullPath: '/config/risk-control-rule'
+      preLoaderRoute: typeof AuthenticatedConfigRiskControlRuleRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/config/payment-channel': {
+      id: '/_authenticated/config/payment-channel'
+      path: '/config/payment-channel'
+      fullPath: '/config/payment-channel'
+      preLoaderRoute: typeof AuthenticatedConfigPaymentChannelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/business/monthly-summary': {
       id: '/_authenticated/business/monthly-summary'
       path: '/business/monthly-summary'
@@ -960,6 +1020,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBusinessDailySummaryRoute: typeof AuthenticatedBusinessDailySummaryRoute
   AuthenticatedBusinessMerchantBindRoute: typeof AuthenticatedBusinessMerchantBindRoute
   AuthenticatedBusinessMonthlySummaryRoute: typeof AuthenticatedBusinessMonthlySummaryRoute
+  AuthenticatedConfigPaymentChannelRoute: typeof AuthenticatedConfigPaymentChannelRoute
+  AuthenticatedConfigRiskControlRuleRoute: typeof AuthenticatedConfigRiskControlRuleRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedFundAccountSettlementRoute: typeof AuthenticatedFundAccountSettlementRoute
   AuthenticatedFundCountryDailySummaryRoute: typeof AuthenticatedFundCountryDailySummaryRoute
@@ -974,6 +1036,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOrdersPaymentSummaryListsRoute: typeof AuthenticatedOrdersPaymentSummaryListsRoute
   AuthenticatedOrdersReceiveListsRoute: typeof AuthenticatedOrdersReceiveListsRoute
   AuthenticatedOrdersReceiveSummaryListsRoute: typeof AuthenticatedOrdersReceiveSummaryListsRoute
+  AuthenticatedSystemRoleManageRoute: typeof AuthenticatedSystemRoleManageRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
@@ -990,6 +1053,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedBusinessMerchantBindRoute,
   AuthenticatedBusinessMonthlySummaryRoute:
     AuthenticatedBusinessMonthlySummaryRoute,
+  AuthenticatedConfigPaymentChannelRoute:
+    AuthenticatedConfigPaymentChannelRoute,
+  AuthenticatedConfigRiskControlRuleRoute:
+    AuthenticatedConfigRiskControlRuleRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedFundAccountSettlementRoute:
     AuthenticatedFundAccountSettlementRoute,
@@ -1011,6 +1078,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOrdersReceiveListsRoute: AuthenticatedOrdersReceiveListsRoute,
   AuthenticatedOrdersReceiveSummaryListsRoute:
     AuthenticatedOrdersReceiveSummaryListsRoute,
+  AuthenticatedSystemRoleManageRoute: AuthenticatedSystemRoleManageRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,

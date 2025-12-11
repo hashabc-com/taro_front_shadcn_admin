@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { useCountryStore,useMerchantStore } from './index'
-// import { router } from '@/main'
+import { router } from '@/main'
 
 type IUserInfo = {
   id: number
@@ -28,6 +28,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ token, isAuthenticated: true,userInfo })
   },
   logout: () => {
+    const redirect = `${router.history.location.href}`;
+    if(redirect.startsWith('/sign-in')) return;
     // 清除当前 store 状态
     localStorage.removeItem('_token')
     localStorage.removeItem('_userInfo')
@@ -38,6 +40,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     useMerchantStore.getState().clearSelectedMerchant()
 
     // 跳转到登录页
-    // router.navigate({ to: '/login' })
+    router.navigate({ to: '/sign-in', search: { redirect } })
   },
 }))

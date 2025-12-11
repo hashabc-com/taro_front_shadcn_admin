@@ -118,7 +118,7 @@ export const getSidebarData = (language: Language): SidebarData => {
           icon: Briefcase,
           items: [
             {
-              title: '商户绑定列表',
+              title: '商务绑定列表',
               url: '/business/merchant-bind',
             },
             {
@@ -128,6 +128,20 @@ export const getSidebarData = (language: Language): SidebarData => {
             {
               title: '商务月汇总',
               url: '/business/monthly-summary',
+            },
+          ],
+        },
+        {
+          title: '配置管理',
+          icon: Settings,
+          items: [
+            {
+              title: '支付渠道配置',
+              url: '/config/payment-channel',
+            },
+            {
+              title: '风控规则配置',
+              url: '/config/risk-control-rule',
             },
           ],
         },
@@ -142,6 +156,16 @@ export const getSidebarData = (language: Language): SidebarData => {
             {
               title: '风控规则记录',
               url: '/logs/risk-control',
+            },
+          ],
+        },
+        {
+          title: '系统管理',
+          icon: Settings,
+          items: [
+            {
+              title: '角色管理',
+              url: '/system/role-manage',
             },
           ],
         },
