@@ -210,7 +210,7 @@ class Request {
         params,
         ...config,
       })
-      return response.data as any
+      return response.data as unknown as ResponseData<T>
     }
     
     return this.request<T>({

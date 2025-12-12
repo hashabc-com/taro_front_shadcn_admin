@@ -11,6 +11,7 @@ import {
   Calculator,
   Briefcase,
   FileText,
+  Download,
 } from 'lucide-react'
 import { getTranslation, type Language } from '@/lib/i18n'
 import { type SidebarData, type NavItem } from '../types'
@@ -179,6 +180,11 @@ export const getSidebarData = (language: Language): SidebarData => {
               url: '/system/account-manage',
             },
           ],
+        },
+        {
+          title: t('sidebar.exportManagement'),
+          url: '/export-management',
+          icon: Download,
         },
       ],
     },

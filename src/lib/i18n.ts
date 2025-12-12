@@ -558,6 +558,28 @@ export const translations = {
         normal: '正常',
         disabled: '禁用',
       },
+      exportManagement: {
+        title: '导出管理',
+      },
+    },
+    // 导出管理
+    export: {
+      fileName: '文件名',
+      exportType: '导出类型',
+      createTime: '导出时间',
+      type: {
+        payment: '收款记录',
+        lending: '付款记录',
+        summary: '交易汇总',
+      },
+      status: {
+        generating: '生成中',
+        downloadable: '可下载',
+        failed: '生成失败',
+      },
+      downloadWarning: '文件尚未生成完成，无法下载',
+      downloadSuccess: '下载成功',
+      downloadError: '下载失败，请重试',
     },
     // 密码管理
     password: {
@@ -577,23 +599,6 @@ export const translations = {
       payPasswordUpdateSuccess: '支付密码修改成功',
       updateFailed: '密码修改失败',
       userNotFound: '用户信息未找到',
-    },
-    // 导出管理
-    exportManagement: {
-      title: '导出管理',
-      id: 'ID',
-      fileName: '文件名',
-      exportType: '导出类型',
-      status: '状态',
-      exportTime: '导出时间',
-      action: '操作',
-      download: '下载',
-      generating: '生成中',
-      downloadable: '可下载',
-      generationFailed: '生成失败',
-      receiveRecords: '收款记录',
-      paymentRecords: '付款记录',
-      transactionSummary: '交易汇总',
     },
     // 设置
     settings: {
@@ -1175,6 +1180,28 @@ export const translations = {
         normal: 'Normal',
         disabled: 'Disabled',
       },
+      exportManagement: {
+        title: 'Export Management',
+      },
+    },
+    // Export Management
+    export: {
+      fileName: 'File Name',
+      exportType: 'Export Type',
+      createTime: 'Export Time',
+      type: {
+        payment: 'Receive Records',
+        lending: 'Payment Records',
+        summary: 'Transaction Summary',
+      },
+      status: {
+        generating: 'Generating',
+        downloadable: 'Downloadable',
+        failed: 'Failed',
+      },
+      downloadWarning: 'File is not ready for download',
+      downloadSuccess: 'Download successful',
+      downloadError: 'Download failed, please try again',
     },
     // Password Management
     password: {
@@ -1194,23 +1221,6 @@ export const translations = {
       payPasswordUpdateSuccess: 'Payment password updated successfully',
       updateFailed: 'Password update failed',
       userNotFound: 'User information not found',
-    },
-    // Export Management
-    exportManagement: {
-      title: 'Export Management',
-      id: 'ID',
-      fileName: 'File Name',
-      exportType: 'Export Type',
-      status: 'Status',
-      exportTime: 'Export Time',
-      action: 'Action',
-      download: 'Download',
-      generating: 'Generating',
-      downloadable: 'Downloadable',
-      generationFailed: 'Generation Failed',
-      receiveRecords: 'Receive Records',
-      paymentRecords: 'Payment Records',
-      transactionSummary: 'Transaction Summary',
     },
     // Settings
     settings: {
