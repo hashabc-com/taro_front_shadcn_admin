@@ -12,6 +12,7 @@ import {
   Briefcase,
   FileText,
   Download,
+  MonitorCog
 } from 'lucide-react'
 import { getTranslation, type Language } from '@/lib/i18n'
 import { type SidebarData, type NavItem } from '../types'
@@ -169,7 +170,7 @@ export const getSidebarData = (language: Language): SidebarData => {
         },
         {
           title: t('sidebar.systemManagement'),
-          icon: Settings,
+          icon: MonitorCog,
           items: [
             {
               title: t('sidebar.roleManage'),

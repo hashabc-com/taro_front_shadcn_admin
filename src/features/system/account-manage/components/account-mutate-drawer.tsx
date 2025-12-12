@@ -28,6 +28,7 @@ import { toast } from 'sonner'
 import { type IAccountType, userTypes } from '../schema'
 import { createAccount, updateAccount, getAccountById } from '@/api/account'
 import { getAllRoles } from '@/api/role'
+import { useLanguage } from '@/context/language-provider'
 
 // 表单验证Schema
 const accountFormSchema = z.object({
@@ -56,7 +57,7 @@ export function AccountMutateDrawer({
   isAdd,
 }: AccountMutateDrawerProps) {
   const queryClient = useQueryClient()
-
+  const {t} = useLanguage()
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(
       isAdd
@@ -126,7 +127,7 @@ export function AccountMutateDrawer({
     onSuccess: (res) => {
       if(res.code == 200){
         queryClient.invalidateQueries({ queryKey: ['system','account-manage'] })
-        toast.success(isAdd ? '添加成功' : '更新成功')
+        toast.success(isAdd ? t('common.addSuccess') : t('common.updateSuccess'))
         handleClose()
       }else{
         toast.error(res.message || '操作失败')
@@ -150,7 +151,7 @@ export function AccountMutateDrawer({
     <Sheet open={open} onOpenChange={handleClose}>
       <SheetContent className='flex flex-col sm:max-w-[540px] overflow-y-auto'>
         <SheetHeader className='text-start'>
-          <SheetTitle>{isAdd ? '添加管理员' : '编辑管理员'}</SheetTitle>
+          <SheetTitle>{isAdd ? t('system.accountManage.addAdministrator') : t('system.accountManage.editAdministrator')}</SheetTitle>
           <SheetDescription>
             {isAdd ? '创建新的管理员账户' : '修改管理员账户信息'}
           </SheetDescription>

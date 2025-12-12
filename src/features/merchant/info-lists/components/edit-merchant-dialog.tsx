@@ -128,7 +128,7 @@ export function EditMerchantDialog({
     const res = await api(params)
 
     if (res.code == 200) {
-      toast.success(isAdd ? '添加成功' : '更新成功')
+      toast.success(isAdd ? t('common.addSuccess') : t('common.updateSuccess'))
       onOpenChange(false)
       onSuccess()
     } else {
@@ -141,7 +141,7 @@ export function EditMerchantDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-[500px]'>
         <DialogHeader>
-          <DialogTitle>{isAdd ? '添加商户' : '编辑商户'}</DialogTitle>
+          <DialogTitle>{isAdd ? t('common.add') + t('merchant.merchant') : t('common.edit') + t('merchant.merchant')}</DialogTitle>
           <DialogDescription>
             {isAdd ? '填写商户信息以创建新商户' : '修改商户信息'}
           </DialogDescription>
@@ -287,7 +287,7 @@ export function EditMerchantDialog({
                 {isSubmitting && (
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 )}
-                {isAdd ? '添加' : '保存'}
+                {isAdd ? t('common.add') : t('common.save')}
               </Button>
             </DialogFooter>
           </form>

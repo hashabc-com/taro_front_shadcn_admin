@@ -18,19 +18,20 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { tasksColumns as columns } from './payment-summary-columns'
+import { getTasksColumns } from './payment-summary-columns'
 import { PaymentSummarySearch } from './payment-summary-search'
 import { usePaymentSummaryData } from '../hooks/use-payment-summary-data'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/orders/payment-summary-lists')
 
 
 export function PaymentSummaryTable() {
-  
+  const { lang } = useLanguage()
   const { data, isLoading,totalRecord, summaryData } = usePaymentSummaryData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-
+  
   // Synced with URL states (updated to match route search schema defaults)
   const { pagination, onPaginationChange, ensurePageInRange } =
     useTableUrlState({
@@ -44,6 +45,8 @@ export function PaymentSummaryTable() {
       // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
       return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
     }, [totalRecord, pagination.pageSize])
+
+  const columns = useMemo(() => getTasksColumns(), [lang])
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({

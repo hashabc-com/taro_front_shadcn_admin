@@ -29,6 +29,7 @@ import { createRole, updateRole, getResourceList } from '@/api/role'
 import { format } from 'date-fns'
 import { ChevronRight, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 
 // 表单验证Schema
 const roleFormSchema = z.object({
@@ -176,7 +177,7 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
   const queryClient = useQueryClient()
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
   const [selectedIds, setSelectedIds] = useState<number[]>([])
-
+  const { t } = useLanguage()
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleFormSchema),
     defaultValues: {
@@ -301,7 +302,7 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
     onSuccess: (res) => {
       if(res.code == 200){
         queryClient.invalidateQueries({ queryKey: ['roles'] })
-       toast.success(isAdd ? '添加成功' : '更新成功')
+       toast.success(isAdd ? t('common.addSuccess') : t('common.updateSuccess'))
       }else{
         toast.error(res.message || '操作失败')
       }
@@ -391,7 +392,7 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
     <Sheet open={open} onOpenChange={handleClose}>
       <SheetContent className='sm:max-w-[600px] overflow-y-auto'>
         <SheetHeader>
-          <SheetTitle>{isAdd ? '添加角色' : '编辑角色'}</SheetTitle>
+          <SheetTitle>{isAdd ? t('system.roleManage.addRole') : t('system.roleManage.editRole')}</SheetTitle>
           <SheetDescription>
             {isAdd ? '创建新的角色并分配权限' : '修改角色信息和权限'}
           </SheetDescription>
