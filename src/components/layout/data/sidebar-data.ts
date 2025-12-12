@@ -12,37 +12,44 @@ import {
   Briefcase,
   FileText,
 } from 'lucide-react'
-import { type SidebarData } from '../types'
 import { getTranslation, type Language } from '@/lib/i18n'
+import { type SidebarData, type NavItem } from '../types'
 
+// 过滤菜单项，根据权限
+const filterMenuItems = (
+  items: NavItem[],
+  hasPermission: (url: string) => boolean
+): NavItem[] => {
+  return items
+    .map((item) => {
+      // 如果有子菜单，递归过滤
+      if (item.items && item.items.length > 0) {
+        const filteredSubItems = filterMenuItems(
+          item.items as NavItem[],
+          hasPermission
+        )
+        // 只有当有可见的子菜单时才保留父菜单
+        if (filteredSubItems.length > 0) {
+          return { ...item, items: filteredSubItems }
+        }
+        return null
+      }
+
+      // 如果有URL，检查权限
+      if (item.url) {
+        return hasPermission(item.url) ? item : null
+      }
+
+      // 没有URL的项目（如系统设置）保留
+      return item
+    })
+    .filter((item): item is NavItem => item !== null)
+}
 export const getSidebarData = (language: Language): SidebarData => {
   const t = (key: string) => getTranslation(language, key)
+  const { hasPermission } = useAuthStore.getState()
 
-  return {
-  user: {
-    name: 'satnaing',
-    email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
-  teams: [
-    {
-      name:
-        (useAuthStore.getState().userInfo?.name as string) || 'Default Team',
-      logo: Command,
-      plan: '',
-    },
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
-    },
-  ],
-  navGroups: [
+  const allNavGroups = [
     {
       title: t('sidebar.general'),
       items: [
@@ -52,151 +59,187 @@ export const getSidebarData = (language: Language): SidebarData => {
           icon: LayoutDashboard,
         },
         {
-          title: '订单管理',
+          title: t('sidebar.orderManagement'),
           icon: ClipboardList,
           items: [
             {
-              title: '收款订单明细',
+              title: t('sidebar.receiveOrders'),
               url: '/orders/receive-lists',
             },
             {
-              title: '收款汇总',
+              title: t('sidebar.receiveSummary'),
               url: '/orders/receive-summary-lists',
             },
             {
-              title: '付款订单明细',
+              title: t('sidebar.paymentOrders'),
               url: '/orders/payment-lists',
             },
             {
-              title: '付款汇总',
+              title: t('sidebar.paymentSummary'),
               url: '/orders/payment-summary-lists',
             },
             {
-              title: '代收成功率',
+              title: t('sidebar.collectionSuccessRate'),
               url: '/orders/collection-success-rate',
             },
           ],
         },
         {
-          title: '资金管理',
+          title: t('sidebar.fundManagement'),
           icon: Calculator,
           items: [
             {
-              title: '结算记录',
+              title: t('sidebar.settlementRecords'),
               url: '/fund/settlement-lists',
             },
             {
-              title: '申请审批',
+              title: t('sidebar.rechargeWithdraw'),
               url: '/fund/recharge-withdraw',
             },
             {
-              title: '账户结算',
+              title: t('sidebar.accountSettlement'),
               url: '/fund/account-settlement',
             },
             {
-              title: '商户每日汇总',
+              title: t('sidebar.merchantDailySummary'),
               url: '/fund/merchant-daily-summary',
             },
             {
-              title: '国家每日汇总',
+              title: t('sidebar.countryDailySummary'),
               url: '/fund/country-daily-summary',
             },
           ],
         },
         {
-          title: '商户管理',
+          title: t('sidebar.merchantManagement'),
           icon: Users,
           items: [
             {
-              title: '商户信息',
+              title: t('sidebar.merchantInfo'),
               url: '/merchant/info-lists',
             },
           ],
         },
         {
-          title: '商务管理',
+          title: t('sidebar.businessManagement'),
           icon: Briefcase,
           items: [
             {
-              title: '商务绑定列表',
+              title: t('sidebar.merchantBind'),
               url: '/business/merchant-bind',
             },
             {
-              title: '商务日汇总',
+              title: t('sidebar.businessDailySummary'),
               url: '/business/daily-summary',
             },
             {
-              title: '商务月汇总',
+              title: t('sidebar.businessMonthlySummary'),
               url: '/business/monthly-summary',
             },
           ],
         },
         {
-          title: '配置管理',
+          title: t('sidebar.configManagement'),
           icon: Settings,
           items: [
             {
-              title: '支付渠道配置',
+              title: t('sidebar.paymentChannel'),
               url: '/config/payment-channel',
             },
             {
-              title: '风控规则配置',
+              title: t('sidebar.riskControlRule'),
               url: '/config/risk-control-rule',
             },
           ],
         },
         {
-          title: '日志管理',
+          title: t('sidebar.logManagement'),
           icon: FileText,
           items: [
             {
-              title: '消息记录表',
+              title: t('sidebar.messageRecord'),
               url: '/logs/message-record',
             },
             {
-              title: '风控规则记录',
+              title: t('sidebar.riskControlLog'),
               url: '/logs/risk-control',
             },
           ],
         },
         {
-          title: '系统管理',
+          title: t('sidebar.systemManagement'),
           icon: Settings,
           items: [
             {
-              title: '角色管理',
+              title: t('sidebar.roleManage'),
               url: '/system/role-manage',
             },
             {
-              title: '账户管理',
+              title: t('sidebar.accountManage'),
               url: '/system/account-manage',
             },
           ],
         },
       ],
     },
-    {
-      title: t('sidebar.other'),
-      items: [
-        {
-          title: t('sidebar.systemSettings'),
-          icon: Settings,
-          items: [
-            {
-              title: t('common.appearance'),
-              url: '/settings/appearance',
-            },
-          ],
-        },
-        {
-          title: t('sidebar.apiDocs'),
-          url: 'https://docs.taropay.com/',
-          icon: HelpCircle,
-        },
-      ],
+  ]
+
+  // 根据权限过滤菜单
+  const filteredNavGroups = allNavGroups
+    .map((group) => {
+      const filteredItems = filterMenuItems(group.items, hasPermission)
+      return filteredItems.length > 0
+        ? { ...group, items: filteredItems }
+        : null
+    })
+    .filter(Boolean) as typeof allNavGroups
+
+  // Other 分组不参与鉴权，所有用户都可见
+  const otherNavGroup = {
+    title: t('sidebar.other'),
+    items: [
+      {
+        title: t('sidebar.systemSettings'),
+        icon: Settings,
+        items: [
+          {
+            title: t('common.appearance'),
+            url: '/settings/appearance',
+          },
+        ],
+      },
+      {
+        title: t('sidebar.apiDocs'),
+        url: 'https://docs.taropay.com/',
+        icon: HelpCircle,
+      },
+    ],
+  }
+
+  return {
+    user: {
+      name: 'satnaing',
+      email: 'satnaingdev@gmail.com',
+      avatar: '/avatars/shadcn.jpg',
     },
-  ],
-}
-
-
+    teams: [
+      {
+        name:
+          (useAuthStore.getState().userInfo?.name as string) || 'Default Team',
+        logo: Command,
+        plan: '',
+      },
+      {
+        name: 'Acme Inc',
+        logo: GalleryVerticalEnd,
+        plan: 'Enterprise',
+      },
+      {
+        name: 'Acme Corp.',
+        logo: AudioWaveform,
+        plan: 'Startup',
+      },
+    ],
+    navGroups: [...filteredNavGroups, otherNavGroup],
+  }
 }

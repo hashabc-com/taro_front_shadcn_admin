@@ -72,3 +72,7 @@ export const deleteAccount = (data: { id: number }) =>
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   })
+
+// 获取账号权限
+export const getAccountPermissions = () =>
+  http.get('/admin/authority/v1/getUserAuthority')

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores'
 import { Loader2, LogIn, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner';
@@ -16,6 +16,7 @@ import {
   type ILoginForm,
   type IUserInfo,
 } from '@/api/login'
+import { getAccountPermissions } from '@/api/account'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -80,7 +81,7 @@ export function UserAuthForm({
   const [loginParams, setLoginParams] = useState<ILoginForm | null>(null)
   const googleInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
-  const { login: authLogin } = useAuthStore()
+  const { login: authLogin, setPermissions } = useAuthStore()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -203,6 +204,18 @@ export function UserAuthForm({
         toast.success('登录成功')
         authLogin(res.result.TOKEN, res.result.userInfo)
 
+        // 获取用户权限
+        try {
+          const permissionsRes = await getAccountPermissions()
+          if (permissionsRes.result) {
+            setPermissions(permissionsRes.result)
+          }
+        } catch (error) {
+          console.error('Failed to fetch permissions:', error)
+          // 权限获取失败不影响登录，使用默认权限（只有系统设置）
+          setPermissions({ menu: [{ name: '外观设置', url: '/settings/appearance' }], user: { roleId: 0, account: res.result.userInfo.name } })
+        }
+
         setShowGoogleAuthModal(false)
 
         const targetPath = redirectTo || '/'
@@ -313,12 +326,12 @@ export function UserAuthForm({
                   <PasswordInput placeholder='********' {...field} />
                 </FormControl>
                 <FormMessage />
-                <Link
+                {/* <Link
                   to='/forgot-password'
                   className='text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:opacity-75'
                 >
                   忘记密码？
-                </Link>
+                </Link> */}
               </FormItem>
             )}
           />
@@ -412,12 +425,11 @@ export function UserAuthForm({
                 : '请输入Google身份验证器中的6位验证码'}
             </DialogDescription>
           </DialogHeader>
-
           {googleAuthMode === 'bind' && userInfo?.roleIds && (
             <div className='flex justify-center py-4'>
               <div className='rounded-lg border p-4'>
                 <QRCode
-                value={userInfo.roleIds}
+                value={window.atob(userInfo.roleIds)}
                 size={250}
                 style={{ backgroundColor: '#ffffff', padding: '16px' }}
                 fgColor="#8b1538"

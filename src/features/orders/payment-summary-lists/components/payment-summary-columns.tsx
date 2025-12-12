@@ -1,11 +1,15 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
 import { type IOrderSummaryType } from '../schema'
+import { getTranslation, type Language } from '@/lib/i18n'
 
-export const tasksColumns: ColumnDef<IOrderSummaryType>[] = [
+export const getTasksColumns = (language: Language = 'zh'): ColumnDef<IOrderSummaryType>[] => {
+  const t = (key: string) => getTranslation(language, key)
+  
+  return [
   {
     accessorKey: 'companyName',
-    header: '商户',
+    header: t('orders.paymentSummary.merchant'),
     enableSorting: false,
     enableHiding: false,
     cell: ({ row }) => (
@@ -16,7 +20,7 @@ export const tasksColumns: ColumnDef<IOrderSummaryType>[] = [
   },
   {
     accessorKey: 'paymentCompany',
-    header: '支付渠道',
+    header: t('orders.paymentSummary.paymentChannel'),
     enableSorting: false,
     cell: ({ row }) => (
       <Badge variant='outline'>{row.getValue('paymentCompany')}</Badge>
@@ -24,15 +28,14 @@ export const tasksColumns: ColumnDef<IOrderSummaryType>[] = [
   },
   {
     accessorKey: 'dealTime',
-    header: '交易时间',
+    header: t('orders.paymentSummary.transactionTime'),
     enableSorting: false,
     cell: ({ row }) => row.getValue('dealTime'),
   },
   {
     accessorKey: 'billCount',
-    header: '订单数',
+    header: t('orders.paymentSummary.orderCount'),
     enableSorting: false,
-    // cell: ({ row }) => row.getValue('billCount'),
     cell: ({ row }) => (
       <div className='flex flex-col gap-1'>
         <span className='font-medium'>{row.getValue('billCount')}</span>
@@ -41,7 +44,7 @@ export const tasksColumns: ColumnDef<IOrderSummaryType>[] = [
   },
   {
     accessorKey: 'amount',
-    header: '金额',
+    header: t('orders.paymentSummary.amount'),
     enableSorting: false,
     cell: ({ row }) => (
       <div className='flex flex-col gap-1'>
@@ -51,7 +54,7 @@ export const tasksColumns: ColumnDef<IOrderSummaryType>[] = [
   },
   {
     accessorKey: 'serviceAmount',
-    header: '手续费',
+    header: t('orders.paymentSummary.serviceFee'),
     enableSorting: false,
     cell: ({ row }) => (
       <div className='flex flex-col gap-1'>
@@ -61,7 +64,7 @@ export const tasksColumns: ColumnDef<IOrderSummaryType>[] = [
   },
   {
     accessorKey: 'totalAmount',
-    header: '总金额',
+    header: t('orders.paymentSummary.totalAmount'),
     enableSorting: false,
     cell: ({ row }) => (
       <div className='flex flex-col gap-1'>
@@ -70,3 +73,4 @@ export const tasksColumns: ColumnDef<IOrderSummaryType>[] = [
     ),
   }
 ]
+}

@@ -18,15 +18,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { tasksColumns as columns } from './receive-summary-columns'
+import { getTasksColumns } from './receive-summary-columns'
 import { ReceiveListsSearch } from './receive-summary-search'
 import { useReceiveSummaryData } from '../hooks/use-receive-summary-data'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
 
 
 export function ReceiveSummaryTable() {
-  
+  const { language } = useLanguage()
+  const columns = useMemo(() => getTasksColumns(language), [language])
   const { orders:data, isLoading,totalRecord, summaryData } = useReceiveSummaryData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})

@@ -28,12 +28,14 @@ import { UnbindKeyDialog, AddIpDialog } from './merchant-dialogs'
 import { RateConfigDialog } from './rate-config-dialog'
 import { updateCustomer, getAutoLoginToken } from '@/api/merchant'
 import { type IMerchantInfoType } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/merchant/info-lists')
 
 const isProduction = import.meta.env.MODE === 'production'
 
 export function MerchantInfoTable() {
+  const { lang } = useLanguage()
   const { data, isLoading, totalRecord, refetch } = useMerchantInfoData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -131,9 +133,9 @@ export function MerchantInfoTable() {
         onBindIp: handleBindIp,
         onRateConfig: handleRateConfig,
         onAutoLogin: handleAutoLogin,
-      }),
+      }, lang),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [lang]
   )
 
   const table = useReactTable({

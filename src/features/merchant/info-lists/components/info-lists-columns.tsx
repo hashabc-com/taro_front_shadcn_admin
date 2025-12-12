@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { type IMerchantInfoType } from '../schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { useCountryStore } from '@/stores'
+import { getTranslation, type Language } from '@/lib/i18n'
 
 type ColumnsOptions = {
   onEdit: (merchant: IMerchantInfoType) => void
@@ -17,19 +18,23 @@ type ColumnsOptions = {
 }
 
 export const getColumns = (
-  options: ColumnsOptions
-): ColumnDef<IMerchantInfoType>[] => [
+  options: ColumnsOptions,
+  language: Language = 'zh'
+): ColumnDef<IMerchantInfoType>[] => {
+  const t = (key: string) => getTranslation(language, key)
+  
+  return [
   {
     accessorKey: 'account',
-    header: '账号',
+    header: t('merchant.info.account'),
   },
   {
     accessorKey: 'companyName',
-    header: '商户名称',
+    header: t('merchant.info.merchantName'),
   },
   {
     accessorKey: 'country',
-    header: '国家',
+    header: t('merchant.info.country'),
     cell: () => {
       const { selectedCountry } = useCountryStore.getState()
       return selectedCountry?.country
@@ -37,12 +42,12 @@ export const getColumns = (
   },
   {
     accessorKey: 'appid',
-    header: '商户ID',
+    header: t('merchant.info.merchantId'),
     meta: { className: 'w-[200px]' },
   },
   {
     accessorKey: 'secretKey',
-    header: '系统公钥',
+    header: t('merchant.info.systemPublicKey'),
     meta: { className: 'w-[400px]' },
     cell: ({ row }) => {
       const secretKey = row.original.secretKey
@@ -102,7 +107,7 @@ export const getColumns = (
   },
   {
     accessorKey: 'status',
-    header: '状态',
+    header: t('merchant.info.status'),
     // meta: { className: 'w-[0px]' },
     cell: ({ row }) => {
       return row.original.status === 0 ? '启用' : '禁用'
@@ -110,7 +115,7 @@ export const getColumns = (
   },
   {
     accessorKey: 'createTime',
-    header: '创建时间',
+    header: t('merchant.info.createTime'),
     meta: { className: 'w-[250px]' },
     cell: ({ row }) => {
       const date = row.original.createTime
@@ -119,11 +124,12 @@ export const getColumns = (
   },
   {
     id: 'actions',
-    header: '操作',
+    header: t('merchant.info.action'),
     cell: ({ row }) => {
       return <DataTableRowActions row={row} {...options} />
     },
   },
 ]
+}
 
 

@@ -6,10 +6,12 @@ import { PaymentChannelTable } from './components/payment-channel-table'
 import { PaymentChannelDialogs } from './components/payment-channel-dialogs'
 import { getPayChannelList } from '@/api/config'
 import { type PaymentChannel } from './schema'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/config/payment-channel')
 
 export function PaymentChannelConfig() {
+  const { t } = useLanguage()
   const search = route.useSearch()
 
   const { data, isLoading } = useQuery({
@@ -25,7 +27,7 @@ export function PaymentChannelConfig() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>支付渠道配置</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t('config.paymentChannel.title')}</h2>
           </div>
         </div>
         <PaymentChannelTable data={channels} totalRecord={totalRecord} isLoading={isLoading} />

@@ -201,7 +201,7 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
     queryKey: ['resources'],
     queryFn: async () => {
       const response = await getResourceList()
-      return response.result
+      return response.result || {resourceList: []}
     },
   })
 

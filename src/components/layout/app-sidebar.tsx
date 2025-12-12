@@ -12,13 +12,20 @@ import { getSidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
 import { useLanguage } from '@/context/language-provider'
+import { useAuthStore } from '@/stores'
+import { useMemo } from 'react'
 // import { TeamSwitcher } from './team-switcher'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
   const { lang } = useLanguage()
   const { state } = useSidebar()
-  const sidebarData = getSidebarData(lang)
+  const { permissions } = useAuthStore()
+  
+  // 当权限变化时重新生成菜单数据
+  const sidebarData = useMemo(() => {
+    return getSidebarData(lang)
+  }, [lang, permissions])
   
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
