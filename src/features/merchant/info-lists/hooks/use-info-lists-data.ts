@@ -22,8 +22,8 @@ export function useMerchantInfoData() {
 
   const dataList = data?.result?.listRecord?.map((item: IMerchantInfoType) => ({
     ...item,
-    amount: convertAmount(item.amount),
-    serviceAmount: convertAmount(item.serviceAmount),
+    amount: convertAmount(item.amount || ''),
+    serviceAmount: convertAmount(item.serviceAmount || ''),
   })) || []
 
   const totalRecord = data?.result?.totalRecord || 0

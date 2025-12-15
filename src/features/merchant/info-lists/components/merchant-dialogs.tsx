@@ -25,6 +25,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { type IMerchantInfoType } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 const unbindKeySchema = z.object({
   googleCode: z.string().min(1, '请输入谷歌验证码'),
@@ -155,7 +156,7 @@ export function AddIpDialog({
   onSuccess,
 }: AddIpDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
-
+  const { t } = useLanguage()
   const form = useForm<AddIpFormValues>({
     resolver: zodResolver(addIpSchema),
     defaultValues: {

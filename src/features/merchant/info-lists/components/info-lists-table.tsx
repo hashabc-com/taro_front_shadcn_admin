@@ -35,7 +35,7 @@ const route = getRouteApi('/_authenticated/merchant/info-lists')
 const isProduction = import.meta.env.MODE === 'production'
 
 export function MerchantInfoTable() {
-  const { lang } = useLanguage()
+  const { lang,t } = useLanguage()
   const { data, isLoading, totalRecord, refetch } = useMerchantInfoData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
