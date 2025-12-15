@@ -145,7 +145,7 @@ export function EditMerchantDialog({
         <DialogHeader>
           <DialogTitle>{isAdd ? t('common.add') + t('merchant.merchant') : t('common.edit') + t('merchant.merchant')}</DialogTitle>
           <DialogDescription>
-            {isAdd ? '填写商户信息以创建新商户' : '修改商户信息'}
+            {isAdd ? t('merchant.info.createDescription') : t('merchant.info.editDescription')}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -156,10 +156,10 @@ export function EditMerchantDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    账号<span className='text-red-500'>*</span>
+                    {t('merchant.info.account')}<span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入账号' {...field} />
+                    <Input placeholder={t('merchant.info.validation.accountRequired')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -173,12 +173,12 @@ export function EditMerchantDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      密码<span className='text-red-500'>*</span>
+                      {t('merchant.info.password')}<span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         type='password'
-                        placeholder='请输入密码'
+                        placeholder={t('merchant.info.validation.passwordRequired')}
                         {...field}
                       />
                     </FormControl>
@@ -194,10 +194,10 @@ export function EditMerchantDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    商户名称<span className='text-red-500'>*</span>
+                    {t('merchant.info.merchantName')}<span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入商户名称' {...field} />
+                    <Input placeholder={t('merchant.info.validation.merchantNameRequired')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -211,7 +211,7 @@ export function EditMerchantDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      代收金额计算时间<span className='text-red-500'>*</span>
+                      {t('merchant.info.freezeType')}<span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
@@ -221,11 +221,11 @@ export function EditMerchantDialog({
                       >
                         <div className='flex items-center space-x-2'>
                           <RadioGroupItem value='0' id='type-t' />
-                          <Label htmlFor='type-t'>交易日(T)</Label>
+                          <Label htmlFor='type-t'>{t('merchant.info.transactionDay')}(T)</Label>
                         </div>
                         <div className='flex items-center space-x-2'>
                           <RadioGroupItem value='1' id='type-d' />
-                          <Label htmlFor='type-d'>自然日(D)</Label>
+                          <Label htmlFor='type-d'>{t('merchant.info.naturalDay')}(D)</Label>
                         </div>
                       </RadioGroup>
                     </FormControl>
@@ -240,12 +240,12 @@ export function EditMerchantDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      天数<span className='text-red-500'>*</span>
+                      {t('merchant.info.settlementDays')}<span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         type='number'
-                        placeholder='请输入天数'
+                        placeholder={t('merchant.info.validation.daysRequired')}
                         {...field}
                         value={field.value ?? ''}
                         onChange={(e) => {
@@ -266,10 +266,10 @@ export function EditMerchantDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    谷歌验证码<span className='text-red-500'>*</span>
+                    {t('common.googleAuthCode')}<span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入谷歌验证码' {...field} />
+                    <Input placeholder={t('common.enterGoogleAuthCode')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -283,7 +283,7 @@ export function EditMerchantDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={isSubmitting}
               >
-                取消
+                {t('common.cancel')}
               </Button>
               <Button type='submit' disabled={isSubmitting}>
                 {isSubmitting && (

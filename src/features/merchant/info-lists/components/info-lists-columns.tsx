@@ -55,7 +55,7 @@ export const getColumns = (
         if (secretKey) {
           try {
             await navigator.clipboard.writeText(secretKey)
-            toast.success('密钥已复制到剪贴板')
+            toast.success(t('merchant.info.secretKeyCopied'))
           } catch {
             // 降级到传统方法
             try {
@@ -72,13 +72,13 @@ export const getColumns = (
               document.body.removeChild(textArea)
 
               if (successful) {
-                toast.success('密钥已复制到剪贴板')
+                toast.success(t('merchant.info.secretKeyCopied'))
               } else {
-                toast.error('复制失败，请手动复制')
+                toast.error(t('merchant.info.copyFailed'))
               }
             } catch (error) {
               console.error('复制失败:', error)
-              toast.error('复制失败，请手动复制')
+              toast.error(t('merchant.info.copyFailed'))
             }
           }
         }
@@ -99,7 +99,7 @@ export const getColumns = (
             className='h-auto min-w-0 p-0 px-1'
             onClick={handleCopy}
           >
-            复制
+            {t('common.copy')}
           </Button>
         </div>
       )

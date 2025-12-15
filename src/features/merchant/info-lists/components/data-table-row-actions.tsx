@@ -54,14 +54,14 @@ export function DataTableRowActions<TData>({
           <span className='sr-only'>操作菜单</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[160px]'>
+      <DropdownMenuContent align='end' className='w-auto'>
         <DropdownMenuItem onClick={() => onEdit(merchant)}>
           <Edit className='mr-2 h-4 w-4' />
-          编辑
+          {t('common.edit')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onChangePassword(merchant)}>
           <Key className='mr-2 h-4 w-4' />
-          修改密码
+          {t('merchant.info.changePassword')}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => onToggleStatus(merchant)}
@@ -73,15 +73,15 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => onUnbindKey(merchant)}>
           <Trash2 className='mr-2 h-4 w-4' />
-          解绑秘钥
+          {t('merchant.info.unbindSecretKey')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onBindIp(merchant)}>
           <Globe className='mr-2 h-4 w-4' />
-          后台IP
+          {t('merchant.info.bindIp')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onRateConfig(merchant)}>
           <DollarSign className='mr-2 h-4 w-4' />
-          费率配置
+          {t('merchant.info.rateConfig')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -89,7 +89,7 @@ export function DataTableRowActions<TData>({
           disabled={merchant.status === 1}
         >
           <LogIn className='mr-2 h-4 w-4' />
-          登录后台
+          {t('merchant.info.autoLogin')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

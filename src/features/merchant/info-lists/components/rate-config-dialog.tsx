@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -44,6 +45,7 @@ export function RateConfigDialog({
   const [isLoading, setIsLoading] = useState(false)
   const [collectionRates, setCollectionRates] = useState<RateItem[]>([])
   const [payoutRates, setPayoutRates] = useState<RateItem[]>([])
+  const { t } = useLanguage()
   const currency = 'USD'
 
   useEffect(() => {
@@ -120,7 +122,7 @@ export function RateConfigDialog({
       setPayoutRates(payoutItems)
     } catch (error) {
       console.error('获取费率数据失败:', error)
-      toast.warning('获取费率数据失败')
+      toast.warning(t('merchant.info.error.loadRateFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -147,7 +149,7 @@ export function RateConfigDialog({
     })
 
     if (hasInvalidData) {
-      toast.warning('费率和单笔固定金额必须同时填写或同时不填')
+      toast.warning(t('merchant.info.validation.rateFeeRequired'))
       return
     }
 
@@ -194,12 +196,12 @@ export function RateConfigDialog({
 
       const res = await updateMerchantRate(submitData)
       if (res) {
-        toast.success('费率配置更新成功')
+        toast.success(t('merchant.info.success.rateUpdateSuccess'))
         onOpenChange(false)
         onSuccess()
       }
     } catch (_error) {
-      toast.error('费率配置更新失败')
+      toast.error(t('merchant.info.error.rateUpdateFailed'))
     } finally {
       setIsSubmitting(false)
     }
@@ -230,9 +232,9 @@ export function RateConfigDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-[600px] max-h-[80vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle>费率配置</DialogTitle>
+          <DialogTitle>{t('merchant.info.rateConfig')}</DialogTitle>
           <DialogDescription>
-            商户：<span className='font-semibold'>{merchant?.companyName}</span>
+            {t('merchant.merchant')}：<span className='font-semibold'>{merchant?.companyName}</span>
           </DialogDescription>
         </DialogHeader>
 
@@ -245,10 +247,10 @@ export function RateConfigDialog({
             {/* 代收渠道配置 */}
             <div>
               <div className='mb-4 flex items-center justify-between border-b pb-2'>
-                <h3 className='text-base font-semibold'>代收渠道配置</h3>
+                <h3 className='text-base font-semibold'>{t('merchant.info.collectionChannel')}</h3>
                 <div className='flex gap-2 text-sm font-semibold'>
-                  <span className='w-[150px]'>费率</span>
-                  <span className='w-[150px]'>单笔固定({currency})</span>
+                  <span className='w-[150px] flex items-center'>{t('merchant.info.rate')}</span>
+                  <span className='w-[150px]'>{t('merchant.info.singleFixedAmount')}({currency})</span>
                 </div>
               </div>
               <div className='space-y-3'>
@@ -259,7 +261,7 @@ export function RateConfigDialog({
                       type='number'
                       step='0.001'
                       min='0'
-                      placeholder='费率'
+                      placeholder={t('merchant.info.rate')}
                       value={item.rate}
                       onChange={(e) =>
                         updateRate('collection', index, 'rate', e.target.value)
@@ -270,7 +272,7 @@ export function RateConfigDialog({
                       type='number'
                       step='0.01'
                       min='0'
-                      placeholder='单笔价格'
+                      placeholder={t('merchant.info.singleFee')}
                       value={item.feeAmount}
                       onChange={(e) =>
                         updateRate(
@@ -290,10 +292,10 @@ export function RateConfigDialog({
             {/* 代付渠道配置 */}
             <div>
               <div className='mb-4 flex items-center justify-between border-b pb-2'>
-                <h3 className='text-base font-semibold'>代付渠道配置</h3>
+                <h3 className='text-base font-semibold'>{t('merchant.info.payoutChannel')}</h3>
                 <div className='flex gap-2 text-sm font-semibold'>
-                  <span className='w-[150px]'>费率</span>
-                  <span className='w-[150px]'>单笔固定({currency})</span>
+                  <span className='w-[150px] flex items-center'>{t('merchant.info.rate')}</span>
+                  <span className='w-[150px]'>{t('merchant.info.singleFixedAmount')}({currency})</span>
                 </div>
               </div>
               <div className='space-y-3'>
@@ -304,7 +306,7 @@ export function RateConfigDialog({
                       type='number'
                       step='0.001'
                       min='0'
-                      placeholder='费率'
+                      placeholder={t('merchant.info.rate')}
                       value={item.rate}
                       onChange={(e) =>
                         updateRate('payout', index, 'rate', e.target.value)
@@ -315,7 +317,7 @@ export function RateConfigDialog({
                       type='number'
                       step='0.01'
                       min='0'
-                      placeholder='单笔价格'
+                      placeholder={t('merchant.info.singleFee')}
                       value={item.feeAmount}
                       onChange={(e) =>
                         updateRate('payout', index, 'feeAmount', e.target.value)
@@ -336,7 +338,7 @@ export function RateConfigDialog({
             onClick={() => onOpenChange(false)}
             disabled={isSubmitting || isLoading}
           >
-            取消
+            {t('common.cancel')}
           </Button>
           <Button
             onClick={handleSubmit}
@@ -345,7 +347,7 @@ export function RateConfigDialog({
             {isSubmitting && (
               <Loader2 className='mr-2 h-4 w-4 animate-spin' />
             )}
-            保存配置
+            {t('common.save')}
           </Button>
         </DialogFooter>
       </DialogContent>

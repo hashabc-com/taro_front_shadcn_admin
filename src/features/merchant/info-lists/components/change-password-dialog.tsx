@@ -26,17 +26,17 @@ import { Input } from '@/components/ui/input'
 import { type IMerchantInfoType } from '../schema'
 import { useLanguage } from '@/context/language-provider'
 
-const changePasswordSchema = z
+const createChangePasswordSchema = (t: (key: string) => string) => z
   .object({
-    pwd: z.string().min(6, '密码至少6个字符'),
-    rePwd: z.string().min(6, '密码至少6个字符'),
+    pwd: z.string().min(6, t('merchant.info.validation.passwordMinLength')),
+    rePwd: z.string().min(6, t('merchant.info.validation.passwordMinLength')),
   })
   .refine((data) => data.pwd === data.rePwd, {
-    message: '两次输入的密码不一致',
+    message: t('merchant.info.validation.passwordMismatch'),
     path: ['rePwd'],
   })
 
-type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>
+type ChangePasswordFormValues = z.infer<ReturnType<typeof createChangePasswordSchema>>
 
 type ChangePasswordDialogProps = {
   open: boolean
@@ -55,7 +55,7 @@ export function ChangePasswordDialog({
   const { t } = useLanguage()
 
   const form = useForm<ChangePasswordFormValues>({
-    resolver: zodResolver(changePasswordSchema),
+    resolver: zodResolver(createChangePasswordSchema(t)),
     defaultValues: {
       pwd: '',
       rePwd: '',
@@ -94,11 +94,10 @@ export function ChangePasswordDialog({
     >
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
-          <DialogTitle>修改密码</DialogTitle>
+          <DialogTitle>{t('merchant.info.changePassword')}</DialogTitle>
           <DialogDescription>
-            为商户{' '}
-            <span className='font-semibold'>{merchant?.companyName}</span>{' '}
-            修改密码
+            {t('merchant.info.changePasswordFor')}{' '}
+            <span className='font-semibold'>{merchant?.companyName}</span>
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -108,11 +107,11 @@ export function ChangePasswordDialog({
               name='pwd'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>新密码</FormLabel>
+                  <FormLabel>{t('password.newPassword')}</FormLabel>
                   <FormControl>
                     <Input
                       type='password'
-                      placeholder='请输入新密码'
+                      placeholder={t('password.newPassword')}
                       {...field}
                     />
                   </FormControl>
@@ -126,11 +125,11 @@ export function ChangePasswordDialog({
               name='rePwd'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>确认密码</FormLabel>
+                  <FormLabel>{t('password.confirmPassword')}</FormLabel>
                   <FormControl>
                     <Input
                       type='password'
-                      placeholder='请再次输入新密码'
+                      placeholder={t('password.confirmPassword')}
                       {...field}
                     />
                   </FormControl>
@@ -146,13 +145,13 @@ export function ChangePasswordDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={isSubmitting}
               >
-                取消
+                {t('common.cancel')}
               </Button>
               <Button type='submit' disabled={isSubmitting}>
                 {isSubmitting && (
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 )}
-                确认修改
+                {t('merchant.info.confirmChange')}
               </Button>
             </DialogFooter>
           </form>

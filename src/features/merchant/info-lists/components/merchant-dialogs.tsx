@@ -27,17 +27,17 @@ import { Textarea } from '@/components/ui/textarea'
 import { type IMerchantInfoType } from '../schema'
 import { useLanguage } from '@/context/language-provider'
 
-const unbindKeySchema = z.object({
-  googleCode: z.string().min(1, '请输入谷歌验证码'),
+const createUnbindKeySchema = (t: (key: string) => string) => z.object({
+  googleCode: z.string().min(1, t('merchant.info.validation.googleCodeRequired')),
 })
 
-const addIpSchema = z.object({
-  ip: z.string().min(1, '请输入IP地址'),
-  googleCode: z.string().min(1, '请输入谷歌验证码'),
+const createAddIpSchema = (t: (key: string) => string) => z.object({
+  ip: z.string().min(1, t('merchant.info.validation.ipRequired')),
+  googleCode: z.string().min(1, t('merchant.info.validation.googleCodeRequired')),
 })
 
-type UnbindKeyFormValues = z.infer<typeof unbindKeySchema>
-type AddIpFormValues = z.infer<typeof addIpSchema>
+type UnbindKeyFormValues = z.infer<ReturnType<typeof createUnbindKeySchema>>
+type AddIpFormValues = z.infer<ReturnType<typeof createAddIpSchema>>
 
 type UnbindKeyDialogProps = {
   open: boolean
@@ -53,9 +53,10 @@ export function UnbindKeyDialog({
   onSuccess,
 }: UnbindKeyDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { t } = useLanguage()
 
   const form = useForm<UnbindKeyFormValues>({
-    resolver: zodResolver(unbindKeySchema),
+    resolver: zodResolver(createUnbindKeySchema(t)),
     defaultValues: {
       googleCode: '',
     },
@@ -74,12 +75,12 @@ export function UnbindKeyDialog({
     const res = await unbindGoogle(formData)
 
     if (res.code == 200) {
-      toast.success('解绑成功')
+      toast.success(t('merchant.info.success.unbindSuccess'))
       onOpenChange(false)
       form.reset()
       onSuccess()
     } else {
-      toast.error(res.message || '解绑失败')
+      toast.error(res.message || t('merchant.info.error.unbindFailed'))
     }
     setIsSubmitting(false)
   }
@@ -96,11 +97,10 @@ export function UnbindKeyDialog({
     >
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
-          <DialogTitle>解绑秘钥</DialogTitle>
+          <DialogTitle>{t('merchant.info.unbindSecretKey')}</DialogTitle>
           <DialogDescription>
-            为商户{' '}
-            <span className='font-semibold'>{merchant?.companyName}</span>{' '}
-            解绑秘钥
+            {t('merchant.info.unbindSecretKeyFor')}{' '}
+            <span className='font-semibold'>{merchant?.companyName}</span>
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -110,9 +110,9 @@ export function UnbindKeyDialog({
               name='googleCode'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>谷歌验证码</FormLabel>
+                  <FormLabel>{t('password.googleAuthCode')}</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入谷歌验证码' {...field} />
+                    <Input placeholder={t('password.enterGoogleAuthCode')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -126,13 +126,13 @@ export function UnbindKeyDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={isSubmitting}
               >
-                取消
+                {t('common.cancel')}
               </Button>
               <Button type='submit' disabled={isSubmitting}>
                 {isSubmitting && (
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 )}
-                确认解绑
+                {t('merchant.info.confirmUnbind')}
               </Button>
             </DialogFooter>
           </form>
@@ -158,7 +158,7 @@ export function AddIpDialog({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { t } = useLanguage()
   const form = useForm<AddIpFormValues>({
-    resolver: zodResolver(addIpSchema),
+    resolver: zodResolver(createAddIpSchema(t)),
     defaultValues: {
       ip: '',
       googleCode: '',
@@ -199,11 +199,10 @@ export function AddIpDialog({
     >
       <DialogContent className='sm:max-w-[500px]'>
         <DialogHeader>
-          <DialogTitle>添加IP</DialogTitle>
+          <DialogTitle>{t('merchant.info.addIP')}</DialogTitle>
           <DialogDescription>
-            为商户{' '}
-            <span className='font-semibold'>{merchant?.companyName}</span>{' '}
-            添加后台IP白名单
+            {t('merchant.info.addIPFor')}{' '}
+            <span className='font-semibold'>{merchant?.companyName}</span>
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -213,10 +212,10 @@ export function AddIpDialog({
               name='ip'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>IP地址</FormLabel>
+                  <FormLabel>{t('merchant.info.ipAddress')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="多个IP用逗号(',')进行分隔"
+                      placeholder={t('merchant.info.placeholder.ipAddress')}
                       rows={3}
                       {...field}
                     />
@@ -231,9 +230,9 @@ export function AddIpDialog({
               name='googleCode'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>谷歌验证码</FormLabel>
+                  <FormLabel>{t('password.googleAuthCode')}</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入谷歌验证码' {...field} />
+                    <Input placeholder={t('password.enterGoogleAuthCode')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -247,13 +246,13 @@ export function AddIpDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={isSubmitting}
               >
-                取消
+                {t('common.cancel')}
               </Button>
               <Button type='submit' disabled={isSubmitting}>
                 {isSubmitting && (
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 )}
-                确认添加
+                {t('merchant.info.confirmAdd')}
               </Button>
             </DialogFooter>
           </form>
