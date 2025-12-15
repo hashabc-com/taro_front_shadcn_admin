@@ -23,6 +23,7 @@ import { getColumns } from './message-record-columns'
 import { MessageRecordSearch } from './message-record-search'
 import { MessageDetailDialog } from './message-detail-dialog'
 import type { IMessageRecordType } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/logs/message-record')
 
@@ -32,7 +33,7 @@ export function MessageRecordTable() {
   const [detailOpen, setDetailOpen] = useState(false)
   const [selectedRecord, setSelectedRecord] =
     useState<IMessageRecordType | null>(null)
-
+  const { lang } = useLanguage()
   const { pagination, onPaginationChange, ensurePageInRange } =
     useTableUrlState({
       search: route.useSearch(),
@@ -50,7 +51,7 @@ export function MessageRecordTable() {
     setDetailOpen(true)
   }
 
-  const columns = getColumns(handleViewDetail)
+  const columns = useMemo(() => getColumns(handleViewDetail,lang),[lang])
 
   const table = useReactTable({
     data,

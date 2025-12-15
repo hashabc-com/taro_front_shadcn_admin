@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { type IMerchantInfoType } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -41,7 +42,7 @@ export function DataTableRowActions<TData>({
   onAutoLogin,
 }: DataTableRowActionsProps<TData>) {
   const merchant = row.original as IMerchantInfoType
-
+  const { t } = useLanguage()
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -67,7 +68,7 @@ export function DataTableRowActions<TData>({
           className={merchant.status === 0 ? 'text-destructive' : ''}
         >
           <Power className='mr-2 h-4 w-4' />
-          {merchant.status === 0 ? '禁用' : '启用'}
+          {merchant.status === 0 ? t('common.disable') : t('common.enable')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => onUnbindKey(merchant)}>

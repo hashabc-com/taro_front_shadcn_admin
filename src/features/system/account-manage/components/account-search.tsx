@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useAccount } from './account-provider'
+import { useI18n } from '@/hooks/use-i18n'
 
 const route = getRouteApi('/_authenticated/system/account-manage')
 
@@ -25,6 +26,7 @@ export function AccountSearch() {
   const navigate = route.useNavigate()
   const search = route.useSearch()
   const { setOpen } = useAccount()
+  const { t } = useI18n()
 
   const [dateRange, setDateRange] = useState<DateRange>({
       from: search.createTimeBegin ? new Date(search.createTimeBegin) : undefined,
@@ -77,7 +79,7 @@ export function AccountSearch() {
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>选择日期范围</span>
+                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -102,19 +104,19 @@ export function AccountSearch() {
       <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
-          搜索
+          {t('common.search')}
         </Button>
         {hasFilters && (
           <Button onClick={handleReset} variant='outline' size='sm'>
             <X className='mr-2 h-4 w-4' />
-            重置
+            {t('common.reset')}
           </Button>
         )}
       </div>
 
       <Button onClick={() => setOpen('create')} size='sm' className='ml-auto'>
         <Plus className='mr-2 h-4 w-4' />
-        添加管理员
+        {t('system.accountManage.addAdministrator')}
       </Button>
     </div>
   )

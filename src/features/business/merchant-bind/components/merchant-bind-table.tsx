@@ -23,10 +23,12 @@ import { getColumns } from './merchant-bind-columns'
 import { MerchantBindSearch } from './merchant-bind-search'
 import { BindMerchantDialog } from './bind-merchant-dialog'
 import { type IBusinessType } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/business/merchant-bind')
 
 export function MerchantBindTable() {
+  const { lang } = useLanguage()
   const { data, isLoading, totalRecord, refetch } = useMerchantBindData()
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [currentBusiness, setCurrentBusiness] = useState<IBusinessType | null>(
@@ -59,6 +61,7 @@ export function MerchantBindTable() {
     () =>
       getColumns({
         onBind: handleBind,
+        language: lang,
       }),
     []
   )

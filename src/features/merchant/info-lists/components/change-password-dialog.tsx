@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { type IMerchantInfoType } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 const changePasswordSchema = z
   .object({
@@ -51,6 +52,7 @@ export function ChangePasswordDialog({
   onSuccess,
 }: ChangePasswordDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { t } = useLanguage()
 
   const form = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(changePasswordSchema),
@@ -70,12 +72,12 @@ export function ChangePasswordDialog({
     const res = await updatePass(formData)
 
     if (res.code == 200) {
-      toast.success('密码修改成功')
+      toast.success(t('merchant.info.success.passwordChanged'))
       onOpenChange(false)
       form.reset()
       onSuccess()
     } else {
-      toast.error(res.message || '修改密码失败')
+      toast.error(res.message || t('merchant.info.error.passwordChangeFailed'))
     }
     setIsSubmitting(false)
   }

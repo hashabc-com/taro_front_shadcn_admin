@@ -15,9 +15,11 @@ import { DataTableRowActions } from './data-table-row-actions'
 function ImagePreview({
   mediaId,
   localUrl,
+  t
 }: {
   mediaId?: string
   localUrl?: string
+  t: (key: string) => string
 }) {
   const [previewOpen, setPreviewOpen] = useState(false)
 
@@ -38,7 +40,7 @@ function ImagePreview({
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
         <DialogContent className='max-w-3xl'>
           <DialogHeader>
-            <DialogTitle>凭证预览</DialogTitle>
+            <DialogTitle>{t('fund.rechargeWithdraw.voucherPreview')}</DialogTitle>
           </DialogHeader>
           <img src={localUrl} alt='凭证' className='h-auto w-full' />
         </DialogContent>
@@ -54,48 +56,49 @@ export const getTasksColumns = (
   return [
     {
       accessorKey: 'companyName',
-      header: '商户',
+      header: t('fund.rechargeWithdraw.merchant'),
       enableHiding: false,
     },
     {
       accessorKey: 'createTime',
-      header: '申请日期',
+      header: t('fund.rechargeWithdraw.applicationDate'),
     },
     {
       accessorKey: 'type',
-      header: '类型',
+      header: t('fund.rechargeWithdraw.type'),
       cell: ({ row }) => (
         <Badge variant='outline'>{row.getValue('type')}</Badge>
       ),
     },
     {
       accessorKey: 'rechargeAmount',
-      header: '金额',
+      header: t('fund.rechargeWithdraw.amount'),
     },
     {
       accessorKey: 'withdrawalType',
-      header: '申请币种',
+      header: t('fund.rechargeWithdraw.applicationCurrency'),
     },
     {
       accessorKey: 'exchangeRate',
-      header: '汇率',
+      header: t('fund.rechargeWithdraw.exchangeRate'),
     },
     {
       accessorKey: 'finalAmount',
-      header: '换算金额',
+      header: t('fund.rechargeWithdraw.convertedAmount'),
     },
     {
       accessorKey: 'withdrawalAddress',
-      header: '提现账号',
+      header: t('fund.rechargeWithdraw.withdrawalAccount'),
     },
     {
       accessorKey: 'mediaId',
-      header: '充值凭证',
+      header: t('fund.rechargeWithdraw.rechargeVoucher'),
       cell: ({ row }) => {
         return (
           <ImagePreview
             mediaId={row.getValue('mediaId')}
             localUrl={row.original.local_url}
+            t={t}
             // type={row.getValue('type')}
           />
         )
@@ -104,11 +107,11 @@ export const getTasksColumns = (
 
     {
       accessorKey: 'remark',
-      header: '备注',
+      header: t('fund.rechargeWithdraw.remark'),
     },
     {
       accessorKey: 'processStatus',
-      header: '审核状态',
+      header: t('fund.rechargeWithdraw.auditStatus'),
       cell: ({ row }) => {
         const statusesItem =
           statuses[row.getValue('processStatus') as keyof typeof statuses]

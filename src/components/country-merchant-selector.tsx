@@ -15,11 +15,12 @@ import { getCountryList, getMerchantList } from '@/api/common'
 import { CurrencySelector } from './currency-selector'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
+import { useLanguage } from '@/context/language-provider'
 
 export function CountryMerchantSelector() {
   const { selectedCountry, setSelectedCountry, setRates } = useCountryStore()
   const { selectedMerchant, setSelectedMerchant } = useMerchantStore()
-
+  const { t } = useLanguage()
   // 获取国家列表
   const { data: countriesData } = useQuery({
     queryKey: ['countries'],
@@ -97,7 +98,7 @@ export function CountryMerchantSelector() {
                     e.currentTarget.style.display = 'none'
                   }}
                 />
-                <span>{selectedCountry.country}</span>
+                <span>{t(`common.countrys.${selectedCountry.code}`)}</span>
               </div>
             )}
           </SelectValue>
@@ -114,7 +115,7 @@ export function CountryMerchantSelector() {
                     e.currentTarget.style.display = 'none'
                   }}
                 />
-                <span>{country.country}</span>
+                <span>{t(`common.countrys.${country.code}`)}</span>
               </div>
             </SelectItem>
           ))}
@@ -130,7 +131,7 @@ export function CountryMerchantSelector() {
           disabled={!selectedCountry}
         >
           <SelectTrigger className='w-full sm:w-[140px] h-9'>
-            <SelectValue placeholder='选择商户' />
+            <SelectValue placeholder={t('common.merchant')} />
           </SelectTrigger>
           <SelectContent>
             {merchants.map((merchant) => (

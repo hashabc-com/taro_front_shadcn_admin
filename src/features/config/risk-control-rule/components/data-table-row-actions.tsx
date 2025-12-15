@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { type RuleConfig } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 interface DataTableRowActionsProps {
   row: Row<RuleConfig>
@@ -20,7 +21,7 @@ export function DataTableRowActions({
   onEdit,
 }: DataTableRowActionsProps) {
   const rule = row.original
-
+  const { t } = useLanguage()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,7 +36,7 @@ export function DataTableRowActions({
       <DropdownMenuContent align='end' className='w-[160px]'>
         <DropdownMenuItem onClick={() => onEdit(rule)}>
           <Pencil className='mr-2 h-4 w-4' />
-          编辑
+          {t('common.edit')}
         </DropdownMenuItem>
         {/* 暂时隐藏删除功能,与原 Vue 版本保持一致 */}
         {/* <DropdownMenuItem

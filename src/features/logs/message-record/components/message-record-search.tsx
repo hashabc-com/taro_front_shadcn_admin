@@ -5,6 +5,7 @@ import { type Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 // import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/data-table'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/logs/message-record')
 
@@ -16,6 +17,7 @@ export function MessageRecordSearch<TData>({
   table,
 }: MessageRecordSearchProps<TData>) {
   const navigate = route.useNavigate()
+  const { t } = useLanguage()
 //   const search = route.useSearch()
 
 //   const [messageId, setMessageId] = useState(search.messageId || '')
@@ -97,7 +99,7 @@ export function MessageRecordSearch<TData>({
       <div className='flex gap-2 mt-0.5'>
         <Button onClick={handleSearch} size='sm'>
           <RefreshCcw className='mr-2 h-4 w-4' />
-          刷新
+          {t('common.refresh')}
         </Button>
         {/* {hasFilters && (
           <Button onClick={handleReset} variant='outline' size='sm'>

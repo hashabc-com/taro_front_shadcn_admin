@@ -14,6 +14,7 @@ import { Edit, Settings, Power, PowerOff } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateChannelStatus } from '@/api/config'
 import { toast } from 'sonner'
+import { useLanguage } from '@/context/language-provider'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -23,7 +24,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   const channel = paymentChannelSchema.parse(row.original)
   const { setOpen, setCurrentRow, setDetailMerchantId, setDetailType } = usePaymentChannel()
   const queryClient = useQueryClient()
-
+  const { t } = useLanguage()
   const statusMutation = useMutation({
     mutationFn: (status: number) => {
         const formData = new FormData();
@@ -34,9 +35,9 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     onSuccess: (res) => {
       if(res.code == 200){
         queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
-        toast.success('状态更新成功')
+        toast.success(t('common.statusUpdateSuccess'))
       }else{
-        toast.error(res.message || '状态更新失败')
+        toast.error(res.message || t('common.statusUpdateFailed'))
       }
     },
     onError: (error: unknown) => {
@@ -65,7 +66,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           }}
         >
           <Edit className='mr-2 h-4 w-4' />
-          编辑
+          {t('common.edit')}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleStatusToggle}
@@ -74,12 +75,12 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           {channel.status === 1 ? (
             <>
               <PowerOff className='mr-2 h-4 w-4' />
-              禁用
+              {t('common.disable')}
             </>
           ) : (
             <>
               <Power className='mr-2 h-4 w-4' />
-              启用
+              {t('common.enable')}
             </>
           )}
         </DropdownMenuItem>
@@ -92,7 +93,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           }}
         >
           <Settings className='mr-2 h-4 w-4' />
-          设置
+          {t('common.settings')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

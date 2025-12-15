@@ -21,6 +21,7 @@ import { DataTablePagination } from '@/components/data-table'
 import { type PaymentChannel } from '../schema'
 import { getPaymentChannelColumns } from './payment-channel-columns'
 import { PaymentChannelSearch } from './payment-channel-search'
+import { useLanguage } from '@/context/language-provider'
 
 type DataTableProps = {
   data: PaymentChannel[]
@@ -32,8 +33,8 @@ export function PaymentChannelTable({ data, isLoading, totalRecord }: DataTableP
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const router = useRouter()
   const navigate = useNavigate()
-
-  const columns = useMemo(() => getPaymentChannelColumns(), [])
+  const { lang } = useLanguage()
+  const columns = useMemo(() => getPaymentChannelColumns(lang), [lang])
 
   const { pagination, onPaginationChange, ensurePageInRange } = useTableUrlState({
     search: router.latestLocation.search as never,

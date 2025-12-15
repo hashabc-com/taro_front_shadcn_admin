@@ -21,14 +21,16 @@ import { DataTablePagination } from '@/components/data-table'
 import { getAccountColumns } from './account-columns'
 import { AccountSearch } from './account-search'
 import { useAccountData } from '../hooks/use-account-data'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/system/account-manage')
 
 export function AccountTable() {
   const { accounts: data, isLoading, totalRecord } = useAccountData()
+  const { lang } = useLanguage()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const columns = useMemo(() => getAccountColumns(), [])
+  const columns = useMemo(() => getAccountColumns(lang), [lang])
 
   const { pagination, onPaginationChange, ensurePageInRange } = useTableUrlState({
     search: route.useSearch(),
@@ -117,6 +119,7 @@ export function AccountTable() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className='h-24 text-center'>
+                    {/* 暂无数据 - 此处可使用 t('common.noData') */}
                     暂无数据
                   </TableCell>
                 </TableRow>

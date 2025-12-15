@@ -27,6 +27,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { type IMerchantInfoType } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 const editMerchantSchema = z.object({
   account: z.string().min(1, '请输入账号'),
@@ -56,6 +57,7 @@ export function EditMerchantDialog({
   isAdd,
   onSuccess,
 }: EditMerchantDialogProps) {
+  const { t } = useLanguage()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { selectedCountry } = useCountryStore()
 

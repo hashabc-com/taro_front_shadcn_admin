@@ -43,22 +43,10 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { rechargeWithdrawSchema } from '../schema'
 import { getRouteApi } from '@tanstack/react-router'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/fund/recharge-withdraw')
 
-const approveFormSchema = z.object({
-  withdrawalPass: z.string().min(1, '请填写提现密码'),
-  gauthcode: z.string().min(1, '请填写谷歌验证码'),
-  remark: z.string().optional(),
-  exchangeRate: z
-    .string()
-    .min(1, '请填写汇率')
-    .regex(/^\d*\.?\d+$/, '汇率必须是有效的数字'),
-})
-
-const rejectFormSchema = z.object({
-  remark: z.string().min(1, '请填写拒绝原因'),
-})
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -68,6 +56,7 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const data = rechargeWithdrawSchema.parse(row.original)
+  const { t } = useLanguage()
   const navigate = route.useNavigate()
   const convertAmount = useConvertAmount()
   const { selectedCountry } = useCountryStore()
@@ -75,6 +64,20 @@ export function DataTableRowActions<TData>({
   const [rejectOpen, setRejectOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [calculatedAmount, setCalculatedAmount] = useState<string>('')
+
+  const approveFormSchema = z.object({
+  withdrawalPass: z.string().min(1, t('fund.rechargeWithdraw.pleaseEnterWithdrawPassword')),
+  gauthcode: z.string().min(1, t('fund.rechargeWithdraw.pleaseEnterGoogleAuthCode')),
+  remark: z.string().optional(),
+  exchangeRate: z
+    .string()
+    .min(1, t('fund.rechargeWithdraw.pleaseEnterExchangeRate'))
+    .regex(/^\d*\.?\d+$/, t('fund.rechargeWithdraw.exchangeRateMustBeValidNumber')),
+})
+
+const rejectFormSchema = z.object({
+  remark: z.string().min(1, t('fund.rechargeWithdraw.pleaseEnterRejectReason')),
+})
 
   const approveForm = useForm<z.infer<typeof approveFormSchema>>({
     resolver: zodResolver(approveFormSchema),
@@ -132,11 +135,11 @@ export function DataTableRowActions<TData>({
           { mediaId, type: true },
           `${data.companyName}-${data.type}-${data.createTime}`
         )
-        toast.success('下载成功')
+        toast.success(t('export.downloadSuccess'))
       }
     } catch (error) {
       console.error('Download failed:', error)
-      toast.error('下载失败')
+      toast.error(t('export.downloadFailed'))
     }
   }
 
@@ -240,18 +243,18 @@ export function DataTableRowActions<TData>({
         <DropdownMenuContent align='end' className='w-[160px]'>
           <DropdownMenuItem onClick={() => setApproveOpen(true)}>
             <CheckCircle className='mr-2 h-4 w-4 text-green-600' />
-            确认
+            {t('common.confirm')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setRejectOpen(true)}>
             <XCircle className='mr-2 h-4 w-4 text-red-600' />
-            拒绝
+            {t('common.reject')}
           </DropdownMenuItem>
           {data.mediaId && (
             <>
               {isReviewing && <DropdownMenuSeparator />}
               <DropdownMenuItem onClick={handleDownload}>
                 <Download className='mr-2 h-4 w-4 text-blue-600' />
-                下载凭证
+                {t('fund.rechargeWithdraw.downloadVoucher')}
               </DropdownMenuItem>
             </>
           )}
@@ -262,8 +265,8 @@ export function DataTableRowActions<TData>({
       <Dialog open={approveOpen} onOpenChange={setApproveOpen}>
         <DialogContent className='max-w-md'>
           <DialogHeader>
-            <DialogTitle>{data.type}确认</DialogTitle>
-            <DialogDescription>请填写以下信息以完成审批</DialogDescription>
+            <DialogTitle>{data.type == '充值' ? t('fund.rechargeWithdraw.recharge') : t('fund.rechargeWithdraw.withdrawal')}</DialogTitle>
+            <DialogDescription>{t('fund.rechargeWithdraw.approveDescription')}</DialogDescription>
           </DialogHeader>
           <Form {...approveForm}>
             <form
@@ -271,7 +274,7 @@ export function DataTableRowActions<TData>({
               className='space-y-4'
             >
               <div className='grid gap-2'>
-                <FormLabel>提现金额</FormLabel>
+                <FormLabel>{t('fund.accountSettlement.withdrawAmount')}</FormLabel>
                 <InputGroup>
                   <InputGroupInput value={data.rechargeAmount} disabled />
                   <InputGroupAddon align='inline-end'>
@@ -286,14 +289,14 @@ export function DataTableRowActions<TData>({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      汇率 <span className='text-red-500'>*</span>
+                      {t('fund.rechargeWithdraw.exchangeRate')} <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type='text'
                         inputMode='decimal'
-                        placeholder='请输入汇率'
+                        placeholder={t('common.enterExchangeRate')}
                         onKeyPress={(e) => {
                           const char = e.key
                           const value = e.currentTarget.value
@@ -314,7 +317,7 @@ export function DataTableRowActions<TData>({
               />
 
               <div className='grid gap-2'>
-                <FormLabel>实际金额</FormLabel>
+                <FormLabel>{t('fund.rechargeWithdraw.actualAmount')}</FormLabel>
                 <div className='relative'>
                   <Input
                     value={convertAmount(calculatedAmount, false)}
@@ -331,13 +334,13 @@ export function DataTableRowActions<TData>({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      提现密码 <span className='text-red-500'>*</span>
+                      {t('fund.accountSettlement.withdrawPassword')} <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type='password'
-                        placeholder='请输入提现密码'
+                        placeholder={t('common.enterWithdrawPassword')}
                       />
                     </FormControl>
                     <FormMessage />
@@ -351,10 +354,10 @@ export function DataTableRowActions<TData>({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      谷歌验证码 <span className='text-red-500'>*</span>
+                      {t('fund.rechargeWithdraw.googleAuthCode')} <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='请输入谷歌验证码' />
+                      <Input {...field} placeholder={t('common.enterGoogleAuthCode')} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -365,9 +368,9 @@ export function DataTableRowActions<TData>({
                 name='remark'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>备注</FormLabel>
+                    <FormLabel>{t('fund.rechargeWithdraw.remark')}</FormLabel>
                     <FormControl>
-                      <Textarea {...field} placeholder='请输入备注' />
+                      <Textarea {...field} placeholder={t('common.enterRemark')} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -382,10 +385,10 @@ export function DataTableRowActions<TData>({
                     approveForm.reset()
                   }}
                 >
-                  取消
+                  {t('common.cancel')}
                 </Button>
                 <Button type='submit' disabled={loading}>
-                  {loading ? '处理中...' : '确定'}
+                  {loading ? t('fund.rechargeWithdraw.pending') : t('common.confirm')}
                 </Button>
               </DialogFooter>
             </form>
@@ -397,8 +400,8 @@ export function DataTableRowActions<TData>({
       <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
         <DialogContent className='max-w-md'>
           <DialogHeader>
-            <DialogTitle>拒绝</DialogTitle>
-            <DialogDescription>请填写拒绝原因</DialogDescription>
+            <DialogTitle>{t('common.reject')}</DialogTitle>
+            <DialogDescription>{t('fund.rechargeWithdraw.pleaseEnterRejectReason')}</DialogDescription>
           </DialogHeader>
           <Form {...rejectForm}>
             <form
@@ -411,10 +414,10 @@ export function DataTableRowActions<TData>({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      拒绝原因 <span className='text-red-500'>*</span>
+                      {t('fund.rechargeWithdraw.rejectReason')} <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Textarea {...field} placeholder='请输入拒绝原因...' />
+                      <Textarea {...field} placeholder={t('fund.rechargeWithdraw.pleaseEnterRejectReason')} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -430,10 +433,10 @@ export function DataTableRowActions<TData>({
                     rejectForm.reset()
                   }}
                 >
-                  取消
+                  {t('common.cancel')}
                 </Button>
                 <Button type='submit' variant='destructive' disabled={loading}>
-                  {loading ? '处理中...' : '确定'}
+                  {loading ? t('fund.rechargeWithdraw.pending') : t('common.confirm')}
                 </Button>
               </DialogFooter>
             </form>

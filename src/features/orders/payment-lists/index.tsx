@@ -1,10 +1,13 @@
 import { Main } from '@/components/layout/main'
+import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 import { PaymentListsTable } from './components/payment-lists-table'
 import { PaymentListsProvider } from './components/payment-lists-provider'
 import { PaymentListsDialogs } from './components/payment-lists-dialogs'
 
 export function PaymentLists() {
-  
+  const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
 
   return (
     <PaymentListsProvider>
@@ -12,7 +15,7 @@ export function PaymentLists() {
       <div className='flex flex-wrap items-end justify-between gap-2'>
         <div>
           <h2 className='text-2xl font-bold tracking-tight'>
-            付款订单明细
+            {t('orders.paymentOrders.title')}
           </h2>
         </div>
       </div>

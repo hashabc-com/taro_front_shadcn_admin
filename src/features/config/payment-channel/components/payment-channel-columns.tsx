@@ -1,18 +1,21 @@
 import { type ColumnDef } from '@tanstack/react-table'
+import { getTranslation, type Language } from '@/lib/i18n'
 import { Badge } from '@/components/ui/badge'
 import { type PaymentChannel } from '../schema'
 import { DataTableRowActions } from './data-table-row-actions'
 
-export const getPaymentChannelColumns = (): ColumnDef<PaymentChannel>[] => {
-
+export const getPaymentChannelColumns = (
+  language: Language = 'zh'
+): ColumnDef<PaymentChannel>[] => {
+  const t = (key: string) => getTranslation(language, key)
   return [
     {
       accessorKey: 'customerName',
-      header: '商户名称',
+      header: t('config.paymentChannel.merchantName'),
     },
     {
       accessorKey: 'country',
-      header: '国家',
+      header: t('common.country'),
       cell: ({ row }) => {
         const country = row.getValue('country') as string | null
         return country || '-'
@@ -20,19 +23,19 @@ export const getPaymentChannelColumns = (): ColumnDef<PaymentChannel>[] => {
     },
     {
       accessorKey: 'type',
-      header: '代收/代付',
+      header: t('config.paymentChannel.collectionPayout'),
       cell: ({ row }) => {
         const type = row.getValue('type') as number
         return (
           <Badge variant={type === 1 ? 'default' : 'secondary'}>
-            {type === 1 ? '代付' : '代收'}
+            {type === 1 ? t('config.paymentChannel.payout') : t('config.paymentChannel.collection')}
           </Badge>
         )
       },
     },
     {
       accessorKey: 'channel',
-      header: '支持渠道',
+      header: t('config.paymentChannel.supportedChannels'),
       cell: ({ row }) => {
         const channels = row.getValue('channel') as string
         return (
@@ -48,19 +51,19 @@ export const getPaymentChannelColumns = (): ColumnDef<PaymentChannel>[] => {
     },
     {
       accessorKey: 'status',
-      header: '状态',
+      header: t('common.status'),
       cell: ({ row }) => {
         const status = row.getValue('status') as number
         return (
           <Badge variant={status === 1 ? 'default' : 'destructive'}>
-            {status === 1 ? '启用' : '禁用'}
+            {status === 1 ? t('common.enabled') : t('common.disabled')}
           </Badge>
         )
       },
     },
     {
       id: 'actions',
-      header: '操作',
+      header: t('common.action'),
       cell: ({ row }) => <DataTableRowActions row={row} />,
     },
   ]

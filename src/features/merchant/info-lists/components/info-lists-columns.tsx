@@ -110,7 +110,7 @@ export const getColumns = (
     header: t('merchant.info.status'),
     // meta: { className: 'w-[0px]' },
     cell: ({ row }) => {
-      return row.original.status === 0 ? '启用' : '禁用'
+      return row.original.status === 0 ? t('common.enabled') : t('common.disabled')
     },
   },
   {

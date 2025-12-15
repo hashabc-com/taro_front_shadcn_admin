@@ -13,6 +13,7 @@ import {
 import { sceneCodeMap } from '../schema'
 import { DataTableViewOptions } from '@/components/data-table'
 import type { Table } from '@tanstack/react-table'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/config/risk-control-rule')
 
@@ -25,7 +26,7 @@ export function RuleConfigSearch<TData>({
 }: RuleConfigSearchProps<TData>) {
   const navigate = route.useNavigate()
   const search = route.useSearch()
-
+  const { t } = useLanguage()
   const [ruleName, setRuleName] = useState(search.ruleName || '')
   const [sceneCode, setSceneCode] = useState<string | undefined>(
     search.sceneCode || undefined
@@ -63,7 +64,7 @@ export function RuleConfigSearch<TData>({
     <div className='flex flex-wrap items-center gap-3'>
       <div className='flex flex-col gap-2'>
         <Input
-          placeholder='规则名称'
+          placeholder={t('config.riskControlRule.ruleName')}
           value={ruleName}
           onChange={(e) => setRuleName(e.target.value)}
           className='w-[160px]'
@@ -74,7 +75,7 @@ export function RuleConfigSearch<TData>({
       <div className='flex flex-col gap-2'>
         <Select value={sceneCode} onValueChange={setSceneCode}>
           <SelectTrigger className='w-[160px]'>
-            <SelectValue placeholder='规则场景' />
+            <SelectValue placeholder={t('config.riskControlRule.ruleScene')} />
           </SelectTrigger>
           <SelectContent>
             {Object.entries(sceneCodeMap).map(([value, label]) => (
@@ -92,11 +93,11 @@ export function RuleConfigSearch<TData>({
           onValueChange={(value) => setStatus(value)}
         >
           <SelectTrigger className='w-[120px]'>
-            <SelectValue placeholder='状态' />
+            <SelectValue placeholder={t('config.riskControlRule.status')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='1'>启用</SelectItem>
-            <SelectItem value='0'>禁用</SelectItem>
+            <SelectItem value='1'>{t('common.enabled')}</SelectItem>
+            <SelectItem value='0'>{t('common.disabled')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -104,12 +105,12 @@ export function RuleConfigSearch<TData>({
       <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
-          搜索
+          {t('common.search')}
         </Button>
         {!!hasFilters && (
           <Button onClick={handleReset} variant='outline' size='sm'>
             <X className='mr-2 h-4 w-4' />
-            重置
+            {t('common.reset')}
           </Button>
         )}
       </div>

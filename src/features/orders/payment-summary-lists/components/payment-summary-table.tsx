@@ -22,12 +22,14 @@ import { getTasksColumns } from './payment-summary-columns'
 import { PaymentSummarySearch } from './payment-summary-search'
 import { usePaymentSummaryData } from '../hooks/use-payment-summary-data'
 import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/orders/payment-summary-lists')
 
 
 export function PaymentSummaryTable() {
   const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
   const { data, isLoading,totalRecord, summaryData } = usePaymentSummaryData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -46,7 +48,7 @@ export function PaymentSummaryTable() {
       return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
     }, [totalRecord, pagination.pageSize])
 
-  const columns = useMemo(() => getTasksColumns(), [lang])
+  const columns = useMemo(() => getTasksColumns(lang), [lang])
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -135,7 +137,7 @@ export function PaymentSummaryTable() {
                   {/* 合计行 */}
                   <TableRow className='bg-muted/50 font-semibold'>
                     <TableCell colSpan={3} className='text-right'>
-                      合计
+                      {t('common.total')}
                     </TableCell>
                     <TableCell>
                       {summaryData.orderTotal}
@@ -157,7 +159,7 @@ export function PaymentSummaryTable() {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    No results.
+                    {t('common.noResults')}
                   </TableCell>
                 </TableRow>
               )}

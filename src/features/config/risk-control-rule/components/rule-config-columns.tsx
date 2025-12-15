@@ -1,12 +1,15 @@
 import { type ColumnDef } from '@tanstack/react-table'
+import { getTranslation, type Language } from '@/lib/i18n'
 import { Badge } from '@/components/ui/badge'
 import { DataTableRowActions } from './data-table-row-actions'
 import { type RuleConfig, sceneCodeMap, actionCodeMap } from '../schema'
 
 export function getColumns(
   onEdit: (rule: RuleConfig) => void,
-  onDelete: (rule: RuleConfig) => void
+  onDelete: (rule: RuleConfig) => void,
+  language: Language = 'zh'
 ): ColumnDef<RuleConfig>[] {
+  const t = (key: string) => getTranslation(language, key)
   return [
     {
       accessorKey: 'id',
@@ -16,7 +19,7 @@ export function getColumns(
     },
     {
       accessorKey: 'ruleName',
-      header: '规则名称',
+      header: t('config.riskControlRule.ruleName'),
       enableHiding: false,
       cell: ({ row }) => (
         <div className='max-w-[150px] truncate'>{row.getValue('ruleName')}</div>
@@ -24,7 +27,7 @@ export function getColumns(
     },
     {
       accessorKey: 'ruleDesc',
-      header: '规则描述',
+      header: t('config.riskControlRule.ruleDescription'),
       enableHiding: false,
       cell: ({ row }) => (
         <div className='max-w-[150px] truncate'>
@@ -34,7 +37,7 @@ export function getColumns(
     },
     {
       accessorKey: 'sceneCode',
-      header: '规则场景',
+      header: t('config.riskControlRule.ruleScene'),
       cell: ({ row }) => {
         const sceneCode = row.getValue('sceneCode') as string
         return (
@@ -46,7 +49,7 @@ export function getColumns(
     },
     {
       accessorKey: 'conditionExpr',
-      header: '条件表达式',
+      header: t('config.riskControlRule.conditionExpression'),
       cell: ({ row }) => (
         <div className='max-w-[200px] truncate'>
           {row.getValue('conditionExpr')}
@@ -55,7 +58,7 @@ export function getColumns(
     },
     {
       accessorKey: 'actionCode',
-      header: '动作标识',
+      header: t('config.riskControlRule.actionCode'),
       cell: ({ row }) => {
         const actionCode = row.getValue('actionCode') as string
         return (
@@ -67,24 +70,24 @@ export function getColumns(
     },
     {
       accessorKey: 'priority',
-      header: '优先级',
+      header: t('config.riskControlRule.priority'),
       meta:{
         className: 'text-center',
       }
     },
     {
       accessorKey: 'status',
-      header: '状态',
+      header: t('common.status'),
       cell: ({ row }) => {
         const status = row.getValue('status') as number
         return (
           <div className='w-[80px]'>
             {status === 1 ? (
               <Badge variant='default' className='bg-green-600'>
-                启用
+                {t('common.enabled')}
               </Badge>
             ) : (
-              <Badge variant='destructive'>禁用</Badge>
+              <Badge variant='destructive'>{t('common.disabled')}</Badge>
             )}
           </div>
         )
@@ -92,7 +95,7 @@ export function getColumns(
     },
     {
       accessorKey: 'createTime',
-      header: '创建时间',
+      header: t('common.createTime'),
       cell: ({ row }) => (
         <div className='max-w-[150px] truncate'>
           {row.getValue('createTime') || '-'}
@@ -101,7 +104,7 @@ export function getColumns(
     },
     {
       accessorKey: 'updateTime',
-      header: '更新时间',
+      header: t('common.updateTime'),
       cell: ({ row }) => (
         <div className='max-w-[150px] truncate'>
           {row.getValue('updateTime') || '-'}
@@ -110,7 +113,7 @@ export function getColumns(
     },
     {
       id: 'actions',
-      header: '操作',
+      header: t('common.action'),
       cell: ({ row }) => (
         <DataTableRowActions row={row} onEdit={onEdit} onDelete={onDelete} />
       ),

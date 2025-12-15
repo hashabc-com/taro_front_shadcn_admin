@@ -85,7 +85,7 @@ export function MerchantInfoTable() {
         toast.success(`${merchant.companyName} 状态更新成功`)
         refetch()
       } else {
-        toast.error('状态更新失败')
+        toast.error(t('merchant.info.error.statusUpdateFailed'))
       }
     } catch (_error) {
       toast.error('状态更新失败')

@@ -19,6 +19,7 @@ import {
 //   SelectValue,
 // } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/fund/merchant-daily-summary')
 
@@ -36,7 +37,7 @@ export function MerchantDailySummarySearch<TData>({
 }: MerchantDailySummarySearchProps<TData>) {
   const navigate = route.useNavigate()
   const search = route.useSearch()
-  
+  const { t } = useLanguage()
   const [dateRange, setDateRange] = useState<DateRange>({
     from: search.startTime ? new Date(search.startTime) : undefined,
     to: search.endTime ? new Date(search.endTime) : undefined,
@@ -88,7 +89,7 @@ export function MerchantDailySummarySearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>选择日期范围</span>
+                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -114,12 +115,12 @@ export function MerchantDailySummarySearch<TData>({
       <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
-          搜索
+          {t('common.search')}
         </Button>
         {hasFilters && (
           <Button onClick={handleReset} variant='outline' size='sm'>
             <X className='mr-2 h-4 w-4' />
-            重置
+            {t('common.reset')}
           </Button>
         )}
       </div>

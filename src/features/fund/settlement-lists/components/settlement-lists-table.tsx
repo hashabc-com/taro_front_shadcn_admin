@@ -22,12 +22,14 @@ import { getTasksColumns } from './settlement-lists-columns'
 import { SettlementListsSearch } from './settlement-lists-search'
 import { useSettlementListData } from '../hooks/use-settlement-lists-data'
 import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/fund/settlement-lists')
 
 
 export function SettlementListTable() {
   const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
   const { data, isLoading,totalRecord } = useSettlementListData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -136,7 +138,7 @@ export function SettlementListTable() {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    No results.
+                    {t('common.noResults')}
                   </TableCell>
                 </TableRow>
               )}

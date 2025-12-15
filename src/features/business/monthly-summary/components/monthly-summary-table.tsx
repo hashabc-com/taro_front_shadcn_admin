@@ -19,15 +19,16 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 import { useMonthlySummaryData } from '../hooks/use-monthly-summary-data'
-import { columns } from './monthly-summary-columns'
+import { getMonthlySummaryColumns } from './monthly-summary-columns'
 import { MonthlySummarySearch } from './monthly-summary-search'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/business/monthly-summary')
 
 export function MonthlySummaryTable() {
   const { data, isLoading, totalRecord } = useMonthlySummaryData()
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-
+  const { lang } = useLanguage()
   const { pagination, onPaginationChange, ensurePageInRange } =
     useTableUrlState({
       search: route.useSearch(),
@@ -39,6 +40,8 @@ export function MonthlySummaryTable() {
     const pageSize = pagination.pageSize ?? 10
     return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
   }, [totalRecord, pagination.pageSize])
+
+  const columns = useMemo(() => getMonthlySummaryColumns(lang), [lang])
 
   const table = useReactTable({
     data,

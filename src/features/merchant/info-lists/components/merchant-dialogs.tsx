@@ -176,12 +176,12 @@ export function AddIpDialog({
     })
 
     if (res.code == 200) {
-      toast.success('添加成功')
+      toast.success(t('common.addSuccess'))
       onOpenChange(false)
       form.reset()
       onSuccess()
     } else {
-      toast.error(res.message || '添加失败')
+      toast.error(res.message || t('common.addFailed'))
     }
     setIsSubmitting(false)
   }

@@ -29,19 +29,7 @@ import { type IAccountType, userTypes } from '../schema'
 import { createAccount, updateAccount, getAccountById } from '@/api/account'
 import { getAllRoles } from '@/api/role'
 import { useLanguage } from '@/context/language-provider'
-
-// 表单验证Schema
-const accountFormSchema = z.object({
-  userName: z.string().min(1, '请输入姓名'),
-  account: z.string().min(1, '请输入账号'),
-  password: z.string().optional(),
-  mobile: z.string().optional(),
-  roleIds: z.number().min(1, '请选择角色'),
-  userType: z.number().min(1, '请选择类型'),
-  disabledStatus: z.number(),
-})
-
-type AccountFormValues = z.infer<typeof accountFormSchema>
+import { useI18n } from '@/hooks/use-i18n'
 
 type AccountMutateDrawerProps = {
   open: boolean
@@ -58,10 +46,25 @@ export function AccountMutateDrawer({
 }: AccountMutateDrawerProps) {
   const queryClient = useQueryClient()
   const {t} = useLanguage()
+  const { t: ti18n } = useI18n()
+  
+  // 动态创建验证 schema
+  const accountFormSchema = z.object({
+    userName: z.string().min(1, ti18n('system.accountManage.validation.nameRequired')),
+    account: z.string().min(1, ti18n('system.accountManage.validation.accountRequired')),
+    password: z.string().optional(),
+    mobile: z.string().optional(),
+    roleIds: z.number().min(1, ti18n('system.accountManage.validation.roleRequired')),
+    userType: z.number().min(1, ti18n('system.accountManage.validation.typeRequired')),
+    disabledStatus: z.number(),
+  })
+  
+  type AccountFormValues = z.infer<typeof accountFormSchema>
+  
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(
       isAdd
-        ? accountFormSchema.extend({ password: z.string().min(1, '请输入密码') })
+        ? accountFormSchema.extend({ password: z.string().min(1, ti18n('system.accountManage.validation.passwordRequired')) })
         : accountFormSchema
     ),
     defaultValues: {
@@ -130,11 +133,11 @@ export function AccountMutateDrawer({
         toast.success(isAdd ? t('common.addSuccess') : t('common.updateSuccess'))
         handleClose()
       }else{
-        toast.error(res.message || '操作失败')
+        toast.error(res.message || ti18n('common.operationFailed'))
       }
     },
     onError: (error: { message?: string }) => {
-      toast.error(error.message || '操作失败')
+      toast.error(error.message || ti18n('common.operationFailed'))
     },
   })
 
@@ -153,7 +156,7 @@ export function AccountMutateDrawer({
         <SheetHeader className='text-start'>
           <SheetTitle>{isAdd ? t('system.accountManage.addAdministrator') : t('system.accountManage.editAdministrator')}</SheetTitle>
           <SheetDescription>
-            {isAdd ? '创建新的管理员账户' : '修改管理员账户信息'}
+            {isAdd ? ti18n('system.accountManage.createDescription') : ti18n('system.accountManage.editDescription')}
           </SheetDescription>
         </SheetHeader>
 
@@ -164,9 +167,9 @@ export function AccountMutateDrawer({
               name='userName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>姓名</FormLabel>
+                  <FormLabel>{ti18n('system.accountManage.name')}</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入姓名' {...field} />
+                    <Input placeholder={ti18n('system.accountManage.placeholder.name')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -178,9 +181,9 @@ export function AccountMutateDrawer({
               name='account'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>账号</FormLabel>
+                  <FormLabel>{ti18n('common.account')}</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入账号' {...field} />
+                    <Input placeholder={ti18n('system.accountManage.placeholder.account')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,9 +196,9 @@ export function AccountMutateDrawer({
                 name='password'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>密码</FormLabel>
+                    <FormLabel>{ti18n('common.password')}</FormLabel>
                     <FormControl>
-                      <Input type='password' placeholder='请输入密码' {...field} />
+                      <Input type='password' placeholder={ti18n('system.accountManage.placeholder.password')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -208,9 +211,9 @@ export function AccountMutateDrawer({
               name='mobile'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>手机号</FormLabel>
+                  <FormLabel>{ti18n('common.phone')}</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入手机号' {...field} />
+                    <Input placeholder={ti18n('system.accountManage.placeholder.phone')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -222,7 +225,7 @@ export function AccountMutateDrawer({
               name='userType'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>类型</FormLabel>
+                  <FormLabel>{ti18n('common.type')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={(value) => field.onChange(Number(value))}
@@ -233,7 +236,7 @@ export function AccountMutateDrawer({
                         <div key={type.value} className='flex items-center space-x-2'>
                           <RadioGroupItem value={type.value.toString()} id={`type-${type.value}`} />
                           <label htmlFor={`type-${type.value}`} className='cursor-pointer'>
-                            {type.label}
+                            {ti18n(type.key)}
                           </label>
                         </div>
                       ))}
@@ -249,7 +252,7 @@ export function AccountMutateDrawer({
               name='roleIds'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>角色</FormLabel>
+                  <FormLabel>{ti18n('common.role')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={(value) => field.onChange(Number(value))}
@@ -277,9 +280,9 @@ export function AccountMutateDrawer({
               render={({ field }) => (
                 <FormItem className='flex items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>账号状态</FormLabel>
+                    <FormLabel className='text-base'>{ti18n('system.accountManage.accountStatus')}</FormLabel>
                     <div className='text-muted-foreground text-sm'>
-                      {field.value === 0 ? '启用' : '禁用'}
+                      {field.value === 0 ? ti18n('common.enabled') : ti18n('common.disabled')}
                     </div>
                   </div>
                   <FormControl>
@@ -294,11 +297,11 @@ export function AccountMutateDrawer({
 
             <SheetFooter className='pt-4'>
             <Button type='submit' disabled={mutation.isPending}>
-                {mutation.isPending ? '提交中...' : '确定'}
+                {mutation.isPending ? ti18n('common.submitting') : ti18n('common.confirm')}
               </Button>
               <SheetClose asChild>
                 <Button type='button' variant='outline'>
-                  取消
+                  {ti18n('common.cancel')}
                 </Button>
               </SheetClose>
               

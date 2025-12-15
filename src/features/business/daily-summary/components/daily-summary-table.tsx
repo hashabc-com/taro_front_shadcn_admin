@@ -19,15 +19,16 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 import { useDailySummaryData } from '../hooks/use-daily-summary-data'
-import { columns } from './daily-summary-columns'
+import { getDailySummaryColumns } from './daily-summary-columns'
 import { DailySummarySearch } from './daily-summary-search'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/business/daily-summary')
 
 export function DailySummaryTable() {
   const { data, isLoading, totalRecord } = useDailySummaryData()
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-
+  const { lang } = useLanguage()
   const { pagination, onPaginationChange, ensurePageInRange } =
     useTableUrlState({
       search: route.useSearch(),
@@ -39,6 +40,8 @@ export function DailySummaryTable() {
     const pageSize = pagination.pageSize ?? 10
     return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
   }, [totalRecord, pagination.pageSize])
+
+  const columns = useMemo(() => getDailySummaryColumns(lang), [lang])
 
   const table = useReactTable({
     data,

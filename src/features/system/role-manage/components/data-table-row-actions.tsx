@@ -25,6 +25,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteRole } from '@/api/role'
 import { toast } from 'sonner'
 import { RoleEditDialog } from './role-edit-dialog'
+import { useI18n } from '@/hooks/use-i18n'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -35,6 +36,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   const queryClient = useQueryClient()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const { t } = useI18n()
 
   const deleteMutation = useMutation({
     mutationFn: () => {
@@ -45,14 +47,14 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     onSuccess: (res) => {
       if(res.code == 200){
          queryClient.invalidateQueries({ queryKey: ['roles'] })
-         toast.success('删除成功')
+         toast.success(t('common.deleteSuccess'))
       }else{
-        toast.error(res.message || '删除失败')
+        toast.error(res.message || t('common.deleteFailed'))
       }
       setDeleteDialogOpen(false)
     },
     onError: (error: unknown) => {
-      toast.error((error as Error).message || '删除失败')
+      toast.error((error as Error).message || t('common.deleteFailed'))
     },
   })
 
@@ -72,7 +74,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         <DropdownMenuContent align='end' className='w-[140px]'>
           <DropdownMenuItem onClick={() => setEditDialogOpen(true)}>
             <Edit className='mr-2 h-4 w-4' />
-            编辑
+            {t('common.edit')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -80,7 +82,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             className='text-destructive focus:text-destructive'
           >
             <Trash2 className='mr-2 h-4 w-4' />
-            删除
+            {t('common.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -88,19 +90,19 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>确认删除</AlertDialogTitle>
+            <AlertDialogTitle>{t('common.confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              确认要删除角色 <span className='font-semibold'>{role.role}</span> 吗?此操作无法撤销。
+              {t('common.deleteConfirmation')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
               className='bg-destructive hover:bg-destructive/90'
             >
-              {deleteMutation.isPending ? '删除中...' : '确认删除'}
+              {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

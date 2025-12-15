@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useAuthStore } from '@/stores'
+import { useLanguage } from '@/context/language-provider'
 
 const CURRENCY_TYPES = [
   { title: '美金', value: 'USD' },
@@ -33,6 +34,7 @@ interface RechargeFormProps {
 }
 
 export function RechargeForm({ onSuccess }: RechargeFormProps) {
+  const { t } = useLanguage()
   const { selectedMerchant } = useMerchantStore()
   const { selectedCountry } = useCountryStore()
   const { userInfo } = useAuthStore()
@@ -78,19 +80,19 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
   // 确认充值
   const handleSubmit = async () => {
     if (!selectedMerchant?.appid) {
-      toast.error('请先选择商户')
+      toast.error(t('common.pleaseSelectMerchantFirst'))
       return
     }
     if (parseFloat(finalAmount) === 0) {
-      toast.error('金额输入错误')
+      toast.error(t('fund.accountSettlement.invalidAmount'))
       return
     }
     if (!form.rechargeKey) {
-      toast.error('请输入密码')
+      toast.error(t('common.pleaseEnterPassword'))
       return
     }
     if (!form.gauthCode) {
-      toast.error('请输入谷歌验证码')
+      toast.error(t('common.enterGoogleAuthCode'))
       return
     }
 
@@ -109,11 +111,11 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
       country: selectedCountry?.code || '',
     })
     if (res.code == 200) {
-      toast.success('充值成功')
+      toast.success(t('fund.accountSettlement.rechargeSuccess'))
       resetForm()
       onSuccess?.()
     } else {
-      toast.error(res.message || '充值失败')
+      toast.error(res.message || t('fund.accountSettlement.rechargeFailed'))
     }
     setIsSubmitting(false)
   }
@@ -121,15 +123,15 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>充值</CardTitle>
+        <CardTitle>{t('fund.accountSettlement.recharge')}</CardTitle>
       </CardHeader>
       <CardContent className='space-y-4'>
         <div className='space-y-2'>
-          <Label>充值金额</Label>
+          <Label>{t('fund.accountSettlement.rechargeAmount')}</Label>
           <div className='flex gap-2'>
             <Input
               type='number'
-              placeholder='请输入充值金额'
+              placeholder={t('fund.accountSettlement.enterRechargeAmount')}
               value={form.rechargeAmount}
               onChange={(e) =>
                 setForm((prev) => ({ ...prev, rechargeAmount: e.target.value }))
@@ -155,7 +157,7 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
             </Select>
             <Input
               type='number'
-              placeholder='汇率'
+              placeholder={t('fund.rechargeWithdraw.exchangeRate')}
               value={form.exchangeRate}
               onChange={(e) =>
                 setForm((prev) => ({ ...prev, exchangeRate: e.target.value }))
@@ -164,20 +166,20 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
               className='w-[120px]'
             />
             <Button variant='outline' onClick={handleClear}>
-              清空
+              {t('common.clear')}
             </Button>
           </div>
         </div>
 
         <div className='space-y-2'>
-          <Label>实际存款金额（{selectedCountry?.currency}）</Label>
+          <Label>{t('fund.accountSettlement.actualDepositAmount')}（{selectedCountry?.currency}）</Label>
           <Input value={finalAmount} disabled className='bg-muted' />
         </div>
 
         <div className='space-y-2'>
-          <Label>备注</Label>
+          <Label>{t('fund.accountSettlement.remark')}</Label>
           <Textarea
-            placeholder='请输入备注'
+            placeholder={t('common.enterRemark')}
             value={form.remark}
             onChange={(e) =>
               setForm((prev) => ({ ...prev, remark: e.target.value }))
@@ -187,10 +189,10 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
         </div>
 
         <div className='space-y-2'>
-          <Label>充值密码</Label>
+          <Label>{t('fund.accountSettlement.rechargePassword')}</Label>
           <Input
             type='password'
-            placeholder='请输入充值密码'
+            placeholder={t('common.enterRechargePassword')}
             value={form.rechargeKey}
             onChange={(e) =>
               setForm((prev) => ({ ...prev, rechargeKey: e.target.value }))
@@ -199,9 +201,9 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
         </div>
 
         <div className='space-y-2'>
-          <Label>谷歌验证码</Label>
+          <Label>{t('common.googleAuthCode')}</Label>
           <Input
-            placeholder='请输入谷歌验证码'
+            placeholder={t('common.enterGoogleAuthCode')}
             value={form.gauthCode}
             onChange={(e) =>
               setForm((prev) => ({ ...prev, gauthCode: e.target.value }))
@@ -215,7 +217,7 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
           onClick={handleSubmit}
           disabled={isSubmitting}
         >
-          {isSubmitting ? '充值中...' : '充值'}
+          {isSubmitting ? t('fund.accountSettlement.recharging') : t('fund.accountSettlement.recharge')}
         </Button>
       </CardContent>
     </Card>

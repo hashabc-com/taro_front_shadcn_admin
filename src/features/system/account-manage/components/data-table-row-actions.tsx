@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { accountSchema } from '../schema'
 import { useAccount } from './account-provider'
 import { updateDisabledStatus } from '@/api/account'
+import { useI18n } from '@/hooks/use-i18n'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -23,6 +24,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   const account = accountSchema.parse(row.original)
   const { setOpen, setCurrentRow } = useAccount()
   const queryClient = useQueryClient()
+  const { t } = useI18n()
 
   const statusMutation = useMutation({
     mutationFn: (disableStatus: number) =>
@@ -33,13 +35,13 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     onSuccess: (res) => {
       if(res.code == 200){
         queryClient.invalidateQueries({ queryKey: ['system','account-manage'] })
-        toast.success('状态更新成功')
+        toast.success(t('common.statusUpdateSuccess'))
       }else{
-        toast.error(res.message || '状态更新失败')
+        toast.error(res.message || t('common.statusUpdateFailed'))
       }
     },
     onError: () => {
-      toast.error('状态更新失败')
+      toast.error(t('common.statusUpdateFailed'))
     },
   })
 
@@ -65,7 +67,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
               setOpen('update')
             }}
           >
-            编辑
+            {t('common.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -73,11 +75,11 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
               setOpen('password')
             }}
           >
-            修改密码
+            {t('system.accountManage.changePassword')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            状态
+            {t('common.status')}
             <Switch
                 checked={account.disabledStatus === 0}
                 onCheckedChange={handleStatusChange}
@@ -92,7 +94,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             }}
             className='text-red-600'
           >
-            删除
+            {t('common.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

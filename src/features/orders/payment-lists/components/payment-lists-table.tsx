@@ -22,12 +22,14 @@ import { getTasksColumns } from './payment-lists-columns'
 import { ReceiveListsSearch } from './payment-lists-search'
 import { usePaymentListsData } from '../hooks/use-payment-lists-data'
 import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/orders/payment-lists')
 
 
 export function PaymentListsTable() {
   const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
   const { orders:data, isLoading,totalRecord } = usePaymentListsData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -135,7 +137,7 @@ const pageCount = useMemo(() => {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    No results.
+                    {t('common.noResults')}
                   </TableCell>
                 </TableRow>
               )}

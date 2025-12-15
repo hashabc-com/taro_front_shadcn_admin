@@ -8,12 +8,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { useLanguage } from '@/context/language-provider'
 
 interface WithdrawFormProps {
   onSuccess?: () => void
 }
 
 export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
+  const { t } = useLanguage()
   const { selectedMerchant } = useMerchantStore()
   const { selectedCountry } = useCountryStore()
 
@@ -39,19 +41,19 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
   // 确认提现
   const handleSubmit = async () => {
     if (!selectedMerchant?.appid) {
-      toast.error('请先选择商户')
+      toast.error(t('common.pleaseSelectMerchantFirst'))
       return
     }
     if (parseFloat(form.finalAmount) === 0) {
-      toast.error('金额输入错误')
+      toast.error(t('fund.accountSettlement.invalidAmount'))
       return
     }
     if (!form.rechargeKey) {
-      toast.error('请输入密码')
+      toast.error(t('common.pleaseEnterPassword'))
       return
     }
     if (!form.gauthCode) {
-      toast.error('请输入谷歌验证码')
+      toast.error(t('common.googleAuthCode'))
       return
     }
 
@@ -66,11 +68,11 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
       ...form,
     })
     if (res.code == 200) {
-      toast.success('提现成功')
+      toast.success(t('fund.accountSettlement.withdrawSuccess'))
       resetForm()
       onSuccess?.()
     } else {
-      toast.error(res.message || '提现失败')
+      toast.error(res.message || t('fund.accountSettlement.withdrawFailed'))
     }
     setIsSubmitting(false)
   }
@@ -78,14 +80,14 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>提现</CardTitle>
+        <CardTitle>{t('fund.accountSettlement.withdraw')}</CardTitle>
       </CardHeader>
       <CardContent className='space-y-4'>
         <div className='space-y-2'>
-          <Label>提现金额</Label>
+          <Label>{t('fund.accountSettlement.withdrawAmount')}</Label>
           <Input
             type='number'
-            placeholder='请输入提现金额'
+            placeholder={t('fund.accountSettlement.enterWithdrawAmount')}
             value={form.finalAmount}
             onChange={(e) =>
               setForm((prev) => ({ ...prev, finalAmount: e.target.value }))
@@ -95,9 +97,9 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
         </div>
 
         <div className='space-y-2'>
-          <Label>备注</Label>
+          <Label>{t('fund.accountSettlement.remark')}</Label>
           <Textarea
-            placeholder='请输入备注'
+            placeholder={t('common.enterRemark')}
             value={form.remark}
             onChange={(e) =>
               setForm((prev) => ({ ...prev, remark: e.target.value }))
@@ -107,10 +109,10 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
         </div>
 
         <div className='space-y-2'>
-          <Label>提现密码</Label>
+          <Label>{t('fund.accountSettlement.withdrawPassword')}</Label>
           <Input
             type='password'
-            placeholder='请输入提现密码'
+            placeholder={t('fund.rechargeWithdraw.pleaseEnterWithdrawPassword')}
             value={form.rechargeKey}
             onChange={(e) =>
               setForm((prev) => ({ ...prev, rechargeKey: e.target.value }))
@@ -119,9 +121,9 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
         </div>
 
         <div className='space-y-2'>
-          <Label>谷歌验证码</Label>
+          <Label>{t('common.googleAuthCode')}</Label>
           <Input
-            placeholder='请输入谷歌验证码'
+            placeholder={t('common.enterGoogleAuthCode')}
             value={form.gauthCode}
             onChange={(e) =>
               setForm((prev) => ({ ...prev, gauthCode: e.target.value }))
@@ -135,7 +137,7 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
           onClick={handleSubmit}
           disabled={isSubmitting}
         >
-          {isSubmitting ? '提现中...' : '提现'}
+          {isSubmitting ? t('fund.accountSettlement.withdrawing') : t('fund.accountSettlement.withdraw')}
         </Button>
       </CardContent>
     </Card>

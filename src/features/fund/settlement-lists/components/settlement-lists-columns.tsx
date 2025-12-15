@@ -10,12 +10,12 @@ export const getTasksColumns = (
   return [
   {
     accessorKey: 'companyName',
-    header: '商户',
+    header: t('fund.settlement.merchant'),
     enableHiding: false
   },
   {
     accessorKey: 'type',
-    header: '类型',
+    header: t('fund.settlement.type'),
     enableSorting: false,
     cell: ({ row }) => (
       <Badge variant='outline'>{row.getValue('type')}</Badge>
@@ -23,7 +23,7 @@ export const getTasksColumns = (
   },
   {
     accessorKey: 'createTime',
-    header: '操作日期',
+    header: t('fund.settlement.operationDate'),
     enableSorting: false,
     cell: ({ row }) => (
       <div className='flex flex-col gap-1'>
@@ -33,27 +33,27 @@ export const getTasksColumns = (
   },
   {
     accessorKey: 'rechargeAmount',
-    header: '金额'
+    header: t('fund.settlement.amount')
   },
   {
     accessorKey: 'withdrawalType',
-    header: '提现币种'
+    header: t('fund.settlement.withdrawalCurrency')
   },
   {
     accessorKey: 'exchangeRate',
-    header: '汇率'
+    header: t('fund.settlement.exchangeRate')
   },
   {
     accessorKey: 'finalAmount',
-    header: '实际金额'
+    header: t('fund.settlement.actualAmount')
   },
   {
     accessorKey: 'remark',
-    header: '备注'
+    header: t('fund.settlement.remark')
   },
 {
     accessorKey: 'processStatus',
-    header: '审核状态',
+    header: t('fund.settlement.auditStatus'),
     cell: ({ row }) => {
             const statusesItem = statuses[row.getValue('processStatus') as keyof typeof statuses];
             if(!statusesItem) return null;

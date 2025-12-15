@@ -18,7 +18,7 @@ export function RiskControlRulePage() {
         </div>
         <Button onClick={() => setAddDialogOpen(true)}>
           <Plus className='mr-2 h-4 w-4' />
-          新增规则
+          {t('config.riskControlRule.addRule')}
         </Button>
       </div>
       <RuleConfigTable />

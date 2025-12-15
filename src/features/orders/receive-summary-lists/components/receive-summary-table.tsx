@@ -22,13 +22,15 @@ import { getTasksColumns } from './receive-summary-columns'
 import { ReceiveListsSearch } from './receive-summary-search'
 import { useReceiveSummaryData } from '../hooks/use-receive-summary-data'
 import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
 
 
 export function ReceiveSummaryTable() {
-  const { language } = useLanguage()
-  const columns = useMemo(() => getTasksColumns(language), [language])
+  const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
+  const columns = useMemo(() => getTasksColumns(lang), [lang])
   const { orders:data, isLoading,totalRecord, summaryData } = useReceiveSummaryData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -134,7 +136,7 @@ export function ReceiveSummaryTable() {
                   {/* 合计行 */}
                   <TableRow className='bg-muted/50 font-semibold'>
                     <TableCell colSpan={3} className='text-right'>
-                      合计
+                        {t('common.total')}
                     </TableCell>
                     <TableCell>
                       {summaryData.orderTotal}
@@ -156,7 +158,7 @@ export function ReceiveSummaryTable() {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    No results.
+                    {t('common.noResults')}
                   </TableCell>
                 </TableRow>
               )}

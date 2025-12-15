@@ -22,6 +22,7 @@ import { useRiskControlData } from '../hooks/use-risk-control-data'
 import { getColumns } from './risk-control-columns'
 import { RiskControlSearch } from './risk-control-search'
 import { ParamsDetailDialog } from './params-detail-dialog'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/logs/risk-control')
 
@@ -30,7 +31,7 @@ export function RiskControlTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [detailOpen, setDetailOpen] = useState(false)
   const [detailContent, setDetailContent] = useState('')
-
+  const { lang } = useLanguage()
   const { pagination, onPaginationChange, ensurePageInRange } =
     useTableUrlState({
       search: route.useSearch(),
@@ -48,7 +49,7 @@ export function RiskControlTable() {
     setDetailOpen(true)
   }
 
-  const columns = getColumns(handleViewDetail)
+  const columns = useMemo(() => getColumns(handleViewDetail,lang), [lang])
 
   const table = useReactTable({
     data,

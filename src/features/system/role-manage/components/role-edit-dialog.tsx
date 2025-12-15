@@ -30,15 +30,7 @@ import { format } from 'date-fns'
 import { ChevronRight, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/context/language-provider'
-
-// 表单验证Schema
-const roleFormSchema = z.object({
-  role: z.string().min(1, '请输入角色名'),
-  description: z.string().optional(),
-  resourceIds: z.array(z.number()).min(1, '请至少选择一个模块'),
-})
-
-type RoleFormValues = z.infer<typeof roleFormSchema>
+import { useI18n } from '@/hooks/use-i18n'
 
 type RoleEditDialogProps = {
   open: boolean
@@ -178,6 +170,17 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const { t } = useLanguage()
+  const { t: ti18n } = useI18n()
+  
+  // 表单验证Schema
+  const roleFormSchema = z.object({
+    role: z.string().min(1, ti18n('system.roleManage.validation.roleNameRequired')),
+    description: z.string().optional(),
+    resourceIds: z.array(z.number()).min(1, ti18n('system.roleManage.validation.resourceRequired')),
+  })
+  
+  type RoleFormValues = z.infer<typeof roleFormSchema>
+  
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleFormSchema),
     defaultValues: {
@@ -304,12 +307,12 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
         queryClient.invalidateQueries({ queryKey: ['roles'] })
        toast.success(isAdd ? t('common.addSuccess') : t('common.updateSuccess'))
       }else{
-        toast.error(res.message || '操作失败')
+        toast.error(res.message || ti18n('common.operationFailed'))
       }
       handleClose()
     },
     onError: (error: unknown) => {
-      toast.error((error as Error).message || '操作失败')
+      toast.error((error as Error).message || ti18n('common.operationFailed'))
     },
   })
 
@@ -394,7 +397,7 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
         <SheetHeader>
           <SheetTitle>{isAdd ? t('system.roleManage.addRole') : t('system.roleManage.editRole')}</SheetTitle>
           <SheetDescription>
-            {isAdd ? '创建新的角色并分配权限' : '修改角色信息和权限'}
+            {isAdd ? ti18n('system.roleManage.createDescription') : ti18n('system.roleManage.editDescription')}
           </SheetDescription>
         </SheetHeader>
 
@@ -405,9 +408,9 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
               name='role'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>角色名</FormLabel>
+                  <FormLabel>{ti18n('system.roleManage.roleName')}</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入角色名' {...field} />
+                    <Input placeholder={ti18n('system.roleManage.placeholder.roleName')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -419,10 +422,10 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
               name='description'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>描述</FormLabel>
+                  <FormLabel>{ti18n('common.description')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='请输入角色描述'
+                      placeholder={ti18n('system.roleManage.placeholder.roleDescription')}
                       maxLength={150}
                       {...field}
                     />
@@ -438,7 +441,7 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
               render={() => (
                 <FormItem>
                   <div className='flex items-center justify-between'>
-                    <FormLabel>模块权限</FormLabel>
+                    <FormLabel>{ti18n('system.roleManage.modulePermissions')}</FormLabel>
                     <div className='flex gap-2'>
                       <Button
                         type='button'
@@ -446,7 +449,7 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
                         size='sm'
                         onClick={handleSelectAll}
                       >
-                        全选
+                        {ti18n('common.selectAll')}
                       </Button>
                       <Button
                         type='button'
@@ -454,7 +457,7 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
                         size='sm'
                         onClick={handleClearAll}
                       >
-                        清空
+                        {ti18n('common.clear')}
                       </Button>
                     </div>
                   </div>
@@ -478,10 +481,10 @@ export function RoleEditDialog({ open, onOpenChange, role, isAdd }: RoleEditDial
 
             <SheetFooter className='mt-auto'>
               <Button type='submit' disabled={mutation.isPending}>
-                {mutation.isPending ? '提交中...' : '确定'}
+                {mutation.isPending ? ti18n('common.submitting') : ti18n('common.confirm')}
               </Button>
               <Button type='button' variant='outline' onClick={handleClose}>
-                取消
+                {ti18n('common.cancel')}
               </Button>
             </SheetFooter>
           </form>

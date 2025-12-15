@@ -70,7 +70,7 @@ export function DailySummarySearch<TData>({
     <div className='flex flex-wrap items-center gap-3'>
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
-          placeholder='商务名称'
+          placeholder={t('business.merchantBind.businessUserName')}
           value={businessName}
           onChange={(e) => setBusinessName(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}

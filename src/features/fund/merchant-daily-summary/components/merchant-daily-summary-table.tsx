@@ -22,11 +22,13 @@ import { getMerchantDailySummaryColumns } from './merchant-daily-summary-columns
 import { MerchantDailySummarySearch } from './merchant-daily-summary-search'
 import { useMerchantDailySummaryData } from '../hooks/use-merchant-daily-summary-data'
 import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/fund/merchant-daily-summary')
 
 export function MerchantDailySummaryTable() {
   const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
   const { data, isLoading, totalRecord } = useMerchantDailySummaryData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -133,7 +135,7 @@ export function MerchantDailySummaryTable() {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    暂无数据
+                    {t('common.noResults')}
                   </TableCell>
                 </TableRow>
               )}

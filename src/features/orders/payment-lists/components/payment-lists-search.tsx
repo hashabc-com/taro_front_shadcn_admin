@@ -21,6 +21,8 @@ import {
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
 import { statuses } from '../schema'
+import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 
 // const statuses = {
 //   0:{
@@ -70,6 +72,8 @@ type DateRange = {
 export function ReceiveListsSearch<TData>({
   table,
 }: ReceiveListsSearchProps<TData>) {
+  const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
   const navigate = route.useNavigate()
   const search = route.useSearch()
   const [refNo, setRefNo] = useState(search.refNo || '')
@@ -133,7 +137,7 @@ export function ReceiveListsSearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>选择日期范围</span>
+                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -157,7 +161,7 @@ export function ReceiveListsSearch<TData>({
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           id='transId'
-          placeholder='商户订单号'
+          placeholder={t('orders.paymentOrders.merchantOrderNo')}
           value={transId}
           onChange={(e) => setTransId(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -166,7 +170,7 @@ export function ReceiveListsSearch<TData>({
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           id='refNo'
-          placeholder='平台订单号'
+          placeholder={t('orders.paymentOrders.platformOrderNo')}
           value={refNo}
           onChange={(e) => setRefNo(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -177,7 +181,7 @@ export function ReceiveListsSearch<TData>({
       <div>
         <Select value={status} onValueChange={setStatus}>
           <SelectTrigger id='status'>
-            <SelectValue placeholder='交易状态' />
+            <SelectValue placeholder={t('orders.paymentOrders.status')} />
           </SelectTrigger>
           <SelectContent>
             {Object.keys(statuses).map((key) => {
@@ -186,7 +190,7 @@ export function ReceiveListsSearch<TData>({
                 <SelectItem key={key} value={key}>
                   <div className='flex items-center gap-2'>
                     {item.icon && <item.icon className='size-4' />}
-                    {item.label}
+                    {t(item.i18n)}
                   </div>
               </SelectItem>
             )})}
@@ -198,12 +202,12 @@ export function ReceiveListsSearch<TData>({
       <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
-          搜索
+          {t('common.search')}
         </Button>
         {hasFilters && (
           <Button onClick={handleReset} variant='outline' size='sm'>
             <X className='mr-2 h-4 w-4' />
-            重置
+            {t('common.reset')}
           </Button>
         )}
       </div>

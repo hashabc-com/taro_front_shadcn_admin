@@ -22,6 +22,7 @@ import { type Order } from '../schema'
 import { getTasksColumns } from './receive-lists-columns'
 import { useLanguage } from '@/context/language-provider'
 import { ReceiveListsSearch } from './receive-lists-search'
+import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/orders/receive-lists')
 
@@ -34,6 +35,7 @@ type DataTableProps = {
 export function ReceiveListsTable({ data, isLoading,totalRecord }: DataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
   
   const columns = useMemo(() => getTasksColumns(lang), [lang])
 
@@ -140,7 +142,7 @@ export function ReceiveListsTable({ data, isLoading,totalRecord }: DataTableProp
                     colSpan={table.getAllColumns().length}
                     className='h-24 text-center'
                   >
-                    No results.
+                    {t('common.noResults')}
                   </TableCell>
                 </TableRow>
               )}

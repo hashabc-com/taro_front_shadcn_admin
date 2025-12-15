@@ -22,11 +22,13 @@ import { getCountryDailySummaryColumns } from './country-daily-summary-columns'
 import { CountryDailySummarySearch } from './country-daily-summary-search'
 import { useCountryDailySummaryData } from '../hooks/use-country-daily-summary-data'
 import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/fund/country-daily-summary')
 
 export function CountryDailySummaryTable() {
   const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
   const { data, isLoading, totalRecord } = useCountryDailySummaryData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -133,7 +135,7 @@ export function CountryDailySummaryTable() {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    暂无数据
+                    {t('common.noResults')}
                   </TableCell>
                 </TableRow>
               )}

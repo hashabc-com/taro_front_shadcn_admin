@@ -21,14 +21,15 @@ import { DataTablePagination } from '@/components/data-table'
 import { getRoleColumns } from './role-manage-columns'
 import { RoleManageSearch } from './role-manage-search'
 import { useRoleManageData } from '../hooks/use-role-manage-data'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/system/role-manage')
 
 export function RoleManageTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-
+  const { lang } = useLanguage()
   const { roles, totalRecord, isLoading } = useRoleManageData()
-  const columns = useMemo(() => getRoleColumns(), [])
+  const columns = useMemo(() => getRoleColumns(lang), [lang])
 
   const { pagination, onPaginationChange, ensurePageInRange } =
       useTableUrlState({

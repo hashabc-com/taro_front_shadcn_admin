@@ -65,32 +65,39 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCountryStore } from '@/stores'
+import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 
-// 添加/编辑表单 Schema
-const channelFormSchema = z.object({
-  merchantId: z.string().min(1, '请选择商户'),
+// 添加/编辑表单 Schema - 使用工厂函数支持国际化
+const createChannelFormSchema = (t: (key: string) => string) => z.object({
+  merchantId: z.string().min(1, t('config.paymentChannel.validation.selectMerchant')),
   type: z.number(),
-  channels: z.array(z.string()).min(1, '请至少选择一个渠道'),
+  channels: z.array(z.string()).min(1, t('config.paymentChannel.validation.selectAtLeastOneChannel')),
 })
 
-type ChannelFormValues = z.infer<typeof channelFormSchema>
+type ChannelFormValues = z.infer<ReturnType<typeof createChannelFormSchema>>
 
-// 一键配置表单 Schema
-const configFormSchema = z.object({
+type ConfigFormValues = z.infer<ReturnType<typeof createConfigFormSchema>>
+
+// 一键配置表单 Schema - 使用工厂函数支持国际化
+const createConfigFormSchema = (t: (key: string) => string) => z.object({
   type: z.number(),
-  paymentPlatform: z.string().min(1, '请选择支付渠道'),
-  withdrawalsShop: z.string().min(1, '请选择子渠道'),
+  paymentPlatform: z.string().min(1, t('config.paymentChannel.validation.selectPaymentChannel')),
+  withdrawalsShop: z.string().min(1, t('config.paymentChannel.validation.selectSubChannel')),
 })
 
-type ConfigFormValues = z.infer<typeof configFormSchema>
+// type ConfigFormValues = z.infer<ReturnType<typeof createConfigFormSchema>>
 
 // 添加/编辑对话框
 export function ChannelMutateDialog() {
+  const { lang, t } = useLanguage()
   const { open, setOpen, currentRow, setCurrentRow } = usePaymentChannel()
   const queryClient = useQueryClient()
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
   const isEdit = open === 'edit'
+  
+  const channelFormSchema = createChannelFormSchema((key: string) => getTranslation(lang, key))
 
   const form = useForm<ChannelFormValues>({
     resolver: zodResolver(channelFormSchema),
@@ -147,7 +154,7 @@ export function ChannelMutateDialog() {
     onSuccess: (res) => {
       if(res.code == 200){
         queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
-        toast.success(isEdit ? '更新成功' : '添加成功')
+        toast.success(isEdit ? t('common.updateSuccess') : t('common.addSuccess'))
       }else{
         toast.error(res.message || '操作失败')
       }
@@ -178,7 +185,7 @@ export function ChannelMutateDialog() {
     <Dialog open={open === 'create' || open === 'edit'} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
-          <DialogTitle>{isEdit ? '编辑商户配置' : '添加商户配置'}</DialogTitle>
+          <DialogTitle>{isEdit ? t('config.paymentChannel.editMerchantConfig') : t('config.paymentChannel.addMerchantConfig')}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -188,7 +195,7 @@ export function ChannelMutateDialog() {
               name='merchantId'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>商户名称</FormLabel>
+                  <FormLabel>{t('config.paymentChannel.merchantName')}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}
@@ -196,7 +203,7 @@ export function ChannelMutateDialog() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='请选择商户' />
+                        <SelectValue placeholder={t('common.selectMerchant')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -217,7 +224,7 @@ export function ChannelMutateDialog() {
               name='type'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>类型</FormLabel>
+                  <FormLabel>{t('config.paymentChannel.type')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={(value) => {
@@ -230,13 +237,13 @@ export function ChannelMutateDialog() {
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='1' id='type-1' />
                         <label htmlFor='type-1' className='cursor-pointer'>
-                          代付
+                          {t('config.paymentChannel.payout')}
                         </label>
                       </div>
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='2' id='type-2' />
                         <label htmlFor='type-2' className='cursor-pointer'>
-                          代收
+                          {t('config.paymentChannel.collection')}
                         </label>
                       </div>
                     </RadioGroup>
@@ -251,7 +258,7 @@ export function ChannelMutateDialog() {
               name='channels'
               render={() => (
                 <FormItem>
-                  <FormLabel>支持渠道</FormLabel>
+                  <FormLabel>{t('config.paymentChannel.supportedChannels')}</FormLabel>
                   <div className='flex flex-wrap gap-4'>
                     {channels.map((channel) => (
                       <FormField
@@ -304,10 +311,13 @@ export function ChannelMutateDialog() {
 
 // 一键配置对话框
 export function GlobalConfigDialog() {
+  const { t } = useLanguage()
   const { open, setOpen } = usePaymentChannel()
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
   const queryClient = useQueryClient()
+  
+  const configFormSchema = createConfigFormSchema(t)
 
   const form = useForm<ConfigFormValues>({
     resolver: zodResolver(configFormSchema),
@@ -347,14 +357,14 @@ export function GlobalConfigDialog() {
     onSuccess: (res) => {
       if(res.code == 200){
         queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
-        toast.success('配置成功')
+        toast.success(t('config.paymentChannel.configSuccess'))
       }else{
-        toast.error(res.message || '操作失败')
+        toast.error(res.message || t('common.operationFailed'))
       }
       handleClose()
     },
     onError: (error: unknown) => {
-      toast.error((error as Error).message || '操作失败')
+      toast.error((error as Error).message || t('common.operationFailed'))
     },
   })
 
@@ -371,7 +381,7 @@ export function GlobalConfigDialog() {
     <Dialog open={open === 'config'} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[550px]'>
         <DialogHeader>
-          <DialogTitle>一键配置</DialogTitle>
+          <DialogTitle>{t('config.paymentChannel.oneClickConfig')}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -381,7 +391,7 @@ export function GlobalConfigDialog() {
               name='type'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>类型</FormLabel>
+                  <FormLabel>{t('config.paymentChannel.type')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={(value) => {
@@ -395,13 +405,13 @@ export function GlobalConfigDialog() {
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='1' id='config-type-1' />
                         <label htmlFor='config-type-1' className='cursor-pointer'>
-                          代付
+                          {t('config.paymentChannel.payout')}
                         </label>
                       </div>
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='2' id='config-type-2' />
                         <label htmlFor='config-type-2' className='cursor-pointer'>
-                          代收
+                          {t('config.paymentChannel.collection')}
                         </label>
                       </div>
                     </RadioGroup>
@@ -416,7 +426,7 @@ export function GlobalConfigDialog() {
               name='paymentPlatform'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>支付渠道</FormLabel>
+                  <FormLabel>{t('config.paymentChannel.paymentChannel')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={(value) => {
@@ -452,7 +462,7 @@ export function GlobalConfigDialog() {
               name='withdrawalsShop'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>子渠道</FormLabel>
+                  <FormLabel>{t('config.paymentChannel.subChannel')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -483,10 +493,10 @@ export function GlobalConfigDialog() {
 
             <DialogFooter>
               <Button type='button' variant='outline' onClick={handleClose}>
-                取消
+                {t('common.cancel')}
               </Button>
               <Button type='submit' disabled={mutation.isPending}>
-                {mutation.isPending ? '提交中...' : '确定'}
+                {mutation.isPending ? t('common.submitting') : t('common.confirm')}
               </Button>
             </DialogFooter>
           </form>
@@ -498,6 +508,7 @@ export function GlobalConfigDialog() {
 
 // 渠道详情抽屉(替代原来的跳转页面)
 export function ChannelDetailDrawer() {
+  const { t } = useLanguage()
   const { open, setOpen, detailMerchantId, detailType } = usePaymentChannel()
   const queryClient = useQueryClient()
 
@@ -526,9 +537,9 @@ export function ChannelDetailDrawer() {
     onSuccess: (res) => {
       if(res.code == 200){
         queryClient.invalidateQueries({ queryKey: ['payment-shops'] })
-        toast.success('状态更新成功')
+        toast.success(t('common.statusUpdateSuccess'))
       }else{
-        toast.error(res.message || '状态更新失败')
+        toast.error(res.message || t('common.statusUpdateFailed'))
       }
     },
     onError: (error: unknown) => {
@@ -549,8 +560,8 @@ export function ChannelDetailDrawer() {
     <Sheet open={open === 'detail'} onOpenChange={handleClose}>
       <SheetContent className='flex flex-col sm:max-w-[700px]'>
         <SheetHeader className='text-start'>
-          <SheetTitle>渠道详情</SheetTitle>
-          <SheetDescription>查看和管理支付渠道的子渠道配置</SheetDescription>
+          <SheetTitle>{t('config.paymentChannel.channelDetail')}</SheetTitle>
+          <SheetDescription>{t('config.paymentChannel.channelDetailDesc')}</SheetDescription>
         </SheetHeader>
 
         <div className='flex-1 overflow-y-auto'>
@@ -565,11 +576,11 @@ export function ChannelDetailDrawer() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>供应商名称</TableHead>
-                    <TableHead>取款当铺</TableHead>
-                    <TableHead>创建时间</TableHead>
-                    <TableHead className='w-[100px]'>状态</TableHead>
-                    <TableHead className='w-[100px]'>操作</TableHead>
+                    <TableHead>{t('config.paymentChannel.providerName')}</TableHead>
+                    <TableHead>{t('config.paymentChannel.withdrawalShop')}</TableHead>
+                    <TableHead>{t('common.createTime')}</TableHead>
+                    <TableHead className='w-[100px]'>{t('common.status')}</TableHead>
+                    <TableHead className='w-[100px]'>{t('common.action')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -581,7 +592,7 @@ export function ChannelDetailDrawer() {
                         <TableCell>{shop.createTime}</TableCell>
                         <TableCell>
                           <Badge variant={shop.status ? 'destructive':'default'}>
-                            {shop.status ? '禁用' : '启用' }
+                            {shop.status ? t('common.disabled') : t('common.enabled') }
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -603,7 +614,7 @@ export function ChannelDetailDrawer() {
                   ) : (
                     <TableRow>
                       <TableCell colSpan={5} className='h-24 text-center'>
-                        暂无数据
+                        {t('common.noData')}
                       </TableCell>
                     </TableRow>
                   )}
@@ -616,7 +627,7 @@ export function ChannelDetailDrawer() {
         <SheetFooter>
           <SheetClose asChild>
             <Button variant='outline' className='w-full'>
-              关闭
+              {t('common.close')}
             </Button>
           </SheetClose>
         </SheetFooter>

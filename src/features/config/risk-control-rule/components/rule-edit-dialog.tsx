@@ -33,20 +33,21 @@ import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { type RuleConfig, sceneCodeMap, actionCodeMap } from '../schema'
 import { createRuleConfig, updateRuleConfig } from '@/api/ruleConfig'
+import { useLanguage } from '@/context/language-provider'
 
-// 表单验证Schema
-const ruleFormSchema = z.object({
-  ruleName: z.string().min(1, '请输入规则名称'),
+// 表单验证Schema - 使用工厂函数支持国际化
+const createRuleFormSchema = (t: (key: string) => string) => z.object({
+  ruleName: z.string().min(1, t('config.riskControlRule.validation.ruleNameRequired')),
   ruleDesc: z.string().optional(),
-  sceneCode: z.string().min(1, '请选择规则场景'),
-  conditionExpr: z.string().min(1, '请输入条件表达式'),
-  actionCode: z.string().min(1, '请选择动作标识'),
-  priority: z.number().min(1, '优先级必须大于0').max(10, '优先级不能超过10'),
+  sceneCode: z.string().min(1, t('config.riskControlRule.validation.sceneCodeRequired')),
+  conditionExpr: z.string().min(1, t('config.riskControlRule.validation.conditionExprRequired')),
+  actionCode: z.string().min(1, t('config.riskControlRule.validation.actionCodeRequired')),
+  priority: z.number().min(1, t('config.riskControlRule.validation.priorityMin')).max(10, t('config.riskControlRule.validation.priorityMax')),
   status: z.number(),
   actionParams: z.string().optional(),
 })
 
-type RuleFormValues = z.infer<typeof ruleFormSchema>
+type RuleFormValues = z.infer<ReturnType<typeof createRuleFormSchema>>
 
 type RuleEditDialogProps = {
   open: boolean
@@ -62,6 +63,9 @@ export function RuleEditDialog({
   isAdd,
 }: RuleEditDialogProps) {
   const queryClient = useQueryClient()
+  const { t } = useLanguage()
+  
+  const ruleFormSchema = createRuleFormSchema(t)
 
   const form = useForm<RuleFormValues>({
     resolver: zodResolver(ruleFormSchema),
@@ -111,7 +115,7 @@ export function RuleEditDialog({
         try {
           JSON.parse(data.actionParams)
         } catch (_e) {
-          throw new Error('动作参数必须是有效的JSON格式')
+          throw new Error(t('config.riskControlRule.actionParamsInvalidJson'))
         }
       }
 
@@ -127,14 +131,14 @@ export function RuleEditDialog({
     onSuccess: (res) => {
       if(res.code == 200){
         queryClient.invalidateQueries({ queryKey: ['ruleConfigs'] })
-        toast.success(isAdd ? '创建成功' : '更新成功')
+        toast.success(isAdd ? t('common.addSuccess') : t('common.updateSuccess'))
       }else{
-        toast.error(res.message || '操作失败')
+        toast.error(res.message || t('common.operationFailed'))
       }
       handleClose()
     },
     onError: (error: Error) => {
-      toast.error(error.message || '操作失败')
+      toast.error(error.message || t('common.operationFailed'))
     },
   })
 
@@ -151,7 +155,7 @@ export function RuleEditDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[700px]'>
         <DialogHeader>
-          <DialogTitle>{isAdd ? '新增规则' : '编辑规则'}</DialogTitle>
+          <DialogTitle>{isAdd ? t('config.riskControlRule.addRule') : t('config.riskControlRule.editRule')}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -161,9 +165,9 @@ export function RuleEditDialog({
               name='ruleName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>规则名称</FormLabel>
+                  <FormLabel>{t('config.riskControlRule.ruleName')}</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入规则名称' {...field} />
+                    <Input placeholder={t('common.enterRuleName')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,10 +179,10 @@ export function RuleEditDialog({
               name='ruleDesc'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>规则描述</FormLabel>
+                  <FormLabel>{t('config.riskControlRule.ruleDescription')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='请输入规则描述'
+                      placeholder={t('common.enterRuleDescription')}
                       rows={3}
                       {...field}
                     />
@@ -193,14 +197,14 @@ export function RuleEditDialog({
               name='sceneCode'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>规则场景</FormLabel>
+                  <FormLabel>{t('config.riskControlRule.ruleScene')}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='请选择规则场景' />
+                        <SelectValue placeholder={t('common.selectRuleScene')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -221,10 +225,10 @@ export function RuleEditDialog({
               name='conditionExpr'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>条件表达式</FormLabel>
+                  <FormLabel>{t('config.riskControlRule.conditionExpression')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='例如: amount > 50000'
+                      placeholder={t('config.riskControlRule.conditionExprExample')}
                       rows={2}
                       {...field}
                     />
@@ -239,14 +243,14 @@ export function RuleEditDialog({
               name='actionCode'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>动作标识</FormLabel>
+                  <FormLabel>{t('config.riskControlRule.actionCode')}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='请选择动作标识' />
+                        <SelectValue placeholder={t('common.selectActionCode')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -267,13 +271,13 @@ export function RuleEditDialog({
               name='priority'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>优先级</FormLabel>
+                  <FormLabel>{t('config.riskControlRule.priority')}</FormLabel>
                   <FormControl>
                     <Input
                       type='number'
                       min={1}
                       max={10}
-                      placeholder='1-10，数值越小优先级越高'
+                      placeholder={t('config.riskControlRule.priorityPlaceholder')}
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
@@ -288,7 +292,7 @@ export function RuleEditDialog({
               name='status'
               render={({ field }) => (
                 <FormItem className='space-y-3'>
-                  <FormLabel>状态</FormLabel>
+                  <FormLabel>{t('common.status')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={(value) => field.onChange(Number(value))}
@@ -297,11 +301,11 @@ export function RuleEditDialog({
                     >
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='1' id='status-enabled' />
-                        <Label htmlFor='status-enabled'>启用</Label>
+                        <Label htmlFor='status-enabled'>{t('common.enabled')}</Label>
                       </div>
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='0' id='status-disabled' />
-                        <Label htmlFor='status-disabled'>禁用</Label>
+                        <Label htmlFor='status-disabled'>{t('common.disabled')}</Label>
                       </div>
                     </RadioGroup>
                   </FormControl>
@@ -315,10 +319,10 @@ export function RuleEditDialog({
               name='actionParams'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>动作参数</FormLabel>
+                  <FormLabel>{t('config.riskControlRule.actionParams')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='JSON格式，例如: {"blockReason":"异地大额支付风险"}'
+                      placeholder={t('config.riskControlRule.actionParamsPlaceholder')}
                       rows={3}
                       {...field}
                     />
@@ -330,10 +334,10 @@ export function RuleEditDialog({
 
             <DialogFooter>
               <Button type='button' variant='outline' onClick={handleClose}>
-                取消
+                {t('common.cancel')}
               </Button>
               <Button type='submit' disabled={mutation.isPending}>
-                {mutation.isPending ? '提交中...' : '确定'}
+                {mutation.isPending ? t('common.submitting') : t('common.confirm')}
               </Button>
             </DialogFooter>
           </form>

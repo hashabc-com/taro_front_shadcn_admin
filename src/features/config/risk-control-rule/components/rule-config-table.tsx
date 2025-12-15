@@ -23,6 +23,7 @@ import { type RuleConfig } from '../schema'
 import { getColumns } from './rule-config-columns'
 import { RuleConfigSearch } from './rule-config-search'
 import { RuleEditDialog } from './rule-edit-dialog'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/config/risk-control-rule')
 
@@ -32,7 +33,7 @@ export function RuleConfigTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [currentRule, setCurrentRule] = useState<RuleConfig | null>(null)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
-
+  const { lang } = useLanguage()
   // Synced with URL states
   const { pagination, onPaginationChange, ensurePageInRange } =
     useTableUrlState({
@@ -58,8 +59,8 @@ export function RuleConfigTable() {
   }, [])
 
   const columns = useMemo(
-    () => getColumns(handleEdit, handleDelete),
-    [handleEdit, handleDelete]
+    () => getColumns(handleEdit, handleDelete, lang),
+    [handleEdit, handleDelete, lang]
   )
 
   const table = useReactTable({

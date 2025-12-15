@@ -1,20 +1,24 @@
 import { type ColumnDef } from '@tanstack/react-table'
+import { getTranslation, type Language } from '@/lib/i18n'
 import { type Role } from '../schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { format } from 'date-fns'
 
-export const getRoleColumns = (): ColumnDef<Role>[] => {
+export const getRoleColumns = (
+  language: Language = 'zh'
+): ColumnDef<Role>[] => {
+  const t = (key: string) => getTranslation(language, key)
   return [
     {
       accessorKey: 'role',
-      header: '角色名',
+      header: t('system.roleManage.roleName'),
       meta: {
         className: 'w-[200px]',
       },
     },
     {
       accessorKey: 'createTime',
-      header: '创建时间',
+      header: t('common.createTime'),
       meta: {
         className: 'w-[200px]',
       },
@@ -29,11 +33,11 @@ export const getRoleColumns = (): ColumnDef<Role>[] => {
     },
     {
       accessorKey: 'description',
-      header: '描述',
+      header: t('common.description'),
     },
     {
       id: 'actions',
-      header: '操作',
+      header: t('common.action'),
       meta: {
         className: 'w-[100px]',
       },

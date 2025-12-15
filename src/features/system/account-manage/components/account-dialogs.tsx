@@ -33,23 +33,25 @@ import {
 import { Input } from '@/components/ui/input'
 import { AccountMutateDrawer } from './account-mutate-drawer'
 import { useAccount } from './account-provider'
-
-// 密码表单验证
-const passwordFormSchema = z
-  .object({
-    pwd: z.string().min(1, '请输入密码'),
-    rePwd: z.string().min(1, '请再次输入密码'),
-  })
-  .refine((data) => data.pwd === data.rePwd, {
-    message: '两次输入的密码不一致',
-    path: ['rePwd'],
-  })
-
-type PasswordFormValues = z.infer<typeof passwordFormSchema>
+import { useI18n } from '@/hooks/use-i18n'
 
 export function AccountDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useAccount()
   const queryClient = useQueryClient()
+  const { t } = useI18n()
+  
+  // 密码表单验证
+  const passwordFormSchema = z
+    .object({
+      pwd: z.string().min(1, t('system.accountManage.validation.newPasswordRequired')),
+      rePwd: z.string().min(1, t('system.accountManage.validation.confirmPasswordRequired')),
+    })
+    .refine((data) => data.pwd === data.rePwd, {
+      message: t('system.accountManage.passwordMismatch'),
+      path: ['rePwd'],
+    })
+
+  type PasswordFormValues = z.infer<typeof passwordFormSchema>
 
   const form = useForm<PasswordFormValues>({
     resolver: zodResolver(passwordFormSchema),
@@ -68,17 +70,17 @@ export function AccountDialogs() {
       }),
     onSuccess: (res) => {
       if (res.code == 200) {
-        toast.success('密码修改成功')
+        toast.success(t('system.accountManage.passwordUpdateSuccess'))
         queryClient.invalidateQueries({
           queryKey: ['system', 'account-manage'],
         })
       } else {
-        toast.error(res.message || '密码修改失败')
+        toast.error(res.message || t('system.accountManage.passwordUpdateFailed'))
       }
       handlePasswordClose()
     },
     onError: (error: { message?: string }) => {
-      toast.error(error.message || '密码修改失败')
+      toast.error(error.message || t('system.accountManage.passwordUpdateFailed'))
     },
   })
 
@@ -89,9 +91,9 @@ export function AccountDialogs() {
         queryClient.invalidateQueries({
           queryKey: ['system', 'account-manage'],
         })
-        toast.success('删除成功')
+        toast.success(t('common.deleteSuccess'))
       } else {
-        toast.error(res.message || '删除失败')
+        toast.error(res.message || t('common.deleteFailed'))
       }
       setOpen(null)
       setTimeout(() => {
@@ -99,7 +101,7 @@ export function AccountDialogs() {
       }, 500)
     },
     onError: (error: { message?: string }) => {
-      toast.error(error.message || '删除失败')
+      toast.error(error.message || t('common.deleteFailed'))
     },
   })
 
@@ -137,7 +139,7 @@ export function AccountDialogs() {
       <Dialog open={open === 'password'} onOpenChange={handlePasswordClose}>
         <DialogContent className='sm:max-w-[425px]'>
           <DialogHeader>
-            <DialogTitle>修改密码</DialogTitle>
+            <DialogTitle>{t('system.accountManage.changePassword')}</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form
@@ -149,11 +151,11 @@ export function AccountDialogs() {
                 name='pwd'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>新密码</FormLabel>
+                    <FormLabel>{t('system.accountManage.newPassword')}</FormLabel>
                     <FormControl>
                       <Input
                         type='password'
-                        placeholder='请输入新密码'
+                        placeholder={t('system.accountManage.placeholder.newPassword')}
                         {...field}
                       />
                     </FormControl>
@@ -166,11 +168,11 @@ export function AccountDialogs() {
                 name='rePwd'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>确认密码</FormLabel>
+                    <FormLabel>{t('common.confirmPassword')}</FormLabel>
                     <FormControl>
                       <Input
                         type='password'
-                        placeholder='请再次输入密码'
+                        placeholder={t('system.accountManage.placeholder.confirmPassword')}
                         {...field}
                       />
                     </FormControl>
@@ -184,10 +186,10 @@ export function AccountDialogs() {
                   variant='outline'
                   onClick={handlePasswordClose}
                 >
-                  取消
+                  {t('common.cancel')}
                 </Button>
                 <Button type='submit' disabled={passwordMutation.isPending}>
-                  {passwordMutation.isPending ? '提交中...' : '确定'}
+                  {passwordMutation.isPending ? t('common.submitting') : t('common.confirm')}
                 </Button>
               </DialogFooter>
             </form>
@@ -209,21 +211,19 @@ export function AccountDialogs() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>确认删除</AlertDialogTitle>
+            <AlertDialogTitle>{t('common.confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              确定要删除账户{' '}
-              <span className='font-semibold'>{currentRow?.account}</span>{' '}
-              吗？此操作无法撤销。
+              {t('common.deleteConfirmation')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => deleteMutation.mutate()}
               disabled={deleteMutation.isPending}
               className='bg-red-600 hover:bg-red-700'
             >
-              {deleteMutation.isPending ? '删除中...' : '确定删除'}
+              {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

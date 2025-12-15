@@ -14,6 +14,7 @@ import {
 import { cn } from '@/lib/utils'
 import { DataTableViewOptions } from '@/components/data-table'
 import { type Table } from '@tanstack/react-table'
+import { useLanguage } from '@/context/language-provider'
 
 type MonthRange = {
   from: Date | undefined
@@ -31,6 +32,7 @@ export function MonthlySummarySearch<TData>({
 }: IMonthlySummarySearchProps<TData>) {
   const navigate = route.useNavigate()
   const search = route.useSearch()
+  const { t } = useLanguage()
   const [businessName, setBusinessName] = useState(search.businessName || '')
   const [monthRange, setMonthRange] = useState<MonthRange>({
     from: search.startMonth
@@ -73,7 +75,7 @@ export function MonthlySummarySearch<TData>({
       {/* 商务名称 */}
       <div className='max-w-[200px] flex-1 min-w-[120px]'>
         <Input
-          placeholder='商务名称'
+          placeholder={t('business.merchantBind.businessUserName')}
           value={businessName}
           onChange={(e) => setBusinessName(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -102,7 +104,7 @@ export function MonthlySummarySearch<TData>({
                   format(monthRange.from, 'yyyy-MM', { locale: zhCN })
                 )
               ) : (
-                <span>选择月份范围</span>
+                <span>{t('common.selectMonthRange')}</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -130,12 +132,12 @@ export function MonthlySummarySearch<TData>({
       <div className='flex gap-2 mt-0.5'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
-          查询
+          {t('common.search')}
         </Button>
         {hasFilters && (
           <Button onClick={handleReset} variant='outline' size='sm'>
             <X className='mr-2 h-4 w-4' />
-            重置
+            {t('common.reset')}
           </Button>
         )}
       </div>

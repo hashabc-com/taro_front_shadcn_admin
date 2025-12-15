@@ -18,15 +18,18 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { tasksColumns as columns } from './collection-success-rate-columns'
+import { getTasksColumns } from './collection-success-rate-columns'
 import { CollectionSuccessRateSearch } from './collection-success-rate-search'
 import { useCollectionRateData } from '../hooks/use-collection-rate-data'
+import { useLanguage } from '@/context/language-provider'
+import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/orders/collection-success-rate')
 
 
 export function ReceiveSummaryTable() {
-  
+  const { lang } = useLanguage()
+  const t = (key: string) => getTranslation(lang, key)
   const { data, isLoading,totalRecord, summaryData } = useCollectionRateData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -44,6 +47,8 @@ export function ReceiveSummaryTable() {
       // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
       return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
     }, [totalRecord, pagination.pageSize])
+
+  const columns = useMemo(() => getTasksColumns(lang), [lang])
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -132,7 +137,7 @@ export function ReceiveSummaryTable() {
                   {/* 合计行 */}
                   <TableRow className='bg-muted/50 font-semibold'>
                     <TableCell colSpan={4} className='text-right'>
-                      合计
+                      {t('common.total')}
                     </TableCell>
                     <TableCell>
                       {summaryData.orderTotal}
@@ -151,7 +156,7 @@ export function ReceiveSummaryTable() {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    No results.
+                    {t('common.noResults')}
                   </TableCell>
                 </TableRow>
               )}

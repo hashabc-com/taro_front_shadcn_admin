@@ -19,8 +19,10 @@ import {
 } from '@/components/ui/dialog'
 import { RechargeForm } from './recharge-form'
 import { WithdrawForm } from './withdraw-form'
+import { useLanguage } from '@/context/language-provider'
 
 export default function AccountSettlement() {
+  const { t } = useLanguage()
   const { selectedCountry } = useCountryStore()
   const { data: accountData, refetch: refetchAmount } = useAccountAmount()
   const { data: rateData, refetch: refetchRate } = useExchangeRate()
@@ -49,11 +51,11 @@ export default function AccountSettlement() {
   // 更新汇率
   const handleUpdateRate = async () => {
     if (!rateForm.name) {
-      toast.error('请输入费率')
+      toast.error(t('common.pleaseEnterRate'))
       return
     }
     if (!rateForm.gauthCode) {
-      toast.error('请输入谷歌验证码')
+      toast.error(t('common.enterGoogleAuthCode'))
       return
     }
 
@@ -64,12 +66,12 @@ export default function AccountSettlement() {
         data: rateData?.provinceCode
     })
     if(res.code == 200){
-      toast.success('更新费率成功')
+      toast.success(t('fund.accountSettlement.rateUpdateSuccess'))
       setRateForm({ name: rateForm.name || rateData.name, gauthCode: '' })
       setRateDialogOpen(false)
       refetchRate()
     }else{
-    toast.error(res?.message || '更新费率失败')
+    toast.error(res?.message || t('fund.accountSettlement.rateUpdateFailed'))
     }
     setIsUpdatingRate(false)
   }
@@ -79,11 +81,11 @@ export default function AccountSettlement() {
       {/* 标题和费率信息 */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4">
-          <h1 className="text-2xl font-bold">账户结算</h1>
+          <h1 className="text-2xl font-bold">{t('fund.accountSettlement.title')}</h1>
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-            <span>当前费率: {rateData?.name || '0'}</span>
+            <span>{t('fund.accountSettlement.currentRate')}: {rateData?.name || '0'}</span>
             <span className="text-muted-foreground/50">|</span>
-            <span>费率更新时间: {rateData?.provinceCode || '-'}</span>
+            <span>{t('fund.accountSettlement.rateUpdateTime')}: {rateData?.provinceCode || '-'}</span>
           </div>
         </div>
         <Button
@@ -91,7 +93,7 @@ export default function AccountSettlement() {
           onClick={() => setRateDialogOpen(true)}
         >
           <RefreshCw className="mr-2 h-4 w-4" />
-          更新费率
+          {t('fund.accountSettlement.updateRate')}
         </Button>
       </div>
 
@@ -100,7 +102,7 @@ export default function AccountSettlement() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              可用余额 {selectedCountry?.currency ? `(${selectedCountry.currency})` : ''}
+              {t('fund.accountSettlement.availableBalance')} {selectedCountry?.currency ? `(${selectedCountry.currency})` : ''}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -113,7 +115,7 @@ export default function AccountSettlement() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              未结算资金 {selectedCountry?.currency ? `(${selectedCountry.currency})` : ''}
+              {t('fund.accountSettlement.unsettledFunds')} {selectedCountry?.currency ? `(${selectedCountry.currency})` : ''}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -126,7 +128,7 @@ export default function AccountSettlement() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              冻结资金 {selectedCountry?.currency ? `(${selectedCountry.currency})` : ''}
+              {t('fund.accountSettlement.rechargeAmount')} {selectedCountry?.currency ? `(${selectedCountry.currency})` : ''}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -147,27 +149,27 @@ export default function AccountSettlement() {
       <Dialog open={rateDialogOpen} onOpenChange={setRateDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>更新费率</DialogTitle>
+            <DialogTitle>{t('fund.accountSettlement.updateRate')}</DialogTitle>
             <DialogDescription>
-              请输入新的费率和谷歌验证码
+              {t('fund.accountSettlement.enterNewRateAndGoogleCode')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="rate">费率 <span className="text-red-500">*</span></Label>
+              <Label htmlFor="rate">{t('merchant.info.rate')} <span className="text-red-500">*</span></Label>
               <Input
                 id="rate"
-                placeholder="请输入费率"
+                placeholder={t('common.enterRate')}
                 value={rateForm.name}
                 onChange={(e) => setRateForm({name: e.target.value, gauthCode: rateForm.gauthCode})}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="gauthCode">谷歌验证码 <span className="text-red-500">*</span></Label>
+              <Label htmlFor="gauthCode">{t('fund.rechargeWithdraw.googleAuthCode')} <span className="text-red-500">*</span></Label>
               <Input
                 id="gauthCode"
-                placeholder="请输入谷歌验证码"
+                placeholder={t('common.enterGoogleAuthCode')}
                 value={rateForm.gauthCode}
                 onChange={(e) => setRateForm({name: rateForm.name, gauthCode: e.target.value})}
                 maxLength={6}
@@ -180,13 +182,13 @@ export default function AccountSettlement() {
               variant="outline"
               onClick={() => setRateDialogOpen(false)}
             >
-              取消
+              {t('common.cancel')}
             </Button>
             <Button 
               onClick={handleUpdateRate}
               disabled={isUpdatingRate}
             >
-              {isUpdatingRate ? '更新中...' : '确认'}
+              {isUpdatingRate ? t('common.updating') : t('common.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

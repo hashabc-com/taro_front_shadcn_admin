@@ -1,26 +1,29 @@
 import { type ColumnDef } from '@tanstack/react-table'
+import { getTranslation, type Language } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import { type IBusinessType } from '../schema'
 
 interface GetColumnsOptions {
   onBind: (business: IBusinessType) => void
+  language?: Language
 }
 
-export function getColumns({ onBind }: GetColumnsOptions): ColumnDef<IBusinessType>[] {
+export function getColumns({ onBind, language = 'zh' }: GetColumnsOptions): ColumnDef<IBusinessType>[] {
+  const t = (key: string) => getTranslation(language, key)
   return [
     {
       accessorKey: 'account',
-      header: '商务账号',
+      header: t('business.merchantBind.businessAccount'),
       cell: ({ row }) => <div className='max-w-[220px]'>{row.getValue('account')}</div>,
     },
     {
       accessorKey: 'userName',
-      header: '商务名称',
+      header: t('business.merchantBind.businessUserName'),
       cell: ({ row }) => <div className='max-w-[220px]'>{row.getValue('userName')}</div>,
     },
     {
       accessorKey: 'disabledStatus',
-      header: '状态',
+      header: t('common.status'),
       cell: ({ row }) => {
         const status = row.getValue('disabledStatus') as number
         return (
@@ -29,19 +32,19 @@ export function getColumns({ onBind }: GetColumnsOptions): ColumnDef<IBusinessTy
               status === 0 ? 'text-green-600' : 'text-red-600'
             }
           >
-            {status === 0 ? '启用' : '禁用'}
+            {status === 0 ? t('common.enabled') : t('common.disabled')}
           </span>
         )
       },
     },
     {
       accessorKey: 'phone',
-      header: '手机号',
+      header: t('common.phone'),
       cell: ({ row }) => row.getValue('phone') || '-',
     },
     {
       accessorKey: 'createTime',
-      header: '创建时间',
+      header: t('common.createTime'),
       cell: ({ row }) => {
         const time = row.getValue('createTime') as string
         return time ? time.replace('T', ' ').substring(0, 19) : '-'
@@ -49,14 +52,14 @@ export function getColumns({ onBind }: GetColumnsOptions): ColumnDef<IBusinessTy
     },
     {
       id: 'actions',
-      header: '操作',
+      header: t('common.action'),
       cell: ({ row }) => (
         <Button
           variant='outline'
           size='sm'
           onClick={() => onBind(row.original)}
         >
-          绑定商户
+          {t('business.merchantBind.bindMerchant')}
         </Button>
       ),
     },

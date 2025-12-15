@@ -1,11 +1,12 @@
 import { type ColumnDef } from '@tanstack/react-table'
+import { getTranslation, type Language } from '@/lib/i18n'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { IRiskControlType } from '../schema'
 
-const businessTypeMap: Record<string, string> = {
-  PAY_PAYIN: '代收',
-  PAY_PAYOUT: '代付',
+const businessTypeMap: Record<string, { zh: string; en: string }> = {
+  PAY_PAYIN: { zh: '代收', en: 'Collection' },
+  PAY_PAYOUT: { zh: '代付', en: 'Payout' },
 }
 
 const businessTypeColorMap: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
@@ -13,10 +14,10 @@ const businessTypeColorMap: Record<string, 'default' | 'secondary' | 'destructiv
   PAY_PAYOUT: 'secondary',
 }
 
-const actionCodeMap: Record<string, string> = {
-  REJECT: '拒绝',
-  ALARM: '告警',
-  BLOCK: '阻止',
+const actionCodeMap: Record<string, { zh: string; en: string }> = {
+  REJECT: { zh: '拒绝', en: 'Reject' },
+  ALARM: { zh: '告警', en: 'Alarm' },
+  BLOCK: { zh: '阻止', en: 'Block' },
 }
 
 const actionCodeColorMap: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
@@ -26,79 +27,80 @@ const actionCodeColorMap: Record<string, 'default' | 'secondary' | 'destructive'
 }
 
 export const getColumns = (
-  onViewDetail: (text: string) => void
-): ColumnDef<IRiskControlType>[] => [
-  {
-    accessorKey: 'id',
-    header: 'ID',
-    enableHiding:false
-  },
-  {
-    accessorKey: 'ruleName',
-    header: '规则名称',
-    enableHiding:false
-  },
-  {
-    accessorKey: 'ruleId',
-    header: '规则ID',
-    enableHiding:false
-  },
-  {
-    accessorKey: 'customerName',
-    header: '商户名称',
-  },
-  {
-    accessorKey: 'businessType',
-    header: '业务类型',
-    cell: ({ row }) => {
-      const type = row.getValue('businessType') as string
-      return (
-        // <div className='flex'>
+  onViewDetail: (text: string) => void,
+  language: Language = 'zh'
+): ColumnDef<IRiskControlType>[] => {
+  const t = (key: string) => getTranslation(language, key)
+  return [
+    {
+      accessorKey: 'id',
+      header: 'ID',
+      enableHiding:false
+    },
+    {
+      accessorKey: 'ruleName',
+      header: t('logs.riskControl.ruleName'),
+      enableHiding:false
+    },
+    {
+      accessorKey: 'ruleId',
+      header: t('logs.riskControl.ruleId'),
+      enableHiding:false
+    },
+    {
+      accessorKey: 'customerName',
+      header: t('logs.riskControl.merchantName'),
+    },
+    {
+      accessorKey: 'businessType',
+      header: t('logs.riskControl.businessType'),
+      cell: ({ row }) => {
+        const type = row.getValue('businessType') as string
+        const typeText = businessTypeMap[type]?.[language] || type
+        return (
           <Badge variant={businessTypeColorMap[type] || 'default'}>
-            {businessTypeMap[type] || type}
+            {typeText}
           </Badge>
-        // </div>
-      )
+        )
+      },
+      size: 100,
     },
-    size: 100,
-  },
-  {
-    accessorKey: 'businessId',
-    header: '订单号'
-  },
-  {
-    accessorKey: 'actionCode',
-    header: '处理动作',
-    cell: ({ row }) => {
-      const action = row.getValue('actionCode') as string
-      return (
-        // <div className='flex justify-center'>
+    {
+      accessorKey: 'businessId',
+      header: t('logs.riskControl.orderNo')
+    },
+    {
+      accessorKey: 'actionCode',
+      header: t('logs.riskControl.action'),
+      cell: ({ row }) => {
+        const action = row.getValue('actionCode') as string
+        const actionText = actionCodeMap[action]?.[language] || action
+        return (
           <Badge variant={actionCodeColorMap[action] || 'default'}>
-            {actionCodeMap[action] || action}
+            {actionText}
           </Badge>
-        // </div>
-      )
+        )
+      },
+      size: 100,
     },
-    size: 100,
-  },
-  {
-    accessorKey: 'reason',
-    header: '拦截原因'
-  },
-  {
-    accessorKey: 'requestParams',
-    header: '请求参数',
-    cell: ({ row }) => {
-      const text = row.getValue('requestParams') as string
-      if (!text) return <div className='text-center'>-</div>
-      return (
-          <Button
-            variant='link'
-            size='sm'
-            className='px-0'
-            onClick={() => onViewDetail(text)}
-          >
-            查看详情
+    {
+      accessorKey: 'reason',
+      header: t('logs.riskControl.interceptReason')
+    },
+    {
+      accessorKey: 'requestParams',
+      header: t('logs.riskControl.requestParams'),
+      cell: ({ row }) => {
+        const text = row.getValue('requestParams') as string
+        if (!text) return <div className='text-center'>-</div>
+        return (
+            <Button
+              variant='link'
+              size='sm'
+              className='px-0'
+              onClick={() => onViewDetail(text)}
+            >
+            {t('common.viewDetails')}
           </Button>
       )
     },
@@ -106,7 +108,7 @@ export const getColumns = (
   },
   {
     accessorKey: 'responseParams',
-    header: '响应参数',
+    header: t('logs.riskControl.responseParams'),
     cell: ({ row }) => {
       const text = row.getValue('responseParams') as string
       if (!text) return
@@ -117,14 +119,14 @@ export const getColumns = (
             className='px-0'
             onClick={() => onViewDetail(text)}
           >
-            查看详情
+            {t('common.viewDetails')}
           </Button>
       )
     }
   },
   {
     accessorKey: 'createTime',
-    header: '创建时间',
+    header: t('logs.riskControl.createTime'),
     cell: ({ row }) => {
       const time = row.getValue('createTime') as string
       return (
@@ -136,7 +138,7 @@ export const getColumns = (
   },
   {
     accessorKey: 'localTime',
-    header: '触发时间',
+    header: t('logs.riskControl.triggerTime'),
     cell: ({ row }) => {
       const time = row.getValue('localTime') as string
       return (
@@ -147,3 +149,4 @@ export const getColumns = (
     }
   },
 ]
+}

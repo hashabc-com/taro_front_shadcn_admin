@@ -42,7 +42,7 @@ export function MerchantBindSearch() {
       {/* 商户订单号 */}
       <div className='max-w-[200px] flex-1 min-w-[120px]'>
         <Input
-          placeholder='商务名称'
+          placeholder={t('business.merchantBind.businessUserName')}
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}

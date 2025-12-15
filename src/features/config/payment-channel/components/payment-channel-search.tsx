@@ -4,6 +4,7 @@ import { Plus, Settings,RefreshCcw } from 'lucide-react'
 import { usePaymentChannel } from './payment-channel-provider'
 import { getRouteApi } from '@tanstack/react-router'
 import { type PaymentChannel } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/config/payment-channel')
 
@@ -14,7 +15,7 @@ type PaymentChannelSearchProps = {
 export function PaymentChannelSearch(_props: PaymentChannelSearchProps) {
   const { setOpen } = usePaymentChannel()
   const navigate = route.useNavigate()
-
+  const { t } = useLanguage()
 
   const handleSearch = () => {
       navigate({
@@ -31,7 +32,7 @@ export function PaymentChannelSearch(_props: PaymentChannelSearchProps) {
       <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <RefreshCcw className='mr-2 h-4 w-4' />
-          刷新
+          {t('common.refresh')}
         </Button>
       </div>
 
@@ -42,7 +43,7 @@ export function PaymentChannelSearch(_props: PaymentChannelSearchProps) {
           onClick={() => setOpen('create')}
         >
           <Plus className='mr-2 h-4 w-4' />
-          添加商户配置
+          {t('config.paymentChannel.addMerchantConfig')}
         </Button>
         <Button
           variant='outline'
@@ -50,7 +51,7 @@ export function PaymentChannelSearch(_props: PaymentChannelSearchProps) {
           onClick={() => setOpen('config')}
         >
           <Settings className='mr-2 h-4 w-4' />
-          一键配置
+          {t('config.paymentChannel.oneClickConfig')}
         </Button>
       </div>
     </div>
