@@ -30,7 +30,9 @@ export const addPayChannel = (data: {
   type: number
   channel: string
   notChannel: string
-}) => http.post('/admin/interface/v1/add', data)
+}) => http.post('/admin/interface/v1/add', data,{
+ headers: { 'Content-Type': 'multipart/form-data' }
+})
 
 // 获取子渠道列表(存款记录列表)
 export const getPaymentShopList = (params: FormData) => http.post('/admin/interface/v1/subChannelList', params)
@@ -44,4 +46,6 @@ export const configChannel = (data: {
   type: number
   paymentPlatform: string
   withdrawalsShop: string
-}) => http.post('/admin/interface/v1/configChannel', data)
+}) => http.post('/admin/deplop/v1/channel', data,{
+ headers: { 'Content-Type': 'multipart/form-data' }
+})

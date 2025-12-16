@@ -163,6 +163,10 @@ export const getSidebarData = (language: Language): SidebarData => {
               url: '/logs/message-record',
             },
             {
+              title: t('logs.merchantRequest.title'),
+              url: '/logs/merchant-request',
+            },
+            {
               title: t('sidebar.riskControlLog'),
               url: '/logs/risk-control',
             },

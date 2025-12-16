@@ -39,6 +39,7 @@ import { Route as AuthenticatedOrdersCollectionSuccessRateRouteImport } from './
 import { Route as AuthenticatedMerchantInfoListsRouteImport } from './routes/_authenticated/merchant/info-lists'
 import { Route as AuthenticatedLogsRiskControlRouteImport } from './routes/_authenticated/logs/risk-control'
 import { Route as AuthenticatedLogsMessageRecordRouteImport } from './routes/_authenticated/logs/message-record'
+import { Route as AuthenticatedLogsMerchantRequestRouteImport } from './routes/_authenticated/logs/merchant-request'
 import { Route as AuthenticatedFundSettlementListsRouteImport } from './routes/_authenticated/fund/settlement-lists'
 import { Route as AuthenticatedFundRechargeWithdrawRouteImport } from './routes/_authenticated/fund/recharge-withdraw'
 import { Route as AuthenticatedFundMerchantDailySummaryRouteImport } from './routes/_authenticated/fund/merchant-daily-summary'
@@ -218,6 +219,12 @@ const AuthenticatedLogsMessageRecordRoute =
     path: '/logs/message-record',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLogsMerchantRequestRoute =
+  AuthenticatedLogsMerchantRequestRouteImport.update({
+    id: '/logs/merchant-request',
+    path: '/logs/merchant-request',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedFundSettlementListsRoute =
   AuthenticatedFundSettlementListsRouteImport.update({
     id: '/fund/settlement-lists',
@@ -310,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/fund/merchant-daily-summary': typeof AuthenticatedFundMerchantDailySummaryRoute
   '/fund/recharge-withdraw': typeof AuthenticatedFundRechargeWithdrawRoute
   '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
+  '/logs/merchant-request': typeof AuthenticatedLogsMerchantRequestRoute
   '/logs/message-record': typeof AuthenticatedLogsMessageRecordRoute
   '/logs/risk-control': typeof AuthenticatedLogsRiskControlRoute
   '/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
@@ -351,6 +359,7 @@ export interface FileRoutesByTo {
   '/fund/merchant-daily-summary': typeof AuthenticatedFundMerchantDailySummaryRoute
   '/fund/recharge-withdraw': typeof AuthenticatedFundRechargeWithdrawRoute
   '/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
+  '/logs/merchant-request': typeof AuthenticatedLogsMerchantRequestRoute
   '/logs/message-record': typeof AuthenticatedLogsMessageRecordRoute
   '/logs/risk-control': typeof AuthenticatedLogsRiskControlRoute
   '/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
@@ -395,6 +404,7 @@ export interface FileRoutesById {
   '/_authenticated/fund/merchant-daily-summary': typeof AuthenticatedFundMerchantDailySummaryRoute
   '/_authenticated/fund/recharge-withdraw': typeof AuthenticatedFundRechargeWithdrawRoute
   '/_authenticated/fund/settlement-lists': typeof AuthenticatedFundSettlementListsRoute
+  '/_authenticated/logs/merchant-request': typeof AuthenticatedLogsMerchantRequestRoute
   '/_authenticated/logs/message-record': typeof AuthenticatedLogsMessageRecordRoute
   '/_authenticated/logs/risk-control': typeof AuthenticatedLogsRiskControlRoute
   '/_authenticated/merchant/info-lists': typeof AuthenticatedMerchantInfoListsRoute
@@ -439,6 +449,7 @@ export interface FileRouteTypes {
     | '/fund/merchant-daily-summary'
     | '/fund/recharge-withdraw'
     | '/fund/settlement-lists'
+    | '/logs/merchant-request'
     | '/logs/message-record'
     | '/logs/risk-control'
     | '/merchant/info-lists'
@@ -480,6 +491,7 @@ export interface FileRouteTypes {
     | '/fund/merchant-daily-summary'
     | '/fund/recharge-withdraw'
     | '/fund/settlement-lists'
+    | '/logs/merchant-request'
     | '/logs/message-record'
     | '/logs/risk-control'
     | '/merchant/info-lists'
@@ -523,6 +535,7 @@ export interface FileRouteTypes {
     | '/_authenticated/fund/merchant-daily-summary'
     | '/_authenticated/fund/recharge-withdraw'
     | '/_authenticated/fund/settlement-lists'
+    | '/_authenticated/logs/merchant-request'
     | '/_authenticated/logs/message-record'
     | '/_authenticated/logs/risk-control'
     | '/_authenticated/merchant/info-lists'
@@ -767,6 +780,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLogsMessageRecordRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/logs/merchant-request': {
+      id: '/_authenticated/logs/merchant-request'
+      path: '/logs/merchant-request'
+      fullPath: '/logs/merchant-request'
+      preLoaderRoute: typeof AuthenticatedLogsMerchantRequestRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/fund/settlement-lists': {
       id: '/_authenticated/fund/settlement-lists'
       path: '/fund/settlement-lists'
@@ -885,6 +905,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFundMerchantDailySummaryRoute: typeof AuthenticatedFundMerchantDailySummaryRoute
   AuthenticatedFundRechargeWithdrawRoute: typeof AuthenticatedFundRechargeWithdrawRoute
   AuthenticatedFundSettlementListsRoute: typeof AuthenticatedFundSettlementListsRoute
+  AuthenticatedLogsMerchantRequestRoute: typeof AuthenticatedLogsMerchantRequestRoute
   AuthenticatedLogsMessageRecordRoute: typeof AuthenticatedLogsMessageRecordRoute
   AuthenticatedLogsRiskControlRoute: typeof AuthenticatedLogsRiskControlRoute
   AuthenticatedMerchantInfoListsRoute: typeof AuthenticatedMerchantInfoListsRoute
@@ -922,6 +943,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFundRechargeWithdrawRoute:
     AuthenticatedFundRechargeWithdrawRoute,
   AuthenticatedFundSettlementListsRoute: AuthenticatedFundSettlementListsRoute,
+  AuthenticatedLogsMerchantRequestRoute: AuthenticatedLogsMerchantRequestRoute,
   AuthenticatedLogsMessageRecordRoute: AuthenticatedLogsMessageRecordRoute,
   AuthenticatedLogsRiskControlRoute: AuthenticatedLogsRiskControlRoute,
   AuthenticatedMerchantInfoListsRoute: AuthenticatedMerchantInfoListsRoute,
