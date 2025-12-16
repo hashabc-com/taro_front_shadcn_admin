@@ -1,10 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { MerchantDailySummaryPage } from '@/features/fund/merchant-daily-summary'
+import { createBaseSearchSchema } from '@/lib/table-schemas'
 
-const merchantDailySummarySearchSchema = z.object({
-  pageNum: z.number().optional().default(1),
-  pageSize: z.number().optional().default(10),
+const merchantDailySummarySearchSchema = createBaseSearchSchema({
   startTime: z.string().optional(),
   endTime: z.string().optional(),
 })

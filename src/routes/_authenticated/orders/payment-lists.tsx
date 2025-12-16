@@ -1,10 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { PaymentLists } from '@/features/orders/payment-lists'
+import { createBaseSearchSchema } from '@/lib/table-schemas'
 
-const paymentListsSearchSchema = z.object({
-  pageNum: z.number().optional().default(1),
-  pageSize: z.number().optional().default(10),
+const paymentListsSearchSchema = createBaseSearchSchema({
   refNo: z.string().optional(),
   transId: z.string().optional(),
   mobile: z.string().optional(),

@@ -72,6 +72,15 @@ export function MutateDrawer({
                 {currentRow.transactionid}
               </div>
             </div>
+            {/* 三方订单号 */}
+            <div className='space-y-2'>
+              <label className='text-muted-foreground text-sm font-medium'>
+                {t('orders.paymentOrders.thirdPartyOrderNo')}
+              </label>
+              <div className='flex flex-col gap-1'>
+                {currentRow.certificateId}
+              </div>
+            </div>
             {/* 三方平台 */}
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>

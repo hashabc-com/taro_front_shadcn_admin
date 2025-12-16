@@ -7,16 +7,21 @@ import { PaymentChannelDialogs } from './components/payment-channel-dialogs'
 import { getPayChannelList } from '@/api/config'
 import { type PaymentChannel } from './schema'
 import { useLanguage } from '@/context/language-provider'
+import { useCountryStore, useMerchantStore } from '@/stores'
 
 const route = getRouteApi('/_authenticated/config/payment-channel')
 
 export function PaymentChannelConfig() {
   const { t } = useLanguage()
   const search = route.useSearch()
-
+  const { selectedCountry } = useCountryStore()
+  const { selectedMerchant } = useMerchantStore()
   const { data, isLoading } = useQuery({
-    queryKey: ['payment-channels', search],
+    queryKey: ['payment-channels', search,selectedCountry?.code,
+      selectedMerchant?.appid,],
     queryFn: () => getPayChannelList(search),
+    enabled: !!selectedCountry,
+    placeholderData:(prev) => prev ?? undefined
   })
 
   const channels = (data?.result?.listRecord as PaymentChannel[]) || []

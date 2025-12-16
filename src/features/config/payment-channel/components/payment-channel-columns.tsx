@@ -13,14 +13,14 @@ export const getPaymentChannelColumns = (
       accessorKey: 'customerName',
       header: t('config.paymentChannel.merchantName'),
     },
-    {
-      accessorKey: 'country',
-      header: t('common.country'),
-      cell: ({ row }) => {
-        const country = row.getValue('country') as string | null
-        return country || '-'
-      },
-    },
+    // {
+    //   accessorKey: 'country',
+    //   header: t('common.country'),
+    //   cell: ({ row }) => {
+    //     const country = row.getValue('country') as string | null
+    //     return country || '-'
+    //   },
+    // },
     {
       accessorKey: 'type',
       header: t('config.paymentChannel.collectionPayout'),

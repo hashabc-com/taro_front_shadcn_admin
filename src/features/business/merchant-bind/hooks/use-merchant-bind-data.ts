@@ -16,6 +16,7 @@ export function useMerchantBindData() {
       return response?.result || { listRecord: [], totalRecord: 0 }
     },
     enabled: !!selectedCountry,
+    placeholderData:(prev) => prev ?? undefined
   })
 
   return {

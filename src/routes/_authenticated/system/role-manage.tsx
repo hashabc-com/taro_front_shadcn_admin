@@ -1,10 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { RoleManagePage } from '@/features/system/role-manage'
+import { createBaseSearchSchema } from '@/lib/table-schemas'
 
-const roleManageSearchSchema = z.object({
-  pageNum: z.number().optional().default(1),
-  pageSize: z.number().optional().default(10),
+const roleManageSearchSchema = createBaseSearchSchema({
   role: z.string().optional(),
   createTimeBegin: z.string().optional(),
   createTimeEnd: z.string().optional(),

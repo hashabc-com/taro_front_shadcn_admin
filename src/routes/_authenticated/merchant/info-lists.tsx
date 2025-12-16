@@ -1,10 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { MerchantInfoPage } from '@/features/merchant/info-lists'
+import { createBaseSearchSchema } from '@/lib/table-schemas'
 
-const searchSchema = z.object({
-  pageNum: z.number().default(1),
-  pageSize: z.number().default(10),
+const searchSchema = createBaseSearchSchema({
   startTime: z.string().optional(),
   endTime: z.string().optional(),
 })

@@ -21,6 +21,8 @@ export function useRuleConfigData() {
       const response = await getRuleConfigList(search)
       return response.result
     },
+    enabled: !!selectedCountry,
+    placeholderData:(prev) => prev ?? undefined
   })
   return {
     data: data?.listRecord ?? [],

@@ -12,6 +12,8 @@ export function useRoleManageData() {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['roles', search,selectedCountry?.code, selectedMerchant?.appid],
     queryFn: () => getRoleList(search),
+    enabled: !!selectedCountry,
+    placeholderData:(prev) => prev ?? undefined
   })
 
   const roles = data?.result?.listRecord || []

@@ -17,6 +17,7 @@ export function useMonthlySummaryData() {
       selectedMerchant?.appid,],
     queryFn: async () => getBusinessMonthlySummary(search),
     enabled: !!selectedCountry,
+     placeholderData:(prev) => prev ?? undefined
   })
 
   const datas =

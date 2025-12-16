@@ -1,10 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { ReceiveLists } from '@/features/orders/receive-lists'
+import { createBaseSearchSchema } from '@/lib/table-schemas'
 
-const receiveListsSearchSchema = z.object({
-  pageNum: z.number().optional().default(1),
-  pageSize: z.number().optional().default(10),
+const receiveListsSearchSchema = createBaseSearchSchema({
   referenceno: z.string().optional(),
   tripartiteOrder: z.string().optional(),
   pickupCenter: z.string().optional(),

@@ -59,7 +59,7 @@ export function DailySummaryTable() {
 
   useEffect(() => {
     ensurePageInRange(pageCount)
-  }, [pageCount, ensurePageInRange, totalRecord, isLoading])
+  }, [pageCount, ensurePageInRange])
 
   return (
     <div className='flex flex-1 flex-col gap-4'>
