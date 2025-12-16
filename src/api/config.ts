@@ -18,7 +18,7 @@ export const updateChannelInfo = (data: {
   type: number
   channel: string
   notChannel: string
-}) => http.post('/admin/interface/v1/update', data)
+}) => http.post('/admin/interface/v1/update', data,{headers: { 'Content-Type': 'multipart/form-data' }})
 
 // 更新渠道状态(启用/禁用)
 export const updateChannelStatus = (data: FormData) =>
