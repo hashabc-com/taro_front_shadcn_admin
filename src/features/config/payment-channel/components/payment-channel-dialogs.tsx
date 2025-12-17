@@ -434,7 +434,7 @@ export function GlobalConfigDialog() {
                         form.setValue('withdrawalsShop', '')
                       }}
                       value={field.value}
-                      className='flex gap-4'
+                      className='flex flex-wrap gap-4'
                     >
                       {channels.map((channel) => (
                         <div key={channel.itemValue} className='flex items-center space-x-2'>
@@ -471,13 +471,13 @@ export function GlobalConfigDialog() {
                       disabled={!paymentPlatform}
                     >
                       {subChannels.map((subChannel) => (
-                        <div key={subChannel.itemName} className='flex items-center space-x-2'>
+                        <div key={subChannel.itemValue} className='flex items-center space-x-2'>
                           <RadioGroupItem
-                            value={subChannel.itemName}
-                            id={`sub-${subChannel.itemName}`}
+                            value={subChannel.itemValue}
+                            id={`sub-${subChannel.itemValue}`}
                           />
                           <label
-                            htmlFor={`sub-${subChannel.itemName}`}
+                            htmlFor={`sub-${subChannel.itemValue}`}
                             className='cursor-pointer'
                           >
                             {subChannel.itemValue}

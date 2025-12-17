@@ -827,8 +827,8 @@ export const translations = {
         transactionid: '订单ID',
         transactionReferenceNo: '平台ID',
         // 交易类型
-        payment: '还款',
-        lending: '放款',
+        payment: '代收',
+        lending: '代付',
         // 交易状态
         statusSuccess: '成功',
         statusProcessing: '处理中',
