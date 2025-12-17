@@ -67,11 +67,23 @@ export const getColumns = (
       accessorKey: 'referenceno',
       header: t('logs.merchantRequest.referenceno'),
       enableHiding: false,
+      cell: ({ row }) => {
+        if(row.original.transactionType === 'P') {
+          return row.original.referenceno
+        }
+        return row.original.transactionReferenceNo
+      }
     },
     {
       accessorKey: 'transId',
       header: t('logs.merchantRequest.transId'),
-      enableHiding: false
+      enableHiding: false,
+      cell: ({ row }) => {
+        if(row.original.transactionType === 'P') {
+          return row.original.transId
+        }
+        return row.original.transactionid
+      }
     },
     {
       accessorKey: 'paymentCompany',

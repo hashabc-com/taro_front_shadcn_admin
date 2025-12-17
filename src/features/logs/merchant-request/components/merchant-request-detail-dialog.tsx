@@ -86,22 +86,22 @@ export function MerchantRequestDetailDialog({
           <DialogTitle>{t('logs.merchantRequest.logDetail')}</DialogTitle>
         </DialogHeader>
         <div className='space-y-4'>
-          <div className='font-semibold text-base border-b-2 pb-2'>基本信息</div>
+          <div className='font-semibold text-base border-b-2 pb-2'>{t('logs.merchantRequest.basicInfo')}</div>
           <InfoRow label={t('logs.merchantRequest.transactionType')} value={getTransactionTypeLabel(record.transactionType)} />
           <InfoRow label={t('logs.merchantRequest.appid')} value={record.appid || '-'} />
-          <InfoRow label={t('logs.merchantRequest.referenceno')} value={record.referenceno || '-'} />
-          <InfoRow label={t('logs.merchantRequest.transId')} value={record.transId || '-'} />
+          <InfoRow label={t('logs.merchantRequest.referenceno')} value={record.transactionType === 'P' ? record.referenceno : record.transactionReferenceNo || '-'} />
+          <InfoRow label={t('logs.merchantRequest.transId')} value={record.transactionType === 'P' ? record.transId : record.transactionid || '-'} />
           <InfoRow label={t('logs.merchantRequest.parameTwo')} value={record.parameTwo || '-'} />
           <InfoRow label={t('logs.merchantRequest.country')} value={record.country || '-'} />
           <InfoRow label={t('logs.merchantRequest.status')} value={getStatusLabel(record.status)} />
           <InfoRow label={t('logs.merchantRequest.callBackStatus')} value={getCallbackStatusLabel(record.callBackStatus)} />
 
-          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>用户信息</div>
+          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>{t('logs.merchantRequest.userInfo')}</div>
           <InfoRow label={t('logs.merchantRequest.userName')} value={record.userName || '-'} />
           <InfoRow label={t('logs.merchantRequest.mobile')} value={record.mobile || '-'} />
           <InfoRow label={t('logs.merchantRequest.address')} value={record.address || '-'} />
 
-          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>金额信息</div>
+          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>{t('logs.merchantRequest.amountInfo')}</div>
           <InfoRow 
             label={t('logs.merchantRequest.amount')} 
             value={record.amount} 
@@ -111,18 +111,18 @@ export function MerchantRequestDetailDialog({
             value={record.serviceAmount} 
           />
 
-          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>支付信息</div>
+          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>{t('logs.merchantRequest.paymentInfo')}</div>
           <InfoRow label={t('logs.merchantRequest.paymentCompany')} value={record.paymentCompany || '-'} />
           <InfoRow label={t('logs.merchantRequest.pickupCenter')} value={record.pickupCenter || '-'} />
           <InfoRow label={t('logs.merchantRequest.url')} value={record.url || '-'} />
           <InfoRow label={t('logs.merchantRequest.notificationUrl')} value={record.notificationUrl || '-'} />
 
-          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>时间信息</div>
+          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>{t('logs.merchantRequest.timeInfo')}</div>
           <InfoRow label={t('logs.merchantRequest.createTime')} value={record.createTime || '-'} />
           <InfoRow label={t('logs.merchantRequest.updateTime')} value={record.updateTime || '-'} />
-          <InfoRow label='本地时间' value={record.localTime || '-'} />
+          <InfoRow label={t('logs.merchantRequest.localTime')} value={record.localTime || '-'} />
 
-          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>请求响应参数</div>
+          <div className='font-semibold text-base border-b-2 pb-2 pt-4'>{t('logs.merchantRequest.requestResponseParams')}</div>
           <div className='space-y-2'>
             <div className='font-medium text-sm'>{t('logs.merchantRequest.requestParam')}:</div>
             <pre className='bg-muted p-3 rounded-md overflow-auto max-h-[250px] text-xs'>

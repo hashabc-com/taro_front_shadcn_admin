@@ -52,6 +52,8 @@ export const merchantRequestSchema = z.object({
   certificateType: z.string().optional(),
   paymentType: z.string().optional(),
   currentConsumptionAmount: z.number().optional(),
+  transaction_reference_no: z.string().optional(),
+  transactionld: z.string().optional(),
 })
 
 export type IMerchantRequest = z.infer<typeof merchantRequestSchema>
