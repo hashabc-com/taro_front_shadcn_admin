@@ -19,6 +19,7 @@ import {
   updateMerchantRate,
 } from '@/api/merchant'
 import { type IMerchantInfoType } from '../schema'
+import { useCountryStore } from '@/stores'
 
 type RateItem = {
   id: string
@@ -46,7 +47,8 @@ export function RateConfigDialog({
   const [collectionRates, setCollectionRates] = useState<RateItem[]>([])
   const [payoutRates, setPayoutRates] = useState<RateItem[]>([])
   const { t } = useLanguage()
-  const currency = 'USD'
+  const {selectedCountry} = useCountryStore()
+  const currency = selectedCountry?.currency || 'USD'
 
   useEffect(() => {
     if (open && merchant) {
@@ -282,7 +284,7 @@ export function RateConfigDialog({
                           e.target.value
                         )
                       }
-                      className='w-[150px]'
+                      className='w-[150px] ml-9'
                     />
                   </div>
                 ))}
@@ -322,7 +324,7 @@ export function RateConfigDialog({
                       onChange={(e) =>
                         updateRate('payout', index, 'feeAmount', e.target.value)
                       }
-                      className='w-[150px]'
+                      className='w-[150px] ml-9'
                     />
                   </div>
                 ))}
