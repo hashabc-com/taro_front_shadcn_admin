@@ -72,7 +72,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           onClick={handleStatusToggle}
           disabled={statusMutation.isPending}
         >
-          {channel.status === 1 ? (
+          {channel.status === 0 ? (
             <>
               <PowerOff className='mr-2 h-4 w-4' />
               {t('common.disable')}
