@@ -55,8 +55,8 @@ export const getPaymentChannelColumns = (
       cell: ({ row }) => {
         const status = row.getValue('status') as number
         return (
-          <Badge variant={status === 1 ? 'default' : 'destructive'}>
-            {status === 1 ? t('common.enabled') : t('common.disabled')}
+          <Badge variant={status === 0 ? 'default' : 'destructive'}>
+            {status === 0 ? t('common.enabled') : t('common.disabled')}
           </Badge>
         )
       },
