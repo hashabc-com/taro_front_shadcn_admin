@@ -13,6 +13,7 @@ type ColumnsOptions = {
   onToggleStatus: (merchant: IMerchantInfoType) => void
   onUnbindKey: (merchant: IMerchantInfoType) => void
   onBindIp: (merchant: IMerchantInfoType) => void
+  onBindTgGroup: (merchant: IMerchantInfoType) => void
   onRateConfig: (merchant: IMerchantInfoType) => void
   onAutoLogin: (merchant: IMerchantInfoType) => void
 }

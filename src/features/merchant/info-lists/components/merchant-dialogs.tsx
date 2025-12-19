@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { unbindGoogle, addIP } from '@/api/merchant'
+import { unbindGoogle, addIP, bindTgGroup, getAutoLoginToken } from '@/api/merchant'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -26,6 +26,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { type IMerchantInfoType } from '../schema'
 import { useLanguage } from '@/context/language-provider'
+
+const isProduction = import.meta.env.MODE === 'production'
 
 const createUnbindKeySchema = (t: (key: string) => string) => z.object({
   googleCode: z.string().min(1, t('merchant.info.validation.googleCodeRequired')),
@@ -133,6 +135,213 @@ export function UnbindKeyDialog({
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 )}
                 {t('merchant.info.confirmUnbind')}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+const createAutoLoginSchema = (t: (key: string) => string) => z.object({
+  googleCode: z.string().min(1, t('merchant.info.validation.googleCodeRequired')),
+})
+
+type AutoLoginFormValues = z.infer<ReturnType<typeof createAutoLoginSchema>>
+
+type AutoLoginDialogProps = {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  merchant: IMerchantInfoType | null
+}
+
+export function AutoLoginDialog({
+  open,
+  onOpenChange,
+  merchant,
+}: AutoLoginDialogProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { t } = useLanguage()
+  const form = useForm<AutoLoginFormValues>({
+    resolver: zodResolver(createAutoLoginSchema(t)),
+    defaultValues: {
+      googleCode: '',
+    },
+  })
+
+  const onSubmit = async (values: AutoLoginFormValues) => {
+    if (!merchant) return
+
+    setIsSubmitting(true)
+
+    try {
+        const res = await getAutoLoginToken(merchant.appid, values.googleCode)
+        if (res.code == 200) {
+            const baseUrl = isProduction
+              ? 'https://merchant.taropay.com'
+              : 'https://merchant-test.taropay.com'
+            window.open(`${baseUrl}?token=${res.result}`, '_blank')
+            onOpenChange(false)
+            form.reset()
+        } else {
+             toast.error(res.result || t('merchant.info.error.autoLoginFailed'))
+        }
+    } catch{
+        toast.error(t('merchant.info.error.autoLoginFailed'))
+    } finally {
+        setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(newOpen) => {
+        if (!newOpen) {
+          form.reset()
+        }
+        onOpenChange(newOpen)
+      }}
+    >
+      <DialogContent className='sm:max-w-[400px]'>
+        <DialogHeader>
+          <DialogTitle>{t('merchant.info.autoLogin')}</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            <FormField
+              control={form.control}
+              name='googleCode'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('merchant.info.googleCode')}</FormLabel>
+                  <FormControl>
+                    <Input placeholder={t('merchant.info.placeholder.googleCode')} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => onOpenChange(false)}
+                disabled={isSubmitting}
+              >
+                {t('common.cancel')}
+              </Button>
+              <Button type='submit' disabled={isSubmitting}>
+                {isSubmitting && (
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                )}
+                {t('common.confirm')}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+const createBindTgGroupSchema = (t: (key: string) => string) => z.object({
+  chatId: z.string().min(1, t('merchant.info.validation.chatIdRequired')),
+})
+
+type BindTgGroupFormValues = z.infer<ReturnType<typeof createBindTgGroupSchema>>
+
+type BindTgGroupDialogProps = {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  merchant: IMerchantInfoType | null
+  onSuccess: () => void
+}
+
+export function BindTgGroupDialog({
+  open,
+  onOpenChange,
+  merchant,
+  onSuccess,
+}: BindTgGroupDialogProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { t } = useLanguage()
+  const form = useForm<BindTgGroupFormValues>({
+    resolver: zodResolver(createBindTgGroupSchema(t)),
+    defaultValues: {
+      chatId: '',
+    },
+  })
+
+  const onSubmit = async (values: BindTgGroupFormValues) => {
+    if (!merchant) return
+
+    setIsSubmitting(true)
+
+    const formData = new FormData()
+    formData.append('merchantId', merchant.appid)
+    
+    formData.append('chatId', values.chatId)
+
+    const res = await bindTgGroup(formData)
+
+    if (res.code == 200) {
+      toast.success(t('merchant.info.success.bindTgGroupSuccess'))
+      onOpenChange(false)
+      form.reset()
+      onSuccess()
+    } else {
+      toast.error(res.message || t('merchant.info.error.bindTgGroupFailed'))
+    }
+    setIsSubmitting(false)
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(newOpen) => {
+        if (!newOpen) {
+          form.reset()
+        }
+        onOpenChange(newOpen)
+      }}
+    >
+      <DialogContent className='sm:max-w-[500px]'>
+        <DialogHeader>
+          <DialogTitle>{t('merchant.info.bindTgGroup')}</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            <FormField
+              control={form.control}
+              name='chatId'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('merchant.info.chatId')}</FormLabel>
+                  <FormControl>
+                    <Input placeholder={t('merchant.info.placeholder.chatId')} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => onOpenChange(false)}
+                disabled={isSubmitting}
+              >
+                {t('common.cancel')}
+              </Button>
+              <Button type='submit' disabled={isSubmitting}>
+                {isSubmitting && (
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                )}
+                {t('merchant.info.confirmBind')}
               </Button>
             </DialogFooter>
           </form>

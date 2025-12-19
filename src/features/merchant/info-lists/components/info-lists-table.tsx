@@ -24,15 +24,13 @@ import { getColumns } from './info-lists-columns'
 import { MerchantInfoSearch } from './info-lists-search'
 import { EditMerchantDialog } from './edit-merchant-dialog'
 import { ChangePasswordDialog } from './change-password-dialog'
-import { UnbindKeyDialog, AddIpDialog } from './merchant-dialogs'
+import { UnbindKeyDialog, AddIpDialog, BindTgGroupDialog, AutoLoginDialog } from './merchant-dialogs'
 import { RateConfigDialog } from './rate-config-dialog'
-import { updateCustomer, getAutoLoginToken } from '@/api/merchant'
+import { updateCustomer } from '@/api/merchant'
 import { type IMerchantInfoType } from '../schema'
 import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/merchant/info-lists')
-
-const isProduction = import.meta.env.MODE === 'production'
 
 export function MerchantInfoTable() {
   const { lang,t } = useLanguage()
@@ -47,6 +45,8 @@ export function MerchantInfoTable() {
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false)
   const [unbindKeyDialogOpen, setUnbindKeyDialogOpen] = useState(false)
   const [addIpDialogOpen, setAddIpDialogOpen] = useState(false)
+  const [bindTgGroupDialogOpen, setBindTgGroupDialogOpen] = useState(false)
+  const [autoLoginDialogOpen, setAutoLoginDialogOpen] = useState(false)
   const [rateConfigDialogOpen, setRateConfigDialogOpen] = useState(false)
 
   // Synced with URL states
@@ -102,21 +102,19 @@ export function MerchantInfoTable() {
     setAddIpDialogOpen(true)
   }
 
+  const handleBindTgGroup = (merchant: IMerchantInfoType) => {
+    setCurrentMerchant(merchant)
+    setBindTgGroupDialogOpen(true)
+  }
+
   const handleRateConfig = (merchant: IMerchantInfoType) => {
     setCurrentMerchant(merchant)
     setRateConfigDialogOpen(true)
   }
 
-  const handleAutoLogin = async (merchant: IMerchantInfoType) => {
-    try {
-      const res = await getAutoLoginToken(merchant.appid)
-      const baseUrl = isProduction
-        ? 'https://merchant.taropay.com'
-        : 'https://merchant-test.taropay.com'
-      window.open(`${baseUrl}?token=${res.result}`, '_blank')
-    } catch (_error) {
-      toast.error('获取登录令牌失败')
-    }
+  const handleAutoLogin = (merchant: IMerchantInfoType) => {
+    setCurrentMerchant(merchant)
+    setAutoLoginDialogOpen(true)
   }
 
   const handleSuccess = () => {
@@ -131,6 +129,7 @@ export function MerchantInfoTable() {
         onToggleStatus: handleToggleStatus,
         onUnbindKey: handleUnbindKey,
         onBindIp: handleBindIp,
+        onBindTgGroup: handleBindTgGroup,
         onRateConfig: handleRateConfig,
         onAutoLogin: handleAutoLogin,
       }, lang),
@@ -262,6 +261,17 @@ export function MerchantInfoTable() {
         onOpenChange={setAddIpDialogOpen}
         merchant={currentMerchant}
         onSuccess={handleSuccess}
+      />
+      <BindTgGroupDialog
+        open={bindTgGroupDialogOpen}
+        onOpenChange={setBindTgGroupDialogOpen}
+        merchant={currentMerchant}
+        onSuccess={handleSuccess}
+      />
+      <AutoLoginDialog
+        open={autoLoginDialogOpen}
+        onOpenChange={setAutoLoginDialogOpen}
+        merchant={currentMerchant}
       />
       <RateConfigDialog
         open={rateConfigDialogOpen}

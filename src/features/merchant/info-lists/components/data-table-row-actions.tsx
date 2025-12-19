@@ -8,6 +8,7 @@ import {
   DollarSign,
   LogIn,
   Trash2,
+  Users,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -29,6 +30,7 @@ type DataTableRowActionsProps<TData> = {
   onBindIp: (merchant: IMerchantInfoType) => void
   onRateConfig: (merchant: IMerchantInfoType) => void
   onAutoLogin: (merchant: IMerchantInfoType) => void
+  onBindTgGroup?: (merchant: IMerchantInfoType) => void
 }
 
 export function DataTableRowActions<TData>({
@@ -40,6 +42,7 @@ export function DataTableRowActions<TData>({
   onBindIp,
   onRateConfig,
   onAutoLogin,
+  onBindTgGroup,
 }: DataTableRowActionsProps<TData>) {
   const merchant = row.original as IMerchantInfoType
   const { t } = useLanguage()
@@ -78,6 +81,13 @@ export function DataTableRowActions<TData>({
         <DropdownMenuItem onClick={() => onBindIp(merchant)}>
           <Globe className='mr-2 h-4 w-4' />
           {t('merchant.info.bindIp')}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => onBindTgGroup?.(merchant)}
+          disabled={!onBindTgGroup}
+        >
+          <Users className='mr-2 h-4 w-4' />
+          {t('merchant.info.bindTgGroup')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onRateConfig(merchant)}>
           <DollarSign className='mr-2 h-4 w-4' />

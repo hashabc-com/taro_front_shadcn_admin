@@ -49,6 +49,10 @@ export const addIP = (data: {
   googleCode: string
 }) => http.post('/admin/deplop/v1/addIp', data)
 
+// 绑定TG群组
+export const bindTgGroup = (data: FormData) =>
+  http.post('/admin/user/v1/bindTgGroup', data,{autoAddCountry:false})
+
 // 获取商户费率
 export const getMerchantRate = (params: { merchantId: string }) =>
   http.get('/admin/customerRate/getRateListByAppid', params,{autoAddMerchantId:false})
@@ -62,6 +66,6 @@ export const getChannelTypeList = (country: string) =>
   http.get('/admin/user/v1/getChannelTypeList', { country })
 
 // 获取自动登录token
-export const getAutoLoginToken = (merchantId: string) =>
-  http.post(`/admin/user/v1/loginCustomerBackstage?merchantId=${merchantId}`,{},{autoAddMerchantId:false})
+export const getAutoLoginToken = (merchantId: string, googleCode: string) =>
+  http.post(`/admin/user/v1/loginCustomerBackstage?merchantId=${merchantId}&gauthKey=${googleCode}`,{},{autoAddMerchantId:false,autoAddCountry:false})
 
