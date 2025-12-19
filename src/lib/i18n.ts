@@ -845,6 +845,7 @@ export const translations = {
         statusProcessing: '处理中',
         statusFailed: '失败',
         statusExpired: '已过期',
+        statusAbnormal: '异常',
         // 回调状态
         callbackSuccess: '成功',
         callbackFailed: '失败',
@@ -1893,6 +1894,7 @@ export const translations = {
         statusProcessing: 'Processing',
         statusFailed: 'Failed',
         statusExpired: 'Expired',
+        statusAbnormal: 'Abnormal',
         // Callback status
         callbackSuccess: 'Success',
         callbackFailed: 'Failed',

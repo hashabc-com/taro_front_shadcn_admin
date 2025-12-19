@@ -50,7 +50,7 @@ export function DataTablePagination<TData>({
               table.setPageSize(Number(value))
             }}
           >
-            <SelectTrigger className='h-8 w-[70px]'>
+            <SelectTrigger className='h-8 w-[90px]'>
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side='top'>
@@ -65,8 +65,8 @@ export function DataTablePagination<TData>({
         </div>
       </div>
 
-      <div className='flex items-center sm:space-x-6 lg:space-x-8'>
-        <div className='flex w-[100px] items-center justify-center text-sm font-medium @max-3xl/content:hidden'>
+      <div className='flex items-center'>
+        <div className='flex min-w-[130px] items-center justify-center whitespace-nowrap text-sm font-medium @max-3xl/content:hidden'>
           {t('common.page')} {currentPage} {t('common.of')} {totalPages}
         </div>
         <div className='flex items-center space-x-2'>

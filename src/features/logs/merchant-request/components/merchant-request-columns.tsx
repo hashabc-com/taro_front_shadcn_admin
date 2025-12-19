@@ -15,36 +15,36 @@ const getTransactionTypeLabel = (type: string | undefined, t: (key: string) => s
   }
 }
 
-const getStatusLabel = (status: number | undefined, t: (key: string) => string) => {
-  if (status === undefined) return '-'
-  switch (status) {
-    case 0:
-      return t('logs.merchantRequest.statusSuccess')
-    case 1:
-      return t('logs.merchantRequest.statusProcessing')
-    case 2:
-      return t('logs.merchantRequest.statusFailed')
-    case 3:
-      return t('logs.merchantRequest.statusExpired')
-    default:
-      return String(status)
-  }
-}
+// const getStatusLabel = (status: number | undefined, t: (key: string) => string) => {
+//   if (status === undefined) return '-'
+//   switch (status) {
+//     case 0:
+//       return t('logs.merchantRequest.statusSuccess')
+//     case 1:
+//       return t('logs.merchantRequest.statusFailed')
+//     case 2:
+//       return t('logs.merchantRequest.statusAbnormal')
+//     // case 3:
+//     //   return t('logs.merchantRequest.statusExpired')
+//     default:
+//       return null
+//   }
+// }
 
-const getStatusClass = (status: number | undefined) => {
-  switch (status) {
-    case 0:
-      return 'text-green-600'
-    case 1:
-      return 'text-blue-600'
-    case 2:
-      return 'text-red-600'
-    case 3:
-      return 'text-gray-600'
-    default:
-      return ''
-  }
-}
+// const getStatusClass = (status: number | undefined) => {
+//   switch (status) {
+//     case 0:
+//       return 'text-green-600'
+//     case 1:
+//       return 'text-red-600'
+//     case 2:
+//       return 'text-yellow-600'
+//     // case 3:
+//     //   return 'text-gray-600'
+//     default:
+//       return ''
+//   }
+// }
 
 export const getColumns = (
   onViewDetail: (record: IMerchantRequest) => void,
@@ -105,18 +105,18 @@ export const getColumns = (
       accessorKey: 'serviceAmount',
       header: t('logs.merchantRequest.serviceAmount')
     },
-    {
-      accessorKey: 'status',
-      header: t('logs.merchantRequest.status'),
-      cell: ({ row }) => {
-        const status = row.original.status
-        return (
-          <span className={getStatusClass(status)}>
-            {getStatusLabel(status, t)}
-          </span>
-        )
-      },
-    },
+    // {
+    //   accessorKey: 'statusQuery',
+    //   header: t('logs.merchantRequest.status'),
+    //   cell: ({ row }) => {
+    //     const status = row.original.statusQuery
+    //     return (
+    //       <span className={getStatusClass(status)}>
+    //         {getStatusLabel(status, t)}
+    //       </span>
+    //     )
+    //   },
+    // },
     {
       accessorKey: 'createTime',
       header: t('logs.merchantRequest.createTime'),
