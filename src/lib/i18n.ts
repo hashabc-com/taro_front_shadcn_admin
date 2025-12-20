@@ -1335,6 +1335,7 @@ export const translations = {
       secretManagement: 'Secret Management',
       exportManagement: 'Export Management',
       systemSettings: 'System Settings',
+      sendAnnouncement: 'Send Announcement',
       apiDocs: 'API Docs',
     },
     // Sign in page
