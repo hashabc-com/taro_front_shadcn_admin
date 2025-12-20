@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedSendAnnouncementRouteImport } from './routes/_authenticated/send-announcement'
 import { Route as AuthenticatedExportManagementRouteImport } from './routes/_authenticated/export-management'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
@@ -61,6 +62,12 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSendAnnouncementRoute =
+  AuthenticatedSendAnnouncementRouteImport.update({
+    id: '/send-announcement',
+    path: '/send-announcement',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedExportManagementRoute =
   AuthenticatedExportManagementRouteImport.update({
     id: '/export-management',
@@ -305,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/export-management': typeof AuthenticatedExportManagementRoute
+  '/send-announcement': typeof AuthenticatedSendAnnouncementRoute
   '/': typeof AuthenticatedIndexRoute
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
@@ -347,6 +355,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/export-management': typeof AuthenticatedExportManagementRoute
+  '/send-announcement': typeof AuthenticatedSendAnnouncementRoute
   '/': typeof AuthenticatedIndexRoute
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
@@ -392,6 +401,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/export-management': typeof AuthenticatedExportManagementRoute
+  '/_authenticated/send-announcement': typeof AuthenticatedSendAnnouncementRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/_authenticated/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
@@ -437,6 +447,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/export-management'
+    | '/send-announcement'
     | '/'
     | '/business/daily-summary'
     | '/business/merchant-bind'
@@ -479,6 +490,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/export-management'
+    | '/send-announcement'
     | '/'
     | '/business/daily-summary'
     | '/business/merchant-bind'
@@ -523,6 +535,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/export-management'
+    | '/_authenticated/send-announcement'
     | '/_authenticated/'
     | '/_authenticated/business/daily-summary'
     | '/_authenticated/business/merchant-bind'
@@ -582,6 +595,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/send-announcement': {
+      id: '/_authenticated/send-announcement'
+      path: '/send-announcement'
+      fullPath: '/send-announcement'
+      preLoaderRoute: typeof AuthenticatedSendAnnouncementRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/export-management': {
@@ -893,6 +913,7 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedExportManagementRoute: typeof AuthenticatedExportManagementRoute
+  AuthenticatedSendAnnouncementRoute: typeof AuthenticatedSendAnnouncementRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedBusinessDailySummaryRoute: typeof AuthenticatedBusinessDailySummaryRoute
   AuthenticatedBusinessMerchantBindRoute: typeof AuthenticatedBusinessMerchantBindRoute
@@ -922,6 +943,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedExportManagementRoute: AuthenticatedExportManagementRoute,
+  AuthenticatedSendAnnouncementRoute: AuthenticatedSendAnnouncementRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedBusinessDailySummaryRoute:
     AuthenticatedBusinessDailySummaryRoute,

@@ -1,119 +1,134 @@
-<!-- # Taropay Admin Dashboard
+# Taropay Admin Dashboard (taro_front_shadcn_admin)
 
-Admin Dashboard UI crafted with Shadcn and Vite. Built with responsiveness and accessibility in mind.
+这是一个基于 [Shadcn UI](https://ui.shadcn.com) 和 [Vite](https://vitejs.dev/) 构建的现代化管理后台前端项目，主要用于 Taropay 支付系统的商户管理、订单查询、资金结算及系统配置等功能。
 
-![alt text](public/images/shadcn-admin.png)
+## ✨ 主要功能
 
-[![Sponsored by Clerk](https://img.shields.io/badge/Sponsored%20by-Clerk-5b6ee1?logo=clerk)](https://go.clerk.com/GttUAaK)
+本项目包含以下核心模块：
 
-I've been creating dashboard UIs at work and for my personal projects. I always wanted to make a reusable collection of dashboard UI for future projects; and here it is now. While I've created a few custom components, some of the code is directly adapted from ShadcnUI examples.
+- **仪表盘 (Dashboard)**: 核心数据概览、可视化图表分析。
+- **商户管理 (Merchant)**: 商户信息列表、商户绑定、每日交易汇总。
+- **订单管理 (Orders)**: 代收/代付订单列表查询、成功率统计、订单汇总报表。
+- **资金管理 (Fund)**: 账户结算管理、充值/提现操作、国家/商户资金日报。
+- **配置中心 (Config)**: 支付通道配置、风控规则配置。
+- **系统管理 (System)**: 内部账号管理、角色权限分配。
+- **日志中心 (Logs)**: 商户请求日志、消息通知记录、风控拦截日志。
+- **个人设置 (Settings)**: 个人账户信息修改、系统外观/主题设置。
+- **导出管理 (Export)**: 统一管理数据导出任务。
 
-> This is not a starter project (template) though. I'll probably make one in the future.
+## 🛠️ 技术栈
 
-## Features
+- **核心框架**: [React 19](https://react.dev/)
+- **构建工具**: [Vite](https://vitejs.dev/)
+- **UI 组件库**: [Shadcn UI](https://ui.shadcn.com) (基于 Radix UI + Tailwind CSS)
+- **路由管理**: [TanStack Router](https://tanstack.com/router) (文件系统路由)
+- **状态管理**: [Zustand](https://github.com/pmndrs/zustand)
+- **数据请求**: [TanStack Query](https://tanstack.com/query) (React Query)
+- **表格组件**: [TanStack Table](https://tanstack.com/table)
+- **表单处理**: [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- **图表库**: [Recharts](https://recharts.org/)
+- **开发语言**: TypeScript
 
-- Light/dark mode
-- Responsive
-- Accessible
-- With built-in Sidebar component
-- Global search command
-- 10+ pages
-- Extra custom components
-- RTL support
+## 🚀 快速开始
 
-<details>
-<summary>Customized Components (click to expand)</summary>
+### 前置要求
 
-This project uses Shadcn UI components, but some have been slightly modified for better RTL (Right-to-Left) support and other improvements. These customized components differ from the original Shadcn UI versions.
+- [Node.js](https://nodejs.org/) (推荐 v18 或更高版本)
+- [pnpm](https://pnpm.io/) (推荐使用 pnpm 进行包管理)
 
-If you want to update components using the Shadcn CLI (e.g., `npx shadcn@latest add <component>`), it's generally safe for non-customized components. For the listed customized ones, you may need to manually merge changes to preserve the project's modifications and avoid overwriting RTL support or other updates.
-
-> If you don't require RTL support, you can safely update the 'RTL Updated Components' via the Shadcn CLI, as these changes are primarily for RTL compatibility. The 'Modified Components' may have other customizations to consider.
-
-### Modified Components
-
-- scroll-area
-- sonner
-- separator
-
-### RTL Updated Components
-
-- alert-dialog
-- calendar
-- command
-- dialog
-- dropdown-menu
-- select
-- table
-- sheet
-- sidebar
-- switch
-
-**Notes:**
-
-- **Modified Components**: These have general updates, potentially including RTL adjustments.
-- **RTL Updated Components**: These have specific changes for RTL language support (e.g., layout, positioning).
-- For implementation details, check the source files in `src/components/ui/`.
-- All other Shadcn UI components in the project are standard and can be safely updated via the CLI.
-
-</details>
-
-## Tech Stack
-
-**UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)
-
-**Build Tool:** [Vite](https://vitejs.dev/)
-
-**Routing:** [TanStack Router](https://tanstack.com/router/latest)
-
-**Type Checking:** [TypeScript](https://www.typescriptlang.org/)
-
-**Linting/Formatting:** [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/)
-
-**Icons:** [Lucide Icons](https://lucide.dev/icons/), [Tabler Icons](https://tabler.io/icons) (Brand icons only)
-
-**Auth (partial):** [Clerk](https://go.clerk.com/GttUAaK)
-
-## Run Locally
-
-Clone the project
+### 安装依赖
 
 ```bash
-  git clone https://github.com/satnaing/shadcn-admin.git
+pnpm install
 ```
 
-Go to the project directory
+### 启动开发服务器
 
 ```bash
-  cd shadcn-admin
+pnpm dev
 ```
 
-Install dependencies
+启动后，访问 `http://localhost:5173` (默认端口) 即可预览。
+
+### 构建生产版本
 
 ```bash
-  pnpm install
+pnpm build
 ```
 
-Start the server
+构建产物将输出到 `dist` 目录。
 
-```bash
-  pnpm run dev
+### 代码规范检查
+
+- **Lint 检查**: `pnpm lint`
+- **格式化检查**: `pnpm format:check`
+- **自动格式化**: `pnpm format`
+
+## 📂 项目结构
+
+主要业务逻辑位于 `src` 目录下，结构说明如下：
+
+```text
+src/
+├── api/                # API 请求定义 (Axios)
+├── assets/             # 静态资源 (图片、图标)
+├── components/         # 公共组件 (UI 组件、布局组件、数据表格组件)
+├── config/             # 全局配置 (字体等)
+├── context/            # React Context (主题、语言、搜索等)
+├── features/           # 业务功能模块 (按领域划分)
+│   ├── auth/           # 认证模块
+│   ├── dashboard/      # 仪表盘
+│   ├── merchant/       # 商户相关
+│   ├── orders/         # 订单相关
+│   ├── fund/           # 资金相关
+│   ├── config/         # 配置中心
+│   ├── system/         # 系统管理
+│   ├── logs/           # 日志模块
+│   └── settings/       # 设置模块
+├── hooks/              # 全局自定义 Hooks
+├── lib/                # 工具函数 (i18n, utils)
+├── routes/             # 路由定义 (TanStack Router 文件路由)
+│   ├── (auth)/         # 认证相关路由
+│   ├── _authenticated/ # 需要登录的路由 (业务页面)
+│   └── __root.tsx      # 根路由布局
+└── index.css           # 全局样式 (Tailwind 指令)
 ```
 
-## Sponsoring this project ❤️
+## 🧩 开发指南
 
-If you find this project helpful or use this in your own work, consider [sponsoring me](https://github.com/sponsors/satnaing) to support development and maintenance. You can [buy me a coffee](https://buymeacoffee.com/satnaing) as well. Don’t worry, every penny helps. Thank you! 🙏
+### 1. 新增页面
 
-For questions or sponsorship inquiries, feel free to reach out at [satnaingdev@gmail.com](mailto:satnaingdev@gmail.com).
+本项目使用 TanStack Router 的文件路由系统。
 
-### Current Sponsor
+1.  在 `src/features` 下创建新的业务模块目录。
+2.  在 `src/routes/_authenticated` 下创建对应的路由文件 (例如 `new-feature.tsx`)。
+3.  在路由文件中引入 feature 模块的主组件。
 
-- [Clerk](https://go.clerk.com/GttUAaK) - authentication and user management for the modern web
+### 2. API 请求
 
-## Author
+所有 API 请求函数存放在 `src/api` 目录下。建议使用 `axios` 实例进行请求。
+在组件中，推荐使用 `useQuery` 或 `useMutation` (来自 TanStack Query) 来管理数据状态。
 
-Crafted with 🤍 by [@satnaing](https://github.com/satnaing)
+### 3. 国际化 (i18n)
 
-## License
+国际化资源文件位于 `src/lib/i18n.ts`。
+在组件中使用 `useLanguage` Hook 获取 `t` 函数进行翻译：
 
-Licensed under the [MIT License](https://choosealicense.com/licenses/mit/) -->
+```tsx
+const { t } = useLanguage()
+// 使用
+{
+  t('common.confirm')
+}
+```
+
+### 4. 数据表格
+
+使用 `src/components/data-table` 下的通用组件构建表格。
+通常需要在 feature 模块下定义 `columns.tsx` (列定义) 和 `table.tsx` (表格容器)。
+
+## 🤝 代码规范
+
+- 遵循 ESLint 和 Prettier 代码规范。
+- 提交代码前请确保 `pnpm lint` 和 `pnpm format:check` 通过。
+- 使用 TypeScript 进行类型约束，尽量避免使用 `any`。

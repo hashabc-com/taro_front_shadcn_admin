@@ -33,7 +33,8 @@ export const translations = {
       exportTaskCreated: '导出任务已创建',
       exportFailed: '导出失败',
       submitFailed: '提交失败',
-      signOutConfirmation: '确定要退出登录吗？退出后需要重新登录才能访问您的账号。',
+      signOutConfirmation:
+        '确定要退出登录吗？退出后需要重新登录才能访问您的账号。',
       exchangeRateUpdated: '汇率已更新',
       benchmark: '基准',
       fetchExchangeRateFailed: '获取汇率失败',
@@ -160,13 +161,13 @@ export const translations = {
       orderNo: '订单号',
       refresh: '刷新',
       settings: '设置',
-      countrys:{
-        ID:'印尼',
-        BR:'巴西',
-        VN:'越南',
-        MX:'墨西哥',
-        BD:'孟加拉',
-        PH:'菲律宾',
+      countrys: {
+        ID: '印尼',
+        BR: '巴西',
+        VN: '越南',
+        MX: '墨西哥',
+        BD: '孟加拉',
+        PH: '菲律宾',
       },
       validation: {
         required: '此字段为必填项',
@@ -185,7 +186,8 @@ export const translations = {
     keyPair: {
       title: '密钥对生成器',
       description1: '此工具可以帮助您生成基于 Ed25519 算法的公私钥对。',
-      description2: '生成的密钥仅在您的浏览器本地生成，不会上传到服务器或云端，确保您的隐私安全。',
+      description2:
+        '生成的密钥仅在您的浏览器本地生成，不会上传到服务器或云端，确保您的隐私安全。',
       warning: '⚠️ 请务必妥善保管您的私钥，一旦丢失将无法恢复！',
       generateButton: '生成密钥对',
       regenerateButton: '重新生成',
@@ -233,9 +235,27 @@ export const translations = {
       roleManage: '角色管理',
       accountManage: '账户管理',
       secretManagement: '密钥管理',
+      sendAnnouncement: '发送公告',
       exportManagement: '导出管理',
       systemSettings: '系统设置',
       apiDocs: 'API文档',
+    },
+    sendAnnouncement: {
+      title: '发送公告',
+      country: '国家',
+      merchant: '商户',
+      content: '发送内容',
+      googleCode: '谷歌验证码',
+      send: '发送',
+      allMerchants: '所有商户',
+      placeholder: {
+        selectCountry: '请选择国家',
+        selectMerchant: '请选择商户',
+        enterContent: '请输入发送内容',
+        enterGoogleCode: '请输入谷歌验证码',
+      },
+      success: '公告发送成功',
+      failed: '公告发送失败',
     },
     // 登录页面
     signIn: {
@@ -339,7 +359,7 @@ export const translations = {
         paymentCompany: '三方平台',
         paymentTime: '付款时间',
         transactionSummary: '交易摘要',
-        product:'产品'
+        product: '产品',
       },
       receiveSummary: {
         title: '收款汇总',
@@ -384,18 +404,18 @@ export const translations = {
         paymentInfo: '付款信息',
         otherInfo: '其他信息',
       },
-      collectionRate:{
+      collectionRate: {
         title: '代收成功率',
-        pickupCenter:'支付类型',
-        channel:'支付渠道',
-        merchant:'商户',
-        paymentChannel:'支付渠道',
-        paymentType:'支付类型',
-        transactionTime:'交易时间',
-        totalOrders:'总订单数',
-        successOrders:'成功订单数',
-        successRate:'成功率',
-      }
+        pickupCenter: '支付类型',
+        channel: '支付渠道',
+        merchant: '商户',
+        paymentChannel: '支付渠道',
+        paymentType: '支付类型',
+        transactionTime: '交易时间',
+        totalOrders: '总订单数',
+        successOrders: '成功订单数',
+        successRate: '成功率',
+      },
     },
     // 资金管理
     fund: {
@@ -616,34 +636,34 @@ export const translations = {
         channel: '渠道',
         rate: '费率',
         singleFixedAmount: '单笔固定金额',
-        singleFee:'单笔价格',
+        singleFee: '单笔价格',
         secretKeyCopied: '密钥已复制到剪贴板',
         copyFailed: '复制失败，请手动复制',
         createDescription: '填写商户信息以创建新商户',
         editDescription: '修改商户信息',
         unbindSecretKey: '解绑秘钥',
         googleCode: '谷歌验证码',
-      bindIp:'绑定IP',
+        bindIp: '绑定IP',
         autoLogin: '登录后台',
-      autoLoginDescription: '请输入谷歌验证码以继续',
-      bindTgGroup: '绑定TG群组',
-      unbindSecretKeyFor: '为商户解绑秘钥',
+        autoLoginDescription: '请输入谷歌验证码以继续',
+        bindTgGroup: '绑定TG群组',
+        unbindSecretKeyFor: '为商户解绑秘钥',
         bindTgGroupFor: '为商户绑定TG群组',
         confirmUnbind: '确认解绑',
         addIPFor: '为商户添加后台IP白名单',
         confirmAdd: '确认添加',
         confirmBind: '确认绑定',
-        multipleIPsTip: '多个IP用逗号(\',\')进行分隔',
+        multipleIPsTip: "多个IP用逗号(',')进行分隔",
         changePasswordFor: '为商户修改登录密码',
         confirmNewPassword: '确认新密码',
         enterNewPasswordAgain: '请再次输入新密码',
         confirmChange: '确认修改',
         rateConfigFor: '费率配置',
-        payoutChannel:' 代付渠道配置',
-        collectionChannel:' 代收渠道配置',
-        freezeType:'代收金额计算时间',
-        transactionDay:'交易日',
-        naturalDay:'自然日',
+        payoutChannel: ' 代付渠道配置',
+        collectionChannel: ' 代收渠道配置',
+        freezeType: '代收金额计算时间',
+        transactionDay: '交易日',
+        naturalDay: '自然日',
         validation: {
           accountRequired: '请输入账号',
           merchantNameRequired: '请输入商户名称',
@@ -657,15 +677,15 @@ export const translations = {
           passwordMinLength: '密码至少6个字符',
         },
         placeholder: {
-        account: '请输入账号',
-        password: '请输入密码',
-        merchantName: '请输入商户名称',
-        settlementDays: '请输入天数',
-        googleCode: '请输入谷歌验证码',
-        ipAddress: '请输入IP地址',
-        chatId: '请输入TG群组ID',
-        newPassword: '请输入新密码',
-      },
+          account: '请输入账号',
+          password: '请输入密码',
+          merchantName: '请输入商户名称',
+          settlementDays: '请输入天数',
+          googleCode: '请输入谷歌验证码',
+          ipAddress: '请输入IP地址',
+          chatId: '请输入TG群组ID',
+          newPassword: '请输入新密码',
+        },
         success: {
           unbindSuccess: '解绑成功',
           addSuccess: '添加成功',
@@ -793,7 +813,8 @@ export const translations = {
         actionParamsInvalidJson: '动作参数必须是有效的JSON格式',
         conditionExprExample: '例如: amount > 50000',
         priorityPlaceholder: '1-10，数值越小优先级越高',
-        actionParamsPlaceholder: 'JSON格式，例如: {"blockReason":"异地大额支付风险"}',
+        actionParamsPlaceholder:
+          'JSON格式，例如: {"blockReason":"异地大额支付风险"}',
         validation: {
           ruleNameRequired: '请输入规则名称',
           sceneCodeRequired: '请选择规则场景',
@@ -1089,7 +1110,8 @@ export const translations = {
       exportTaskCreated: 'Export task created',
       exportFailed: 'Export failed',
       submitFailed: 'Submit failed',
-      signOutConfirmation: 'Are you sure you want to sign out? You will need to sign in again to access your account.',
+      signOutConfirmation:
+        'Are you sure you want to sign out? You will need to sign in again to access your account.',
       exchangeRateUpdated: 'Exchange rate updated',
       benchmark: 'Benchmark',
       fetchExchangeRateFailed: 'Failed to fetch exchange rate',
@@ -1114,7 +1136,7 @@ export const translations = {
       fileSizeTooLarge: 'File size cannot exceed 5MB',
       clickToPreview: 'Click to preview',
       remove: 'Remove',
-      understood:'Understood',
+      understood: 'Understood',
       view: 'View',
       toggleColumns: 'Toggle columns',
       add: 'Add',
@@ -1129,7 +1151,8 @@ export const translations = {
       updateFailed: 'Update failed',
       deleteFailed: 'Delete failed',
       confirmDelete: 'Confirm Delete',
-      deleteConfirmation: 'Are you sure you want to delete this record? This action cannot be undone.',
+      deleteConfirmation:
+        'Are you sure you want to delete this record? This action cannot be undone.',
       pleaseEnter: 'Please enter',
       pleaseSelect: 'Please select',
       administrator: 'Administrator',
@@ -1169,7 +1192,8 @@ export const translations = {
       pleaseEnterPassword: 'Please enter password',
       selectMerchantFirst: 'Please select merchant first',
       enterPassword: 'Please enter password',
-      rateMustBeFilled: 'Rate and single fixed amount must be filled in together or both left empty',
+      rateMustBeFilled:
+        'Rate and single fixed amount must be filled in together or both left empty',
       rateConfigUpdateSuccess: 'Rate configuration updated successfully',
       rateConfigUpdateFailed: 'Rate configuration update failed',
       fetchRateDataFailed: 'Failed to fetch rate data',
@@ -1216,7 +1240,7 @@ export const translations = {
       orderNo: 'Order No',
       refresh: 'Refresh',
       settings: 'Settings',
-      countrys:{
+      countrys: {
         ID: 'Indonesia',
         BR: 'Brazil',
         VN: 'Vietnam',
@@ -1238,11 +1262,31 @@ export const translations = {
         newPassword: 'Please enter new password',
       },
     },
+    sendAnnouncement: {
+      title: 'Send Announcement',
+      country: 'Country',
+      merchant: 'Merchant',
+      content: 'Content',
+      googleCode: 'Google Code',
+      send: 'Send',
+      allMerchants: 'All Merchants',
+      placeholder: {
+        selectCountry: 'Please select country',
+        selectMerchant: 'Please select merchant',
+        enterContent: 'Please enter content',
+        enterGoogleCode: 'Please enter google code',
+      },
+      success: 'Announcement sent successfully',
+      failed: 'Announcement sent failed',
+    },
     keyPair: {
       title: 'Key Pair Generator',
-      description1: 'This tool helps you generate a public-private key pair based on the Ed25519 algorithm.',
-      description2: 'The generated keys are created locally in your browser and will not be uploaded to any server or cloud, ensuring your privacy.',
-      warning: '⚠️ Please keep your private key safe. Once lost, it cannot be recovered!',
+      description1:
+        'This tool helps you generate a public-private key pair based on the Ed25519 algorithm.',
+      description2:
+        'The generated keys are created locally in your browser and will not be uploaded to any server or cloud, ensuring your privacy.',
+      warning:
+        '⚠️ Please keep your private key safe. Once lost, it cannot be recovered!',
       generateButton: 'Generate Key Pair',
       regenerateButton: 'Regenerate',
       downloadButton: 'Download Key Pair',
@@ -1317,8 +1361,10 @@ export const translations = {
       googleAuthCode: 'Google Auth Code',
       bindGoogleAuth: 'Bind Google Authenticator',
       enterGoogleAuthCode: 'Enter Google Auth Code',
-      bindGoogleAuthDesc: 'Please scan the QR code with Google Authenticator and enter the 6-digit code',
-      enterGoogleCodeDesc: 'Please enter the 6-digit code from Google Authenticator',
+      bindGoogleAuthDesc:
+        'Please scan the QR code with Google Authenticator and enter the 6-digit code',
+      enterGoogleCodeDesc:
+        'Please enter the 6-digit code from Google Authenticator',
       enterSixDigitCode: 'Please enter 6-digit code',
       codeMustBeSixDigits: 'Code must be 6 digits',
       loginSuccess: 'Login successful',
@@ -1339,7 +1385,8 @@ export const translations = {
       rechargeAmount: 'Recharge Amount',
       withdrawalAmount: 'Withdrawal Amount',
       collectionPaymentStats: 'Collection/Payment Stats',
-      recentDaysComparison: 'Recent days collection and payment data comparison',
+      recentDaysComparison:
+        'Recent days collection and payment data comparison',
       totalAmount: 'Total Amount',
       orderCount: 'Order Count',
       serviceFee: 'Service Fee',
@@ -1440,18 +1487,18 @@ export const translations = {
         paymentInfo: 'Payment Information',
         otherInfo: 'Other Information',
       },
-      collectionRate:{
+      collectionRate: {
         title: 'Collection Success Rate',
-        pickupCenter:'Payment Type',
-        channel:'Payment Channel',
-        merchant:'Merchant',
-        paymentChannel:'Payment Channel',
-        paymentType:'Payment Type',
-        transactionTime:'Transaction Time',
-        totalOrders:'Total Orders',
-        successOrders:'Successful Orders',
-        successRate:'Success Rate',
-      }
+        pickupCenter: 'Payment Type',
+        channel: 'Payment Channel',
+        merchant: 'Merchant',
+        paymentChannel: 'Payment Channel',
+        paymentType: 'Payment Type',
+        transactionTime: 'Transaction Time',
+        totalOrders: 'Total Orders',
+        successOrders: 'Successful Orders',
+        successRate: 'Success Rate',
+      },
     },
     // Fund Management
     fund: {
@@ -1530,7 +1577,8 @@ export const translations = {
         withdrawalAccount: 'Withdrawal Account',
         rechargeVoucher: 'Recharge Voucher',
         downloadVoucher: 'Download Voucher',
-        approveDescription: 'Please fill in the following information to complete the approval',
+        approveDescription:
+          'Please fill in the following information to complete the approval',
         pleaseEnterRejectReason: 'Please enter reject reason',
         rejectReason: 'Reject Reason',
         pleaseEnterWithdrawPassword: 'Please enter withdraw password',
@@ -1674,24 +1722,25 @@ export const translations = {
         channel: 'Channel',
         rate: 'Rate',
         singleFixedAmount: 'Single Fixed Amount',
-        singleFee:' Single Fee',
+        singleFee: ' Single Fee',
         secretKeyCopied: 'Secret key copied to clipboard',
         copyFailed: 'Copy failed, please copy manually',
-        createDescription: 'Fill in merchant information to create new merchant',
+        createDescription:
+          'Fill in merchant information to create new merchant',
         editDescription: 'Edit merchant information',
         unbindSecretKey: 'Unbind Secret Key',
         bindIp: 'Bind IP',
         payoutChannel: 'Payout Channel',
         collectionChannel: 'Collection Channel',
         autoLogin: 'Auto Login',
-        transactionDay:'Transaction days',
-        naturalDay:'Natural day',
-        freezeType:'Calculation time for collection amount',
+        transactionDay: 'Transaction days',
+        naturalDay: 'Natural day',
+        freezeType: 'Calculation time for collection amount',
         unbindSecretKeyFor: 'Unbind secret key for merchant {name}',
         confirmUnbind: 'Confirm Unbind',
         addIPFor: 'Add backend IP whitelist for merchant {name}',
         confirmAdd: 'Confirm Add',
-        multipleIPsTip: 'Separate multiple IPs with comma (\',\')',
+        multipleIPsTip: "Separate multiple IPs with comma (',')",
         changePasswordFor: 'Change login password for merchant {name}',
         confirmNewPassword: 'Confirm New Password',
         enterNewPasswordAgain: 'Please enter new password again',
@@ -1705,7 +1754,8 @@ export const translations = {
           daysRequired: 'Please enter days',
           googleCodeRequired: 'Please enter Google auth code',
           ipRequired: 'Please enter IP address',
-          rateMustBeFilled: 'Rate and single fixed amount must be filled in together or both left empty',
+          rateMustBeFilled:
+            'Rate and single fixed amount must be filled in together or both left empty',
           passwordMinLength: 'Password must be at least 6 characters',
         },
         placeholder: {
@@ -1808,7 +1858,8 @@ export const translations = {
         configSuccess: 'Config successful',
         type: 'Type',
         channelDetail: 'Channel Detail',
-        channelDetailDesc: 'View and manage sub-channel configuration of payment channels',
+        channelDetailDesc:
+          'View and manage sub-channel configuration of payment channels',
         providerName: 'Provider Name',
         withdrawalShop: 'Withdrawal Shop',
         validation: {
@@ -1842,7 +1893,8 @@ export const translations = {
         actionParamsInvalidJson: 'Action params must be valid JSON format',
         conditionExprExample: 'For example: amount > 50000',
         priorityPlaceholder: '1-10, lower value means higher priority',
-        actionParamsPlaceholder: 'JSON format, e.g: {"blockReason":"Remote large payment risk"}',
+        actionParamsPlaceholder:
+          'JSON format, e.g: {"blockReason":"Remote large payment risk"}',
         validation: {
           ruleNameRequired: 'Please enter rule name',
           sceneCodeRequired: 'Please select rule scene',
@@ -2069,7 +2121,8 @@ export const translations = {
       updatePassword: 'Change Login Password',
       updatePayPassword: 'Change Payment Password',
       updatePasswordDesc: 'Please enter your new password and confirm it',
-      updatePayPasswordDesc: 'Please enter your new payment password and confirm it',
+      updatePayPasswordDesc:
+        'Please enter your new payment password and confirm it',
       newPassword: 'New Password',
       confirmPassword: 'Confirm Password',
       enterPassword: 'Please enter password',
@@ -2089,7 +2142,8 @@ export const translations = {
       subtitle: 'Manage your account settings and set e-mail preferences.',
       appearance: {
         title: 'Appearance',
-        subtitle: 'Customize the appearance of the app. Automatically switch between day and night themes.',
+        subtitle:
+          'Customize the appearance of the app. Automatically switch between day and night themes.',
         theme: 'Theme',
         themeDescription: 'Select the theme for the dashboard',
         light: 'Light',
@@ -2106,7 +2160,7 @@ export const translations = {
   },
 } as const
 
-export type TranslationKeys = typeof translations['zh']
+export type TranslationKeys = (typeof translations)['zh']
 export type Language = keyof typeof translations
 
 // Helper function to get nested translation
@@ -2114,10 +2168,10 @@ export function getTranslation(lang: Language, key: string): string {
   const keys = key.split('.')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let value: any = translations[lang]
-  
+
   for (const k of keys) {
     value = value?.[k]
   }
-  
+
   return value || key
 }

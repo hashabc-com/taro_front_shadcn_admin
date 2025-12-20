@@ -12,7 +12,8 @@ import {
   Briefcase,
   FileText,
   Download,
-  MonitorCog
+  MonitorCog,
+  Send
 } from 'lucide-react'
 import { getTranslation, type Language } from '@/lib/i18n'
 import { type SidebarData, type NavItem } from '../types'
@@ -185,6 +186,11 @@ export const getSidebarData = (language: Language): SidebarData => {
               url: '/system/account-manage',
             },
           ],
+        },
+        {
+          title: t('sidebar.sendAnnouncement'),
+          url: '/send-announcement',
+          icon: Send,
         },
         {
           title: t('sidebar.exportManagement'),

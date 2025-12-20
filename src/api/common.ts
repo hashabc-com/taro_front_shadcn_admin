@@ -1,6 +1,6 @@
-import http, { type ResponseData } from '@/lib/http'
 import type { Country } from '@/stores/country-store'
 import type { Merchant } from '@/stores/merchant-store'
+import http, { type ResponseData } from '@/lib/http'
 
 export interface IPaymentChannel {
   id: number
@@ -33,30 +33,38 @@ export interface IProductDict {
   payoutChannel: string[]
 }
 
-
-
 // 获取国家列表
-export const getCountryList = () => 
+export const getCountryList = () =>
   http.get<ResponseData<Country[]>>('/admin/home/v1/getCountryList')
 
 // 获取商户列表
-export const getMerchantList = () => 
+export const getMerchantList = () =>
   http.get<ResponseData<Merchant[]>>('/admin/user/v1/getAllUserList')
 
+export const getMerchantListBySend = (country: string) =>
+  http.get<ResponseData<Merchant[]>>(
+    '/admin/user/v1/getAllUserList',
+    { country },
+    { autoAddCountry: false }
+  )
 
 // 获取支付渠道
-export const getPaymentChannels = (type: 'withdraw_channel' | 'pay_channel') => 
+export const getPaymentChannels = (type: 'withdraw_channel' | 'pay_channel') =>
   http.get(`/admin/interface/v1/channelDetails?type=${type}`)
-
 
 // 获取产品类型字典
 export const getProductDict = () =>
   http.get<IProductDict>(`/admin/user/v1/getChannelTypeList`)
 
 // 获取图片
-export const getImg = async (params: { mediaId: string; type: boolean }): Promise<string> => {
+export const getImg = async (params: {
+  mediaId: string
+  type: boolean
+}): Promise<string> => {
   try {
-    const blob = await http.get('/admin/pic/getMedia', params, { responseType: 'blob' }) as never
+    const blob = (await http.get('/admin/pic/getMedia', params, {
+      responseType: 'blob',
+    })) as never
     return window.URL.createObjectURL(blob)
   } catch (error) {
     console.error('Get image failed:', error)
@@ -65,9 +73,14 @@ export const getImg = async (params: { mediaId: string; type: boolean }): Promis
 }
 
 // 下载图片
-export const downloadImg = async (params: { mediaId: string; type: boolean }, filename: string) => {
+export const downloadImg = async (
+  params: { mediaId: string; type: boolean },
+  filename: string
+) => {
   try {
-    const blob = await http.get('/admin/pic/getMedia', params, { responseType: 'blob' }) as never
+    const blob = (await http.get('/admin/pic/getMedia', params, {
+      responseType: 'blob',
+    })) as never
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
@@ -81,3 +94,13 @@ export const downloadImg = async (params: { mediaId: string; type: boolean }, fi
     throw error
   }
 }
+
+export const sendAnnouncement = (params: {
+  country: string
+  appidList?: string[] | undefined
+  gauthKey: string
+  content: string
+}) =>
+  http.post('/admin/accountmanage/v1/sendNotify', params, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
