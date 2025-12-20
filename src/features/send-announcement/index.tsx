@@ -62,7 +62,7 @@ export default function SendAnnouncement() {
 
   const selectedCountryId = form.watch('country')
   const selectedCountry = countries.find(
-    (c) => c.id.toString() === selectedCountryId
+    (c) => c.code.toString() === selectedCountryId
   )
 
   const { data: merchantsData } = useQuery({
@@ -116,13 +116,13 @@ export default function SendAnnouncement() {
                       >
                         {countries.map((country) => (
                           <label
-                            key={country.id}
-                            htmlFor={`country-${country.id}`}
+                            key={country.code}
+                            htmlFor={`country-${country.code}`}
                             className='hover:bg-muted hover:border-muted-foreground flex cursor-pointer items-center gap-3 rounded-md border p-3 transition-colors'
                           >
                             <RadioGroupItem
-                              value={country.id.toString()}
-                              id={`country-${country.id}`}
+                              value={country.code.toString()}
+                              id={`country-${country.code}`}
                             />
                             <span className='flex items-center gap-2 text-sm leading-none font-medium'>
                               <img

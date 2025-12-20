@@ -102,5 +102,6 @@ export const sendAnnouncement = (params: {
   content: string
 }) =>
   http.post('/admin/accountmanage/v1/sendNotify', params, {
+    autoAddCountry: false,
     headers: { 'Content-Type': 'multipart/form-data' },
   })
