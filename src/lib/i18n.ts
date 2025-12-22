@@ -168,6 +168,7 @@ export const translations = {
         MX: '墨西哥',
         BD: '孟加拉',
         PH: '菲律宾',
+        NG: '尼日利亚',
       },
       validation: {
         required: '此字段为必填项',
@@ -1247,6 +1248,7 @@ export const translations = {
         MX: 'Mexico',
         BD: 'Bangladesh',
         PH: 'Philippines',
+        NG: 'Nigeria',
       },
       validation: {
         required: 'This field is required',
