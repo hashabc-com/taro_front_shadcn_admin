@@ -3,12 +3,14 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { getRouteApi } from '@tanstack/react-router'
 import { type Row } from '@tanstack/react-table'
-import { useCountryStore } from '@/stores'
+// import { useCountryStore } from '@/stores'
 import { CheckCircle, XCircle, Download } from 'lucide-react'
 import { toast } from 'sonner'
 import { downloadImg } from '@/api/common'
 import { approveWithdrawal, approveRecharge } from '@/api/fund'
+import { useLanguage } from '@/context/language-provider'
 import { useConvertAmount } from '@/hooks/use-convert-amount'
 import { Button } from '@/components/ui/button'
 import {
@@ -42,11 +44,8 @@ import {
 } from '@/components/ui/input-group'
 import { Textarea } from '@/components/ui/textarea'
 import { rechargeWithdrawSchema } from '../schema'
-import { getRouteApi } from '@tanstack/react-router'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/fund/recharge-withdraw')
-
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -59,25 +58,34 @@ export function DataTableRowActions<TData>({
   const { t } = useLanguage()
   const navigate = route.useNavigate()
   const convertAmount = useConvertAmount()
-  const { selectedCountry } = useCountryStore()
+  // const { selectedCountry } = useCountryStore()
   const [approveOpen, setApproveOpen] = useState(false)
   const [rejectOpen, setRejectOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [calculatedAmount, setCalculatedAmount] = useState<string>('')
 
   const approveFormSchema = z.object({
-  withdrawalPass: z.string().min(1, t('fund.rechargeWithdraw.pleaseEnterWithdrawPassword')),
-  gauthcode: z.string().min(1, t('fund.rechargeWithdraw.pleaseEnterGoogleAuthCode')),
-  remark: z.string().optional(),
-  exchangeRate: z
-    .string()
-    .min(1, t('fund.rechargeWithdraw.pleaseEnterExchangeRate'))
-    .regex(/^\d*\.?\d+$/, t('fund.rechargeWithdraw.exchangeRateMustBeValidNumber')),
-})
+    withdrawalPass: z
+      .string()
+      .min(1, t('fund.rechargeWithdraw.pleaseEnterWithdrawPassword')),
+    gauthcode: z
+      .string()
+      .min(1, t('fund.rechargeWithdraw.pleaseEnterGoogleAuthCode')),
+    remark: z.string().optional(),
+    exchangeRate: z
+      .string()
+      .min(1, t('fund.rechargeWithdraw.pleaseEnterExchangeRate'))
+      .regex(
+        /^\d*\.?\d+$/,
+        t('fund.rechargeWithdraw.exchangeRateMustBeValidNumber')
+      ),
+  })
 
-const rejectFormSchema = z.object({
-  remark: z.string().min(1, t('fund.rechargeWithdraw.pleaseEnterRejectReason')),
-})
+  const rejectFormSchema = z.object({
+    remark: z
+      .string()
+      .min(1, t('fund.rechargeWithdraw.pleaseEnterRejectReason')),
+  })
 
   const approveForm = useForm<z.infer<typeof approveFormSchema>>({
     resolver: zodResolver(approveFormSchema),
@@ -171,10 +179,10 @@ const rejectFormSchema = z.object({
         setApproveOpen(false)
         approveForm.reset()
         navigate({
-            search: (prev) => ({
+          search: (prev) => ({
             ...prev,
-            refresh: Date.now()
-            })
+            refresh: Date.now(),
+          }),
         })
       } else {
         toast.error(res.message || '审批失败')
@@ -210,10 +218,10 @@ const rejectFormSchema = z.object({
         setRejectOpen(false)
         rejectForm.reset()
         navigate({
-            search: (prev) => ({
+          search: (prev) => ({
             ...prev,
-            refresh: Date.now()
-            })
+            refresh: Date.now(),
+          }),
         })
       } else {
         toast.error(res.message || '操作失败')
@@ -265,20 +273,33 @@ const rejectFormSchema = z.object({
       <Dialog open={approveOpen} onOpenChange={setApproveOpen}>
         <DialogContent className='max-w-md'>
           <DialogHeader>
-            <DialogTitle>{data.type == '充值' ? t('fund.rechargeWithdraw.recharge') : t('fund.rechargeWithdraw.withdrawal')}</DialogTitle>
-            <DialogDescription>{t('fund.rechargeWithdraw.approveDescription')}</DialogDescription>
+            <DialogTitle>
+              {data.type == '充值'
+                ? t('fund.rechargeWithdraw.recharge')
+                : t('fund.rechargeWithdraw.withdrawal')}
+            </DialogTitle>
+            <DialogDescription>
+              {t('fund.rechargeWithdraw.approveDescription')}
+            </DialogDescription>
           </DialogHeader>
           <Form {...approveForm}>
             <form
               onSubmit={approveForm.handleSubmit(handleApprove)}
               className='space-y-4'
+              autoComplete='off'
             >
               <div className='grid gap-2'>
-                <FormLabel>{t('fund.accountSettlement.withdrawAmount')}</FormLabel>
+                <FormLabel>
+                  {data.type == '充值'
+                    ? t('fund.rechargeWithdraw.topUpAmount')
+                    : t('fund.rechargeWithdraw.withdrawalAmount')}
+                </FormLabel>
                 <InputGroup>
                   <InputGroupInput value={data.rechargeAmount} disabled />
                   <InputGroupAddon align='inline-end'>
-                    {data.withdrawalType || ''}
+                    {data.type == '充值'
+                      ? data?.currencyType || ''
+                      : data.withdrawalType}
                   </InputGroupAddon>
                 </InputGroup>
               </div>
@@ -289,12 +310,14 @@ const rejectFormSchema = z.object({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {t('fund.rechargeWithdraw.exchangeRate')} <span className='text-red-500'>*</span>
+                      {t('fund.rechargeWithdraw.exchangeRate')}{' '}
+                      <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type='text'
+                        autoComplete='no-autofill-exchange-rate'
                         inputMode='decimal'
                         placeholder={t('common.enterExchangeRate')}
                         onKeyPress={(e) => {
@@ -324,7 +347,7 @@ const rejectFormSchema = z.object({
                     disabled
                   />
                   <span className='text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-sm'>
-                    {selectedCountry?.currency || ''}
+                    {data.type == '充值' ? data?.currencyType : 'USTD'}
                   </span>
                 </div>
               </div>
@@ -334,12 +357,14 @@ const rejectFormSchema = z.object({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {t('fund.accountSettlement.withdrawPassword')} <span className='text-red-500'>*</span>
+                      {t('fund.accountSettlement.withdrawPassword')}{' '}
+                      <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type='password'
+                        autoComplete='new-password'
                         placeholder={t('common.enterWithdrawPassword')}
                       />
                     </FormControl>
@@ -354,10 +379,15 @@ const rejectFormSchema = z.object({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {t('fund.rechargeWithdraw.googleAuthCode')} <span className='text-red-500'>*</span>
+                      {t('fund.rechargeWithdraw.googleAuthCode')}{' '}
+                      <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder={t('common.enterGoogleAuthCode')} />
+                      <Input
+                        {...field}
+                        autoComplete='one-time-code'
+                        placeholder={t('common.enterGoogleAuthCode')}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -370,7 +400,10 @@ const rejectFormSchema = z.object({
                   <FormItem>
                     <FormLabel>{t('fund.rechargeWithdraw.remark')}</FormLabel>
                     <FormControl>
-                      <Textarea {...field} placeholder={t('common.enterRemark')} />
+                      <Textarea
+                        {...field}
+                        placeholder={t('common.enterRemark')}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -388,7 +421,9 @@ const rejectFormSchema = z.object({
                   {t('common.cancel')}
                 </Button>
                 <Button type='submit' disabled={loading}>
-                  {loading ? t('fund.rechargeWithdraw.pending') : t('common.confirm')}
+                  {loading
+                    ? t('fund.rechargeWithdraw.pending')
+                    : t('common.confirm')}
                 </Button>
               </DialogFooter>
             </form>
@@ -401,7 +436,9 @@ const rejectFormSchema = z.object({
         <DialogContent className='max-w-md'>
           <DialogHeader>
             <DialogTitle>{t('common.reject')}</DialogTitle>
-            <DialogDescription>{t('fund.rechargeWithdraw.pleaseEnterRejectReason')}</DialogDescription>
+            <DialogDescription>
+              {t('fund.rechargeWithdraw.pleaseEnterRejectReason')}
+            </DialogDescription>
           </DialogHeader>
           <Form {...rejectForm}>
             <form
@@ -414,10 +451,16 @@ const rejectFormSchema = z.object({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {t('fund.rechargeWithdraw.rejectReason')} <span className='text-red-500'>*</span>
+                      {t('fund.rechargeWithdraw.rejectReason')}{' '}
+                      <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Textarea {...field} placeholder={t('fund.rechargeWithdraw.pleaseEnterRejectReason')} />
+                      <Textarea
+                        {...field}
+                        placeholder={t(
+                          'fund.rechargeWithdraw.pleaseEnterRejectReason'
+                        )}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -436,7 +479,9 @@ const rejectFormSchema = z.object({
                   {t('common.cancel')}
                 </Button>
                 <Button type='submit' variant='destructive' disabled={loading}>
-                  {loading ? t('fund.rechargeWithdraw.pending') : t('common.confirm')}
+                  {loading
+                    ? t('fund.rechargeWithdraw.pending')
+                    : t('common.confirm')}
                 </Button>
               </DialogFooter>
             </form>
