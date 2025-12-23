@@ -24,11 +24,11 @@ export const orderSchema = z.object({
   amountTwo: z.string(),
   serviceAmountTwo: z.string(),
   notificationURL: z.string().nullable(),
-  tripartiteOrder: z.string().optional(),
+  tripartiteOrder: z.string().optional().nullable(),
   country: z.string().nullable(),
   amountUSD: z.number().optional(),
   serviceAmountUSD: z.number().optional(),
-  localTime: z.string().optional().nullable()
+  localTime: z.string().optional().nullable(),
 })
 
 export type Order = z.infer<typeof orderSchema>
