@@ -8,6 +8,7 @@ export const orderSchema = z.object({
   paymentCompany: z.string(),
   referenceno: z.string(),
   amount: z.number().or(z.string()),
+  realAmount: z.number().or(z.string()).optional(),
   expiryDate: z.string().nullable(),
   remark: z.string().nullable(),
   transId: z.string(),

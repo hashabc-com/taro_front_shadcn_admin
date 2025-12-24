@@ -1,5 +1,5 @@
 import { type ColumnDef } from '@tanstack/react-table'
-import { CheckCircle, Clock, XCircle } from 'lucide-react'
+import { CheckCircle, Clock, XCircle, Wallet } from 'lucide-react'
 import { getTranslation, type Language } from '@/lib/i18n'
 import { Badge } from '@/components/ui/badge'
 import { type Order } from '../schema'
@@ -86,7 +86,7 @@ export const getTasksColumns = (
         } else if (value == '4') {
           return (
             <div className='flex items-center text-yellow-600'>
-              <XCircle className='mr-1.5 h-4 w-4' />
+              <Wallet className='mr-1.5 h-4 w-4' />
               <span className='font-medium'>
                 {t('orders.receiveOrders.partialPayment')}
               </span>
