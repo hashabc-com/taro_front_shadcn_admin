@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { X } from 'lucide-react'
+import { toast } from 'sonner'
+import { getCountryList, getMerchantList } from '@/api/common'
+import { useCountryStore, type Country } from '@/stores/country-store'
+import { useMerchantStore, type Merchant } from '@/stores/merchant-store'
+import { useLanguage } from '@/context/language-provider'
 import {
   Select,
   SelectContent,
@@ -8,14 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-import { useCountryStore, type Country } from '@/stores/country-store'
-import { useMerchantStore, type Merchant } from '@/stores/merchant-store'
-import { getCountryList, getMerchantList } from '@/api/common'
-import { CurrencySelector } from './currency-selector'
 import { Separator } from '@/components/ui/separator'
-import { toast } from 'sonner'
-import { useLanguage } from '@/context/language-provider'
+import { CurrencySelector } from './currency-selector'
 
 export function CountryMerchantSelector() {
   const { selectedCountry, setSelectedCountry, setRates } = useCountryStore()
@@ -45,24 +43,29 @@ export function CountryMerchantSelector() {
   )
 
   // 当国家变化时，清空商户选择
-  const handleCountryChange = useCallback(async (countryId: string) => {
-    const country = countries.find((c) => c.id.toString() == countryId)
-    if (country) {
-      try {
-        const response = await fetch(`https://open.er-api.com/v6/latest/${country?.currency}`)
-        const data = await response.json()
-        
-        if (data.result === 'success' && data.rates) {
-          setRates(data.rates)
-          console.log(`汇率已更新 [基准: ${country?.currency}]`)
+  const handleCountryChange = useCallback(
+    async (countryId: string) => {
+      const country = countries.find((c) => c.id.toString() == countryId)
+      if (country) {
+        try {
+          const response = await fetch(
+            `https://open.er-api.com/v6/latest/${country?.currency}`
+          )
+          const data = await response.json()
+
+          if (data.result === 'success' && data.rates) {
+            setRates(data.rates)
+            console.log(`汇率已更新 [基准: ${country?.currency}]`)
+          }
+        } catch {
+          toast.error('获取汇率失败')
         }
-      } catch {
-        toast.error('获取汇率失败')
+        setSelectedCountry(country)
+        setSelectedMerchant(null) // 清空商户选择
       }
-      setSelectedCountry(country)
-      setSelectedMerchant(null) // 清空商户选择
-    }
-  },[countries, setRates, setSelectedCountry, setSelectedMerchant])
+    },
+    [countries, setRates, setSelectedCountry, setSelectedMerchant]
+  )
 
   // 第一次进来默认选中第一个国家
   useEffect(() => {
@@ -73,10 +76,9 @@ export function CountryMerchantSelector() {
   }, [countries, handleCountryChange, selectedCountry, setSelectedCountry])
 
   const handleMerchantChange = (merchantId: string) => {
-    const merchant = merchants.find((m) => m.appid?.toString() === merchantId)
-    if (merchant) {
-      setSelectedMerchant(merchant)
-    }
+    const merchant =
+      merchants.find((m) => m.appid?.toString() === merchantId) || null
+    setSelectedMerchant(merchant)
   }
 
   return (
@@ -86,14 +88,14 @@ export function CountryMerchantSelector() {
         value={selectedCountry?.id.toString()}
         onValueChange={handleCountryChange}
       >
-        <SelectTrigger className='w-full sm:w-[140px] h-9'>
+        <SelectTrigger className='h-9 w-full sm:w-[140px]' clearable={false}>
           <SelectValue placeholder='选择国家'>
             {selectedCountry && (
               <div className='flex items-center gap-2'>
-                <img 
-                  src={`/images/${selectedCountry.code}.svg`} 
+                <img
+                  src={`/images/${selectedCountry.code}.svg`}
                   alt={selectedCountry.code}
-                  className='w-4 h-4'
+                  className='h-4 w-4'
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'
                   }}
@@ -107,10 +109,10 @@ export function CountryMerchantSelector() {
           {countries.map((country) => (
             <SelectItem key={country.id} value={country.id.toString()}>
               <div className='flex items-center gap-2'>
-                <img 
-                  src={`/images/${country.code}.svg`} 
+                <img
+                  src={`/images/${country.code}.svg`}
                   alt={country.code}
-                  className='w-4 h-4'
+                  className='h-4 w-4'
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'
                   }}
@@ -121,8 +123,8 @@ export function CountryMerchantSelector() {
           ))}
         </SelectContent>
       </Select>
-        <CurrencySelector />
-        <Separator orientation='vertical' className='h-6 max-md:hidden' />
+      <CurrencySelector />
+      <Separator orientation='vertical' className='h-6 max-md:hidden' />
       {/* 商户选择 */}
       <div className='flex items-center gap-1'>
         <Select
@@ -130,18 +132,21 @@ export function CountryMerchantSelector() {
           onValueChange={handleMerchantChange}
           disabled={!selectedCountry}
         >
-          <SelectTrigger className='w-full sm:w-[140px] h-9'>
+          <SelectTrigger className='h-9 w-full sm:w-[140px]'>
             <SelectValue placeholder={t('common.merchant')} />
           </SelectTrigger>
           <SelectContent>
             {merchants.map((merchant) => (
-              <SelectItem key={merchant.appid} value={merchant.appid?.toString() || ''}>
+              <SelectItem
+                key={merchant.appid}
+                value={merchant.appid?.toString() || ''}
+              >
                 {merchant.companyName}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        {selectedMerchant && (
+        {/* {selectedMerchant && (
           <Button
             variant='ghost'
             size='sm'
@@ -150,7 +155,7 @@ export function CountryMerchantSelector() {
           >
             <X className='h-4 w-4' />
           </Button>
-        )}
+        )} */}
       </div>
     </div>
   )

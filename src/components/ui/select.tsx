@@ -1,12 +1,27 @@
 import * as React from 'react'
 import * as SelectPrimitive from '@radix-ui/react-select'
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon, XIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+type SelectContextValue = {
+  value?: string
+  onValueChange?: (v: string) => void
+}
+
+const SelectContext = React.createContext<SelectContextValue>({})
 
 function Select({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
-  return <SelectPrimitive.Root data-slot='select' {...props} />
+  const ctx: SelectContextValue = {
+    value: props.value as unknown as string | undefined,
+    onValueChange: props.onValueChange as unknown as (v: string) => void,
+  }
+  return (
+    <SelectContext.Provider value={ctx}>
+      <SelectPrimitive.Root data-slot='select' {...props} />
+    </SelectContext.Provider>
+  )
 }
 
 function SelectGroup({
@@ -25,10 +40,22 @@ function SelectTrigger({
   className,
   size = 'default',
   children,
+  clearable = true,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
   size?: 'sm' | 'default'
+  clearable?: boolean
 }) {
+  const { value, onValueChange } =
+    React.useContext<SelectContextValue>(SelectContext)
+  const hasValue =
+    (props as unknown as { hasValue?: boolean }).hasValue ??
+    !!(value && value !== '')
+  const onClear =
+    (props as unknown as { onClear?: () => void }).onClear ??
+    (() => {
+      onValueChange?.('')
+    })
   return (
     <SelectPrimitive.Trigger
       data-slot='select-trigger'
@@ -40,9 +67,36 @@ function SelectTrigger({
       {...props}
     >
       {children}
-      <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className='size-4 opacity-50' />
-      </SelectPrimitive.Icon>
+      {clearable && hasValue ? (
+        <span
+          role='button'
+          aria-label='Clear'
+          tabIndex={0}
+          className='hover:bg-muted/60 text-muted-foreground hover:text-foreground rounded-md p-1'
+          onPointerDown={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+          }}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onClear?.()
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              e.stopPropagation()
+              onClear?.()
+            }
+          }}
+        >
+          <XIcon className='size-4' />
+        </span>
+      ) : (
+        <SelectPrimitive.Icon asChild>
+          <ChevronDownIcon className='size-4 opacity-50' />
+        </SelectPrimitive.Icon>
+      )}
     </SelectPrimitive.Trigger>
   )
 }

@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
+import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
+import { useCountryStore, useMerchantStore } from '@/stores'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Search, X } from 'lucide-react'
+import { getProductDict } from '@/api/common'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
@@ -21,10 +25,6 @@ import {
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
 import { getStatuses } from '../schema'
-import {getProductDict} from '@/api/common'
-import { useQuery } from '@tanstack/react-query'
-import { useLanguage } from '@/context/language-provider'
-import { useCountryStore, useMerchantStore } from '@/stores'
 
 const route = getRouteApi('/_authenticated/orders/receive-lists')
 
@@ -47,12 +47,8 @@ export function ReceiveListsSearch<TData>({
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
 
-  const [referenceno, setMerchantOrderNo] = useState(
-    search.referenceno || ''
-  )
-  const [transId, setTransId] = useState(
-    search.transId || ''
-  )
+  const [referenceno, setMerchantOrderNo] = useState(search.referenceno || '')
+  const [transId, setTransId] = useState(search.transId || '')
   const [status, setStatus] = useState(search.status || '')
   const [pickupCenter, setPickupCenter] = useState(search.pickupCenter || '')
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -61,12 +57,12 @@ export function ReceiveListsSearch<TData>({
   })
 
   const { data } = useQuery({
-    queryKey: ['product-dict',selectedCountry?.code,selectedMerchant?.appid],
+    queryKey: ['product-dict', selectedCountry?.code, selectedMerchant?.appid],
     queryFn: () => getProductDict(),
     enabled: !!selectedCountry,
   })
 
-  const payinChannel = data?.result?.payinChannel || [];
+  const payinChannel = data?.result?.payinChannel || []
 
   const statuses = getStatuses(t)
 
@@ -83,7 +79,7 @@ export function ReceiveListsSearch<TData>({
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
         endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
@@ -103,7 +99,8 @@ export function ReceiveListsSearch<TData>({
     })
   }
 
-  const hasFilters = pickupCenter ||
+  const hasFilters =
+    pickupCenter ||
     referenceno ||
     transId ||
     status ||
@@ -113,7 +110,7 @@ export function ReceiveListsSearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 商户订单号 */}
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
+      <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           id='referenceno'
           placeholder={t('orders.receiveOrders.merchantOrderNo')}
@@ -122,7 +119,7 @@ export function ReceiveListsSearch<TData>({
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
+      <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           id='transId'
           placeholder={t('orders.receiveOrders.platformOrderNo')}
@@ -133,35 +130,31 @@ export function ReceiveListsSearch<TData>({
       </div>
 
       {/* 交易状态 */}
-      <div className='max-w-[120px]'>
-        <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger id='status'>
-            <SelectValue placeholder={t('orders.receiveOrders.status')} />
-          </SelectTrigger>
-          <SelectContent>
-            {statuses.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                <div className='flex items-center gap-2'>
-                  {item.icon && <item.icon className='size-4' />}
-                  {item.label}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <Select value={status} onValueChange={setStatus}>
+        <SelectTrigger id='status' clearable>
+          <SelectValue placeholder={t('orders.receiveOrders.status')} />
+        </SelectTrigger>
+        <SelectContent>
+          {statuses.map((item) => (
+            <SelectItem key={item.value} value={item.value}>
+              <div className='flex items-center gap-2'>
+                {item.icon && <item.icon className='size-4' />}
+                {item.label}
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       {/* 产品 */}
       <div className='max-w-[120px]'>
         <Select value={pickupCenter} onValueChange={setPickupCenter}>
-          <SelectTrigger id='pickupCenter'>
+          <SelectTrigger id='pickupCenter' clearable>
             <SelectValue placeholder={t('common.product')} />
           </SelectTrigger>
           <SelectContent>
             {payinChannel.map((item) => (
               <SelectItem key={item} value={item}>
-                <div className='flex items-center gap-2'>
-                  {item}
-                </div>
+                <div className='flex items-center gap-2'>{item}</div>
               </SelectItem>
             ))}
           </SelectContent>
@@ -175,7 +168,7 @@ export function ReceiveListsSearch<TData>({
               variant='outline'
               className='w-full justify-start text-left font-normal'
             >
-              <CalendarIcon className='mr-2 h-4 w-4 text-muted-foreground' />
+              <CalendarIcon className='text-muted-foreground mr-2 h-4 w-4' />
               {dateRange.from ? (
                 dateRange.to ? (
                   <>
@@ -186,7 +179,9 @@ export function ReceiveListsSearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                <span className='text-muted-foreground'>
+                  {t('common.selectDateRange')}
+                </span>
               )}
             </Button>
           </PopoverTrigger>
@@ -209,7 +204,7 @@ export function ReceiveListsSearch<TData>({
       </div>
 
       {/* 操作按钮 */}
-      <div className='flex gap-2 mt-0.5'>
+      <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
           {t('common.search')}

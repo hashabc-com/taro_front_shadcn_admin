@@ -1,9 +1,15 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
+import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
+import { useCountryStore, useMerchantStore } from '@/stores'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Download, Search, X } from 'lucide-react'
+import { toast } from 'sonner'
+import { getPaymentChannels, type IPaymentChannel } from '@/api/common'
+import { prepareExportPayment } from '@/api/order'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -19,12 +25,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
-import { useQuery } from '@tanstack/react-query'
-import { getPaymentChannels,type IPaymentChannel } from '@/api/common'
-import { useLanguage } from '@/context/language-provider'
-import { toast } from 'sonner'
-import { prepareExportPayment } from '@/api/order'
-import { useCountryStore, useMerchantStore } from '@/stores'
 
 const route = getRouteApi('/_authenticated/orders/payment-summary-lists')
 
@@ -42,11 +42,10 @@ export function PaymentSummarySearch<TData>({
 }: PaymentListsSearchProps<TData>) {
   const navigate = route.useNavigate()
   const search = route.useSearch()
-  
+
   const { t } = useLanguage()
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
-
 
   const [channel, setChannel] = useState(search.channel)
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -55,13 +54,15 @@ export function PaymentSummarySearch<TData>({
   })
 
   const { data: paymentChannels } = useQuery({
-    queryKey: ['common', 'payment-channels',selectedCountry?.code, selectedMerchant?.appid],
+    queryKey: [
+      'common',
+      'payment-channels',
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: () => getPaymentChannels('withdraw_channel'),
   })
-  const hasFilters =
-    channel ||
-    dateRange.from ||
-    dateRange.to
+  const hasFilters = channel || dateRange.from || dateRange.to
   const handleSearch = () => {
     navigate({
       search: (prev) => ({
@@ -72,7 +73,7 @@ export function PaymentSummarySearch<TData>({
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
         endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
@@ -89,8 +90,13 @@ export function PaymentSummarySearch<TData>({
     })
   }
 
-   const handleExport = async () => {
-    const res = await prepareExportPayment({startTime: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd HH:mm:ss') : '', endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd HH:mm:ss') : ''})
+  const handleExport = async () => {
+    const res = await prepareExportPayment({
+      startTime: dateRange.from
+        ? format(dateRange.from, 'yyyy-MM-dd HH:mm:ss')
+        : '',
+      endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd HH:mm:ss') : '',
+    })
     if (res.code === '200') {
       toast.success(t('common.exportTaskCreated'))
     } else {
@@ -98,7 +104,6 @@ export function PaymentSummarySearch<TData>({
     }
   }
 
-  
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期范围 */}
@@ -109,7 +114,7 @@ export function PaymentSummarySearch<TData>({
               variant='outline'
               className='w-full justify-start text-left font-normal'
             >
-              <CalendarIcon className='mr-2 h-4 w-4 text-muted-foreground' />
+              <CalendarIcon className='text-muted-foreground mr-2 h-4 w-4' />
               {dateRange.from ? (
                 dateRange.to ? (
                   <>
@@ -120,7 +125,9 @@ export function PaymentSummarySearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                <span className='text-muted-foreground'>
+                  {t('common.selectDateRange')}
+                </span>
               )}
             </Button>
           </PopoverTrigger>
@@ -142,12 +149,13 @@ export function PaymentSummarySearch<TData>({
         </Popover>
       </div>
 
-      
       {/* 交易状态 */}
       <div className='max-w-[200px]'>
         <Select value={channel} onValueChange={setChannel}>
-          <SelectTrigger id='channel'>
-            <SelectValue placeholder={t('orders.paymentSummary.paymentChannel')} />
+          <SelectTrigger id='channel' clearable>
+            <SelectValue
+              placeholder={t('orders.paymentSummary.paymentChannel')}
+            />
           </SelectTrigger>
           <SelectContent>
             {/* <SelectItem value='all'>全部渠道</SelectItem> */}
@@ -161,7 +169,7 @@ export function PaymentSummarySearch<TData>({
       </div>
 
       {/* 操作按钮 */}
-      <div className='flex gap-2 mt-0.5'>
+      <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
           {t('common.search')}

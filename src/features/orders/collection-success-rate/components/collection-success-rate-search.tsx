@@ -126,7 +126,9 @@ export function CollectionSuccessRateSearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                <span className='text-muted-foreground'>
+                  {t('common.selectDateRange')}
+                </span>
               )}
             </Button>
           </PopoverTrigger>
@@ -150,8 +152,10 @@ export function CollectionSuccessRateSearch<TData>({
       {/* 产品 */}
       <div className='max-w-[200px]'>
         <Select value={pickupCenter} onValueChange={setPickupCenter}>
-          <SelectTrigger id='pickupCenter'>
-            <SelectValue placeholder={t('orders.collectionRate.pickupCenter')} />
+          <SelectTrigger id='pickupCenter' clearable>
+            <SelectValue
+              placeholder={t('orders.collectionRate.pickupCenter')}
+            />
           </SelectTrigger>
           <SelectContent>
             {payinChannel.map((item) => (
@@ -166,7 +170,7 @@ export function CollectionSuccessRateSearch<TData>({
       {/* 交易状态 */}
       <div className='max-w-[200px]'>
         <Select value={channel} onValueChange={setChannel}>
-          <SelectTrigger id='channel'>
+          <SelectTrigger id='channel' clearable>
             <SelectValue placeholder={t('orders.collectionRate.channel')} />
           </SelectTrigger>
           <SelectContent>

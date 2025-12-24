@@ -3,7 +3,9 @@ import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { zhCN } from 'date-fns/locale'
-import { CalendarIcon,Search, X } from 'lucide-react'
+import { CalendarIcon, Search, X } from 'lucide-react'
+import { getTranslation } from '@/lib/i18n'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
@@ -21,8 +23,6 @@ import {
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
 import { statuses } from '../schema'
-import { useLanguage } from '@/context/language-provider'
-import { getTranslation } from '@/lib/i18n'
 
 // const statuses = {
 //   0:{
@@ -38,7 +38,6 @@ import { getTranslation } from '@/lib/i18n'
 //     icon: XCircle,
 //   },
 // }
- 
 
 // const statuses = [
 //   {
@@ -98,7 +97,7 @@ export function ReceiveListsSearch<TData>({
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
         endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
@@ -137,7 +136,9 @@ export function ReceiveListsSearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                <span className='text-muted-foreground'>
+                  {t('common.selectDateRange')}
+                </span>
               )}
             </Button>
           </PopoverTrigger>
@@ -180,20 +181,21 @@ export function ReceiveListsSearch<TData>({
       {/* 交易状态 */}
       <div>
         <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger id='status'>
+          <SelectTrigger id='status' clearable>
             <SelectValue placeholder={t('orders.paymentOrders.status')} />
           </SelectTrigger>
           <SelectContent>
             {Object.keys(statuses).map((key) => {
-              const item = statuses[key as unknown as keyof typeof statuses];
+              const item = statuses[key as unknown as keyof typeof statuses]
               return (
                 <SelectItem key={key} value={key}>
                   <div className='flex items-center gap-2'>
                     {item.icon && <item.icon className='size-4' />}
                     {t(item.i18n)}
                   </div>
-              </SelectItem>
-            )})}
+                </SelectItem>
+              )
+            })}
           </SelectContent>
         </Select>
       </div>

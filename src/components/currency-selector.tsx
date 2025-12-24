@@ -23,21 +23,20 @@ const currencyToCountryCode: Record<string, string> = {
 }
 
 export function CurrencySelector() {
-
   const { displayCurrency, selectedCountry, setDisplayCurrency } =
     useCountryStore()
   const defaultCurrency = selectedCountry?.currency
 
   return (
     <Select value={displayCurrency ?? ''} onValueChange={setDisplayCurrency}>
-      <SelectTrigger className='h-9 w-full sm:w-[140px]'>
+      <SelectTrigger className='h-9 w-full sm:w-[140px]' clearable={false}>
         <SelectValue placeholder='选择货币'>
           {displayCurrency && (
             <div className='flex items-center gap-2'>
-              <img 
-                src={`/images/${currencyToCountryCode[displayCurrency] || selectedCountry?.code}.svg`} 
+              <img
+                src={`/images/${currencyToCountryCode[displayCurrency] || selectedCountry?.code}.svg`}
                 alt={displayCurrency}
-                className='w-4 h-4'
+                className='h-4 w-4'
                 onError={(e) => {
                   e.currentTarget.style.display = 'none'
                 }}
@@ -50,10 +49,10 @@ export function CurrencySelector() {
       <SelectContent>
         <SelectItem value={defaultCurrency as string}>
           <div className='flex items-center gap-2'>
-            <img 
-              src={`/images/${selectedCountry?.code}.svg`} 
+            <img
+              src={`/images/${selectedCountry?.code}.svg`}
               alt={defaultCurrency}
-              className='w-4 h-4'
+              className='h-4 w-4'
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
               }}
@@ -66,10 +65,10 @@ export function CurrencySelector() {
           return (
             <SelectItem key={currency} value={currency}>
               <div className='flex items-center gap-2'>
-                <img 
-                  src={`/images/${countryCode}.svg`} 
+                <img
+                  src={`/images/${countryCode}.svg`}
                   alt={currency}
-                  className='w-4 h-4'
+                  className='h-4 w-4'
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'
                   }}

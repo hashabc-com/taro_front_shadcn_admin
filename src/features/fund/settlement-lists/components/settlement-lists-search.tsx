@@ -4,6 +4,7 @@ import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Search, X } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -20,7 +21,6 @@ import {
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
 import { statuses, types } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/fund/settlement-lists')
 
@@ -58,7 +58,7 @@ export function SettlementListsSearch<TData>({
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
         endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
@@ -96,7 +96,9 @@ export function SettlementListsSearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                <span className='text-muted-foreground'>
+                  {t('common.selectDateRange')}
+                </span>
               )}
             </Button>
           </PopoverTrigger>
@@ -120,7 +122,7 @@ export function SettlementListsSearch<TData>({
 
       <div className='max-w-[120px]'>
         <Select value={type} onValueChange={setType}>
-          <SelectTrigger id='type'>
+          <SelectTrigger id='type' clearable>
             <SelectValue placeholder={t('fund.fundsDetail.type')} />
           </SelectTrigger>
           <SelectContent>
@@ -133,7 +135,7 @@ export function SettlementListsSearch<TData>({
         </Select>
       </div>
       <Select value={status} onValueChange={setStatus}>
-        <SelectTrigger id='status'>
+        <SelectTrigger id='status' clearable>
           <SelectValue placeholder={t('orders.receiveOrders.status')} />
         </SelectTrigger>
         <SelectContent>

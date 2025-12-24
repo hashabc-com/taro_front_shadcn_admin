@@ -1,9 +1,15 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
+import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
+import { useCountryStore, useMerchantStore } from '@/stores'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Download, Search, X } from 'lucide-react'
+import { toast } from 'sonner'
+import { getPaymentChannels, type IPaymentChannel } from '@/api/common'
+import { prepareExportReceive } from '@/api/order'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -19,12 +25,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
-import { useQuery } from '@tanstack/react-query'
-import { getPaymentChannels,type IPaymentChannel } from '@/api/common'
-import { useCountryStore, useMerchantStore } from '@/stores'
-import { useLanguage } from '@/context/language-provider'
-import { prepareExportReceive } from '@/api/order'
-import { toast } from 'sonner'
 
 const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
 
@@ -54,13 +54,15 @@ export function ReceiveListsSearch<TData>({
   })
 
   const { data: receiveChannels } = useQuery({
-    queryKey: ['common', 'receive-channels',selectedCountry?.code, selectedMerchant?.appid],
+    queryKey: [
+      'common',
+      'receive-channels',
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: () => getPaymentChannels('pay_channel'),
   })
-  const hasFilters =
-    channel ||
-    dateRange.from ||
-    dateRange.to
+  const hasFilters = channel || dateRange.from || dateRange.to
   const handleSearch = () => {
     navigate({
       search: (prev) => ({
@@ -71,7 +73,7 @@ export function ReceiveListsSearch<TData>({
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
         endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
@@ -89,7 +91,12 @@ export function ReceiveListsSearch<TData>({
   }
 
   const handleExport = async () => {
-    const res = await prepareExportReceive({startTime: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd HH:mm:ss') : '', endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd HH:mm:ss') : ''})
+    const res = await prepareExportReceive({
+      startTime: dateRange.from
+        ? format(dateRange.from, 'yyyy-MM-dd HH:mm:ss')
+        : '',
+      endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd HH:mm:ss') : '',
+    })
     if (res.code === '200') {
       toast.success(t('common.exportTaskCreated'))
     } else {
@@ -97,7 +104,6 @@ export function ReceiveListsSearch<TData>({
     }
   }
 
-  
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期范围 */}
@@ -108,7 +114,7 @@ export function ReceiveListsSearch<TData>({
               variant='outline'
               className='w-full justify-start text-left font-normal'
             >
-              <CalendarIcon className='mr-2 h-4 w-4 text-muted-foreground' />
+              <CalendarIcon className='text-muted-foreground mr-2 h-4 w-4' />
               {dateRange.from ? (
                 dateRange.to ? (
                   <>
@@ -119,7 +125,9 @@ export function ReceiveListsSearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                <span className='text-muted-foreground'>
+                  {t('common.selectDateRange')}
+                </span>
               )}
             </Button>
           </PopoverTrigger>
@@ -141,12 +149,13 @@ export function ReceiveListsSearch<TData>({
         </Popover>
       </div>
 
-      
       {/* 交易状态 */}
       <div className='max-w-[200px]'>
         <Select value={channel} onValueChange={setChannel}>
-          <SelectTrigger id='channel'>
-            <SelectValue placeholder={t('orders.receiveSummary.paymentChannel')} />
+          <SelectTrigger id='channel' clearable>
+            <SelectValue
+              placeholder={t('orders.receiveSummary.paymentChannel')}
+            />
           </SelectTrigger>
           <SelectContent>
             {/* <SelectItem value='all'>全部渠道</SelectItem> */}
@@ -160,7 +169,7 @@ export function ReceiveListsSearch<TData>({
       </div>
 
       {/* 操作按钮 */}
-      <div className='flex gap-2 mt-0.5'>
+      <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
           {t('common.search')}
