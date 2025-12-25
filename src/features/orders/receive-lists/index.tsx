@@ -36,12 +36,12 @@ export function ReceiveLists() {
     data?.result?.listRecord?.map((item: Order) => ({
       ...item,
       amount: convertAmount(item.amount, false),
-      realAmount: convertAmount(item.realAmount || '', false),
+      realAmount: convertAmount(item.realAmount || 0, false),
       serviceAmount: convertAmount(item.serviceAmount, false),
     })) || []
   const totalRecord = data?.result?.totalRecord || 0
 
-  // console.log('orders', orders)
+  console.log('orders=============', orders)
   return (
     <ReceiveListsProvider>
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
