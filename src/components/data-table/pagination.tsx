@@ -50,7 +50,7 @@ export function DataTablePagination<TData>({
               table.setPageSize(Number(value))
             }}
           >
-            <SelectTrigger className='h-8 w-[90px]'>
+            <SelectTrigger className='h-8 w-[90px]' clearable={false}>
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side='top'>
@@ -61,12 +61,14 @@ export function DataTablePagination<TData>({
               ))}
             </SelectContent>
           </Select>
-          <p className='hidden text-sm font-medium sm:block'>{t('common.rowsPerPage')}</p>
+          <p className='hidden text-sm font-medium sm:block'>
+            {t('common.rowsPerPage')}
+          </p>
         </div>
       </div>
 
       <div className='flex items-center'>
-        <div className='flex min-w-[130px] items-center justify-center whitespace-nowrap text-sm font-medium @max-3xl/content:hidden'>
+        <div className='flex min-w-[130px] items-center justify-center text-sm font-medium whitespace-nowrap @max-3xl/content:hidden'>
           {t('common.page')} {currentPage} {t('common.of')} {totalPages}
         </div>
         <div className='flex items-center space-x-2'>
@@ -100,7 +102,9 @@ export function DataTablePagination<TData>({
                   className='h-8 min-w-8 px-2'
                   onClick={() => table.setPageIndex((pageNumber as number) - 1)}
                 >
-                  <span className='sr-only'>{t('common.goToPage')} {pageNumber}</span>
+                  <span className='sr-only'>
+                    {t('common.goToPage')} {pageNumber}
+                  </span>
                   {pageNumber}
                 </Button>
               )}
