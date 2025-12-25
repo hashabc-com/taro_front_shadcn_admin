@@ -140,11 +140,22 @@ export function MutateDrawer({
             {/* 金额 */}
             <div className='flex flex-col gap-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                {t('orders.receiveOrders.amount')}
+                {t('orders.receiveOrders.orderAmount')}
               </label>
               <div className='flex flex-col gap-1'>
                 <div className='text-base font-semibold'>
                   {currentRow.amount}
+                </div>
+              </div>
+            </div>
+            {/* 实际金额 */}
+            <div className='flex flex-col gap-2'>
+              <label className='text-muted-foreground text-sm font-medium'>
+                {t('orders.receiveOrders.realAmount')}
+              </label>
+              <div className='flex flex-col gap-1'>
+                <div className='text-base font-semibold'>
+                  {currentRow.realAmount}
                 </div>
               </div>
             </div>
