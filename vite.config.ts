@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
     ],
     server: {
+      host: true,
       proxy: {
         '/admin': {
           target: env.VITE_PROXY_TARGET,
