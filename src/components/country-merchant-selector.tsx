@@ -126,7 +126,7 @@ export function CountryMerchantSelector() {
       <CurrencySelector />
       <Separator orientation='vertical' className='h-6 max-md:hidden' />
       {/* 商户选择 */}
-      <div className='flex items-center gap-1'>
+      <div className='flex items-center gap-1 max-md:hidden'>
         <Select
           value={selectedMerchant?.appid?.toString() || ''}
           onValueChange={handleMerchantChange}
