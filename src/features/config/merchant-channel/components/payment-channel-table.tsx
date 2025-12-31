@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getRouteApi } from '@tanstack/react-router'
+import { useRouter, useNavigate } from '@tanstack/react-router'
 import {
   type VisibilityState,
   flexRender,
@@ -18,53 +18,34 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { useMerchantBindData } from '../hooks/use-merchant-bind-data'
-import { getColumns } from './merchant-bind-columns'
-import { MerchantBindSearch } from './merchant-bind-search'
-import { BindMerchantDialog } from './bind-merchant-dialog'
-// import { type IBusinessType } from '../schema'
+import { type PaymentChannel } from '../schema'
+import { getPaymentChannelColumns } from './payment-channel-columns'
+import { PaymentChannelSearch } from './payment-channel-search'
 import { useLanguage } from '@/context/language-provider'
-import { RateConfigDialog } from './rate-config-dialog'
 
-const route = getRouteApi('/_authenticated/business/merchant-bind')
+type DataTableProps = {
+  data: PaymentChannel[]
+  totalRecord?: number
+  isLoading: boolean
+}
 
-export function MerchantBindTable() {
-  const { lang } = useLanguage()
-  const { data, isLoading, totalRecord, refetch } = useMerchantBindData()
+export function PaymentChannelTable({ data, isLoading, totalRecord }: DataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  // const [currentBusiness, setCurrentBusiness] = useState<IBusinessType | null>(
-  //   null
-  // )
-  // const [bindDialogOpen, setBindDialogOpen] = useState(false)
+  const router = useRouter()
+  const navigate = useNavigate()
+  const { lang } = useLanguage()
+  const columns = useMemo(() => getPaymentChannelColumns(lang), [lang])
 
-  const { pagination, onPaginationChange, ensurePageInRange } =
-    useTableUrlState({
-      search: route.useSearch(),
-      navigate: route.useNavigate(),
-      pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
-    })
+  const { pagination, onPaginationChange, ensurePageInRange } = useTableUrlState({
+    search: router.latestLocation.search as never,
+    navigate: navigate as never,
+    pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
+  })
 
   const pageCount = useMemo(() => {
     const pageSize = pagination.pageSize ?? 10
     return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
   }, [totalRecord, pagination.pageSize])
-
-  // const handleBind = (business: IBusinessType) => {
-  //   setCurrentBusiness(business)
-  //   setBindDialogOpen(true)
-  // }
-
-  const handleSuccess = () => {
-    refetch()
-  }
-
-  const columns = useMemo(
-    () =>
-      getColumns({
-        language: lang,
-      }),
-    []
-  )
 
   const table = useReactTable({
     data,
@@ -82,11 +63,11 @@ export function MerchantBindTable() {
 
   useEffect(() => {
     ensurePageInRange(pageCount)
-  }, [pageCount, ensurePageInRange, totalRecord, isLoading])
+  }, [pageCount, ensurePageInRange])
 
   return (
     <div className='flex flex-1 flex-col gap-4'>
-      <MerchantBindSearch />
+      <PaymentChannelSearch table={table} />
       {isLoading ? (
         <div className='overflow-hidden rounded-md border'>
           <div className='space-y-3 p-4'>
@@ -115,10 +96,7 @@ export function MerchantBindTable() {
                       >
                         {header.isPlaceholder
                           ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                          : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
                     )
                   })}
@@ -128,10 +106,7 @@ export function MerchantBindTable() {
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
+                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
@@ -140,41 +115,23 @@ export function MerchantBindTable() {
                           cell.column.columnDef.meta?.tdClassName
                         )}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className='h-24 text-center'
-                  >
+                  <TableCell colSpan={table.getAllColumns().length} className='h-24 text-center'>
                     暂无数据
                   </TableCell>
                 </TableRow>
-              )}
+              )}  
             </TableBody>
           </Table>
         </div>
       )}
-
       <DataTablePagination table={table} className='mt-auto' />
-
-      <BindMerchantDialog
-        // open={bindDialogOpen}
-        // onOpenChange={setBindDialogOpen}
-        // business={currentBusiness}
-        onSuccess={handleSuccess}
-      />
-      {/* 汇率配置弹窗 */}
-      <RateConfigDialog
-        onSuccess={handleSuccess}
-      />
     </div>
   )
 }

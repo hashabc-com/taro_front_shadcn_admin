@@ -150,6 +150,10 @@ export const getSidebarData = (language: Language): SidebarData => {
               url: '/config/payment-channel',
             },
             {
+              title: t('sidebar.merchantChannel'),
+              url: '/config/merchant-channel',
+            },
+            {
               title: t('sidebar.riskControlRule'),
               url: '/config/risk-control-rule',
             },

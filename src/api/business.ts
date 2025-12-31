@@ -28,3 +28,12 @@ export const getBusinessDaySummary = (params: IDailySummarySearch) => http.get('
 
 // 获取商务月汇总
 export const getBusinessMonthlySummary = (params: IMonthlySummarySearch) => http.get('/admin/business/monthlyReportList', params)
+
+
+// 获取商务汇率
+export const getBusinessRate = (businessId: number) =>
+  http.get('/admin/costRateConfig/getBusinessRateListByAppid', { businessId },{autoAddMerchantId:false})
+
+// 配置商务汇率
+export const configureBusinessRate = (data: unknown[]) =>
+  http.post('/admin/costRateConfig/saveOrUpdate', data,{autoAddMerchantId:false,autoAddCountry:false})

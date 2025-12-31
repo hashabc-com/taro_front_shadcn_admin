@@ -1,14 +1,13 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { getTranslation, type Language } from '@/lib/i18n'
-import { Button } from '@/components/ui/button'
+import { DataTableRowActions } from './data-table-row-actions'
 import { type IBusinessType } from '../schema'
 
 interface GetColumnsOptions {
-  onBind: (business: IBusinessType) => void
   language?: Language
 }
 
-export function getColumns({ onBind, language = 'zh' }: GetColumnsOptions): ColumnDef<IBusinessType>[] {
+export function getColumns({ language = 'zh' }: GetColumnsOptions): ColumnDef<IBusinessType>[] {
   const t = (key: string) => getTranslation(language, key)
   return [
     {
@@ -53,15 +52,16 @@ export function getColumns({ onBind, language = 'zh' }: GetColumnsOptions): Colu
     {
       id: 'actions',
       header: t('common.action'),
-      cell: ({ row }) => (
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => onBind(row.original)}
-        >
-          {t('business.merchantBind.bindMerchant')}
-        </Button>
-      ),
+      cell: ({ row }) => <DataTableRowActions row={row} />
+      // cell: ({ row }) => (
+      //   <Button
+      //     variant='outline'
+      //     size='sm'
+      //     onClick={() => onBind(row.original)}
+      //   >
+      //     {t('business.merchantBind.bindMerchant')}
+      //   </Button>
+      // ),
     },
   ]
 }

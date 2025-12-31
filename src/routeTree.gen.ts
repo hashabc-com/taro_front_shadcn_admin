@@ -49,6 +49,7 @@ import { Route as AuthenticatedFundAccountSettlementRouteImport } from './routes
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedConfigRiskControlRuleRouteImport } from './routes/_authenticated/config/risk-control-rule'
 import { Route as AuthenticatedConfigPaymentChannelRouteImport } from './routes/_authenticated/config/payment-channel'
+import { Route as AuthenticatedConfigMerchantChannelRouteImport } from './routes/_authenticated/config/merchant-channel'
 import { Route as AuthenticatedBusinessMonthlySummaryRouteImport } from './routes/_authenticated/business/monthly-summary'
 import { Route as AuthenticatedBusinessMerchantBindRouteImport } from './routes/_authenticated/business/merchant-bind'
 import { Route as AuthenticatedBusinessDailySummaryRouteImport } from './routes/_authenticated/business/daily-summary'
@@ -280,6 +281,12 @@ const AuthenticatedConfigPaymentChannelRoute =
     path: '/config/payment-channel',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedConfigMerchantChannelRoute =
+  AuthenticatedConfigMerchantChannelRouteImport.update({
+    id: '/config/merchant-channel',
+    path: '/config/merchant-channel',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBusinessMonthlySummaryRoute =
   AuthenticatedBusinessMonthlySummaryRouteImport.update({
     id: '/business/monthly-summary',
@@ -317,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
+  '/config/merchant-channel': typeof AuthenticatedConfigMerchantChannelRoute
   '/config/payment-channel': typeof AuthenticatedConfigPaymentChannelRoute
   '/config/risk-control-rule': typeof AuthenticatedConfigRiskControlRuleRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -360,6 +368,7 @@ export interface FileRoutesByTo {
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
+  '/config/merchant-channel': typeof AuthenticatedConfigMerchantChannelRoute
   '/config/payment-channel': typeof AuthenticatedConfigPaymentChannelRoute
   '/config/risk-control-rule': typeof AuthenticatedConfigRiskControlRuleRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -406,6 +415,7 @@ export interface FileRoutesById {
   '/_authenticated/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/_authenticated/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/_authenticated/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
+  '/_authenticated/config/merchant-channel': typeof AuthenticatedConfigMerchantChannelRoute
   '/_authenticated/config/payment-channel': typeof AuthenticatedConfigPaymentChannelRoute
   '/_authenticated/config/risk-control-rule': typeof AuthenticatedConfigRiskControlRuleRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -452,6 +462,7 @@ export interface FileRouteTypes {
     | '/business/daily-summary'
     | '/business/merchant-bind'
     | '/business/monthly-summary'
+    | '/config/merchant-channel'
     | '/config/payment-channel'
     | '/config/risk-control-rule'
     | '/errors/$error'
@@ -495,6 +506,7 @@ export interface FileRouteTypes {
     | '/business/daily-summary'
     | '/business/merchant-bind'
     | '/business/monthly-summary'
+    | '/config/merchant-channel'
     | '/config/payment-channel'
     | '/config/risk-control-rule'
     | '/errors/$error'
@@ -540,6 +552,7 @@ export interface FileRouteTypes {
     | '/_authenticated/business/daily-summary'
     | '/_authenticated/business/merchant-bind'
     | '/_authenticated/business/monthly-summary'
+    | '/_authenticated/config/merchant-channel'
     | '/_authenticated/config/payment-channel'
     | '/_authenticated/config/risk-control-rule'
     | '/_authenticated/errors/$error'
@@ -863,6 +876,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConfigPaymentChannelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/config/merchant-channel': {
+      id: '/_authenticated/config/merchant-channel'
+      path: '/config/merchant-channel'
+      fullPath: '/config/merchant-channel'
+      preLoaderRoute: typeof AuthenticatedConfigMerchantChannelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/business/monthly-summary': {
       id: '/_authenticated/business/monthly-summary'
       path: '/business/monthly-summary'
@@ -918,6 +938,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBusinessDailySummaryRoute: typeof AuthenticatedBusinessDailySummaryRoute
   AuthenticatedBusinessMerchantBindRoute: typeof AuthenticatedBusinessMerchantBindRoute
   AuthenticatedBusinessMonthlySummaryRoute: typeof AuthenticatedBusinessMonthlySummaryRoute
+  AuthenticatedConfigMerchantChannelRoute: typeof AuthenticatedConfigMerchantChannelRoute
   AuthenticatedConfigPaymentChannelRoute: typeof AuthenticatedConfigPaymentChannelRoute
   AuthenticatedConfigRiskControlRuleRoute: typeof AuthenticatedConfigRiskControlRuleRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
@@ -951,6 +972,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedBusinessMerchantBindRoute,
   AuthenticatedBusinessMonthlySummaryRoute:
     AuthenticatedBusinessMonthlySummaryRoute,
+  AuthenticatedConfigMerchantChannelRoute:
+    AuthenticatedConfigMerchantChannelRoute,
   AuthenticatedConfigPaymentChannelRoute:
     AuthenticatedConfigPaymentChannelRoute,
   AuthenticatedConfigRiskControlRuleRoute:

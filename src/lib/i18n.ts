@@ -227,7 +227,8 @@ export const translations = {
       businessDailySummary: '商务日汇总',
       businessMonthlySummary: '商务月汇总',
       configManagement: '配置管理',
-      paymentChannel: '商户通道配置',
+      merchantChannel: '商户通道配置',
+      paymentChannel: '支付通道配置',
       riskControlRule: '风控规则配置',
       logManagement: '日志管理',
       messageRecord: '消息记录表',
@@ -682,6 +683,7 @@ export const translations = {
           chatIdRequired: '请输入TG群组ID',
           rateMustBeFilled: '费率和单笔固定金额必须同时填写或同时不填',
           passwordMinLength: '密码至少6个字符',
+          rateFeeRequired: '请输入费率或单笔固定金额',
         },
         placeholder: {
           account: '请输入账号',
@@ -761,8 +763,11 @@ export const translations = {
     },
     // 配置管理
     config: {
+      merchantChannel: {
+
+      },
       paymentChannel: {
-        title: '支付渠道配置',
+        title: '支付通道配置',
         channelName: '渠道名称',
         channelType: '渠道类型',
         status: '状态',

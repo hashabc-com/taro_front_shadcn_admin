@@ -13,28 +13,25 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { type IBusinessType, type IMerchantItem } from '../schema'
+import { type IMerchantItem } from '../schema'
+import { useMerchantBindProvider } from './merchant-bind-provider'
 
 type BindMerchantDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  business: IBusinessType | null
   onSuccess: () => void
 }
 
 export function BindMerchantDialog({
-  open,
-  onOpenChange,
-  business,
   onSuccess,
 }: BindMerchantDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [merchants, setMerchants] = useState<IMerchantItem[]>([])
   const [selectedMerchants, setSelectedMerchants] = useState<string[]>([])
+  const { open,setOpen,currentRow: business } = useMerchantBindProvider()
+
 
   useEffect(() => {
-    if (open && business) {
+    if (open == 'bind' && business) {
       loadMerchants()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,7 +81,7 @@ export function BindMerchantDialog({
     })
     if (res.code == 200) {
       toast.success('绑定成功')
-      onOpenChange(false)
+      setOpen(null)
       onSuccess()
     } else {
       toast.error(res?.message || '绑定失败')
@@ -101,7 +98,7 @@ export function BindMerchantDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={!!open} onOpenChange={(isOpen) => !isOpen && setOpen(null)}>
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>绑定商户</DialogTitle>
@@ -147,7 +144,7 @@ export function BindMerchantDialog({
           <Button
             type='button'
             variant='outline'
-            onClick={() => onOpenChange(false)}
+            onClick={() => setOpen(null)}
             disabled={isSubmitting || isLoading}
           >
             取消
