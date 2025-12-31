@@ -5,7 +5,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Row } from '@tanstack/react-table'
-// import { useCountryStore } from '@/stores'
+import { useCountryStore } from '@/stores'
 import { CheckCircle, XCircle, Download } from 'lucide-react'
 import { toast } from 'sonner'
 import { downloadImg } from '@/api/common'
@@ -58,7 +58,7 @@ export function DataTableRowActions<TData>({
   const { t } = useLanguage()
   const navigate = route.useNavigate()
   const convertAmount = useConvertAmount()
-  // const { selectedCountry } = useCountryStore()
+  const { selectedCountry } = useCountryStore()
   const [approveOpen, setApproveOpen] = useState(false)
   const [rejectOpen, setRejectOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -73,6 +73,13 @@ export function DataTableRowActions<TData>({
       .min(1, t('fund.rechargeWithdraw.pleaseEnterGoogleAuthCode')),
     remark: z.string().optional(),
     exchangeRate: z
+      .string()
+      .min(1, t('fund.rechargeWithdraw.pleaseEnterExchangeRate'))
+      .regex(
+        /^\d*\.?\d+$/,
+        t('fund.rechargeWithdraw.exchangeRateMustBeValidNumber')
+      ),
+    costRate: z
       .string()
       .min(1, t('fund.rechargeWithdraw.pleaseEnterExchangeRate'))
       .regex(
@@ -94,6 +101,7 @@ export function DataTableRowActions<TData>({
       gauthcode: '',
       remark: '',
       exchangeRate: String(data.exchangeRate || ''),
+      costRate: String(data.costRate || ''),
     },
   })
 
@@ -111,7 +119,7 @@ export function DataTableRowActions<TData>({
         const rate = parseFloat(value.exchangeRate || '0')
         const amount = +data.rechargeAmount.replace(/,/g, '')
         if (!isNaN(rate) && !isNaN(amount)) {
-          setCalculatedAmount(String(amount * rate))
+          setCalculatedAmount( data.type == '充值' ? String(amount * rate) : String(amount / rate))
         } else {
           setCalculatedAmount('')
         }
@@ -158,6 +166,7 @@ export function DataTableRowActions<TData>({
         merchantId: data.merchantId,
         id: data.id,
         exchangeRate: values.exchangeRate,
+        costRate: values.costRate,
         rechargeAmount: +data.rechargeAmount.replace(/,/g, ''),
         finalAmount: calculatedAmount,
         withdrawalType: data.withdrawalType || '',
@@ -338,6 +347,40 @@ export function DataTableRowActions<TData>({
                   </FormItem>
                 )}
               />
+              <FormField
+                control={approveForm.control}
+                name='costRate'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('fund.rechargeWithdraw.costExchangeRate')}{' '}
+                      <span className='text-red-500'>*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type='text'
+                        autoComplete='no-autofill-exchange-rate'
+                        inputMode='decimal'
+                        placeholder={t('common.enterExchangeRate')}
+                        onKeyPress={(e) => {
+                          const char = e.key
+                          const value = e.currentTarget.value
+                          // 只允许数字和一个小数点
+                          if (!/[0-9.]/.test(char)) {
+                            e.preventDefault()
+                          }
+                          // 只允许一个小数点
+                          if (char === '.' && value.includes('.')) {
+                            e.preventDefault()
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <div className='grid gap-2'>
                 <FormLabel>{t('fund.rechargeWithdraw.actualAmount')}</FormLabel>
@@ -347,7 +390,7 @@ export function DataTableRowActions<TData>({
                     disabled
                   />
                   <span className='text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-sm'>
-                    {data.type == '充值' ? data?.currencyType : 'USTD'}
+                    {data.type == '充值' ? selectedCountry?.currency : 'USTD'}
                   </span>
                 </div>
               </div>

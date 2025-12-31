@@ -83,6 +83,14 @@ export const getTasksColumns = (
       header: t('fund.rechargeWithdraw.exchangeRate'),
     },
     {
+      accessorKey: 'costRate',
+      header: t('fund.rechargeWithdraw.costExchangeRate'),
+    },
+    {
+      accessorKey: 'profitAmountTwo',
+      header: t('fund.rechargeWithdraw.profit'),
+    },
+    {
       accessorKey: 'finalAmount',
       header: t('fund.rechargeWithdraw.convertedAmount'),
     },

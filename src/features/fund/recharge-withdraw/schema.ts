@@ -10,6 +10,7 @@ export const rechargeWithdrawSchema = z.object({
   rechargeAmount: z.string(),
   withdrawalType: z.string().optional().nullable(),
   exchangeRate: z.string().or(z.number()).optional().nullable(),
+  costRate: z.string().or(z.number()).optional().nullable(),
   finalAmount: z.string(),
   withdrawalAddress: z.string().optional().nullable(),
   mediaId: z.string().optional().nullable(),
