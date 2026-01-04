@@ -163,7 +163,7 @@ export function RateConfigDialog() {
             payCode: item.payCode,
             rate: Number(item.rate),
             feeAmount: Number(item.feeAmount),
-            config_type:2,
+            configType:2,
             type: '2', // 代收
           })
         }
@@ -182,7 +182,7 @@ export function RateConfigDialog() {
             rate: Number(item.rate),
             feeAmount: Number(item.feeAmount),
             type: '1', // 代付
-            config_type:2
+            configType:2
           })
         }
       })
