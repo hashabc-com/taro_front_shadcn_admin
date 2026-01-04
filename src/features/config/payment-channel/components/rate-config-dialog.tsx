@@ -82,7 +82,7 @@ export function RateConfigDialog() {
       }))
 
       // 获取现有费率数据
-      const rateRes = await getBusinessRate(currentRow.id)
+      const rateRes = await getBusinessRate(currentRow.channelCode)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rateData = (rateRes as any)?.result || rateRes
       
@@ -165,6 +165,7 @@ export function RateConfigDialog() {
             feeAmount: Number(item.feeAmount),
             configType:2,
             type: '2', // 代收
+            country: currentRow.country || '',
           })
         }
       })
@@ -182,7 +183,8 @@ export function RateConfigDialog() {
             rate: Number(item.rate),
             feeAmount: Number(item.feeAmount),
             type: '1', // 代付
-            configType:2
+            configType:2,
+            country: currentRow.country || '',
           })
         }
       })

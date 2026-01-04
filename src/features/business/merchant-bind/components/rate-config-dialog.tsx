@@ -168,6 +168,7 @@ export function RateConfigDialog({
             rate: Number(item.rate),
             feeAmount: Number(item.feeAmount),
             type: '2', // 代收
+            country: selectedCountry?.code || '',
           })
         }
       })
@@ -185,7 +186,7 @@ export function RateConfigDialog({
             rate: Number(item.rate),
             feeAmount: Number(item.feeAmount),
             type: '1', // 代付
-            // country: merchant.country,
+            country: selectedCountry?.code || '',
           })
         }
       })

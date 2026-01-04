@@ -31,7 +31,7 @@ export const getBusinessMonthlySummary = (params: IMonthlySummarySearch) => http
 
 
 // 获取商务汇率
-export const getBusinessRate = (businessId: number) =>
+export const getBusinessRate = (businessId: number | string) =>
   http.get('/admin/costRateConfig/getBusinessRateListByAppid', { businessId },{autoAddMerchantId:false})
 
 // 配置商务汇率
