@@ -54,7 +54,7 @@ export function AccountMutateDrawer({
     account: z.string().min(1, ti18n('system.accountManage.validation.accountRequired')),
     password: z.string().optional(),
     mobile: z.string().optional(),
-    roleIds: z.number().min(1, ti18n('system.accountManage.validation.roleRequired')),
+    roleIds: z.number().or(z.string()),
     userType: z.number().min(1, ti18n('system.accountManage.validation.typeRequired')),
     disabledStatus: z.number(),
   })

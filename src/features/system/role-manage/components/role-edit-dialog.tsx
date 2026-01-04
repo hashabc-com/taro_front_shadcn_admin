@@ -114,10 +114,15 @@ function TreeNodeComponent({
       <div className='flex items-center gap-1 py-1 hover:bg-accent rounded-sm'>
         {hasChildren ? (
           <Button
+            type='button'
             variant='ghost'
             size='sm'
             className='h-6 w-6 p-0'
-            onClick={() => onExpand(node.key)}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onExpand(node.key)
+            }}
           >
             {isExpanded ? (
               <ChevronDown className='h-4 w-4' />
@@ -136,7 +141,10 @@ function TreeNodeComponent({
             className={cn(isIndeterminate && 'data-[state=checked]:bg-primary/50')}
           />
           <label
-            onClick={() => handleParentToggle()}
+            onClick={(e) => {
+              e.preventDefault()
+              handleParentToggle()
+            }}
             className={cn(
               'flex items-center gap-1.5 text-sm',
               node.id ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
