@@ -80,6 +80,10 @@ export const getPaymentChannelColumns = (
       },
     },
     {
+      accessorKey: 'runTimeRange',
+      header: t('config.paymentChannel.runTimeRange'),
+    },
+    {
       accessorKey: 'country',
       header: t('common.country'),
       cell: ({ row }) => {
