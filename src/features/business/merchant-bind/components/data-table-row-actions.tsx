@@ -49,7 +49,7 @@ export function DataTableRowActions<TData>({
             setOpen('rate')
           }}
         >
-          汇率配置
+          {t('config.paymentChannel.rateConfig')}
         <DollarSign className='ml-auto h-4 w-4' />
         </DropdownMenuItem>
       </DropdownMenuContent>

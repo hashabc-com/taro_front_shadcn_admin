@@ -1,5 +1,62 @@
 import http from '@/lib/http'
 
+// ======================== 支付通道配置 API ========================
+
+// 获取支付通道列表
+export const getPaymentChannelList = (params: {
+  pageNum?: number
+  pageSize?: number
+  channelCode?: string | null
+  channelStatus?: number | null
+  fundType?: number | null
+  country?: string | null
+}) => http.get('/admin/paymentChannel/list', params,{autoAddCountry:false})
+
+// 新增支付通道
+export const addPaymentChannel = (data: {
+  channelCode: string
+  channelName: string
+  channelDesc?: string
+  fundType: number
+  singleMinAmount?: number
+  singleMaxAmount?: number
+  dailyMaxAmount?: number
+  channelStatus: number
+  costRate?: number
+  externalQuoteRate?: number
+  transProcessTime?: string
+  runTimeRange?: string
+  country?: string
+  remark?: string
+}) => http.post('/admin/paymentChannel/add', data,{autoAddCountry:false})
+
+// 更新支付通道
+export const updatePaymentChannel = (data: {
+  id: number
+  channelCode: string
+  channelName: string
+  channelDesc?: string
+  fundType: number
+  singleMinAmount?: number
+  singleMaxAmount?: number
+  dailyMaxAmount?: number
+  channelStatus: number
+  costRate?: number
+  externalQuoteRate?: number
+  transProcessTime?: string
+  runTimeRange?: string
+  country?: string
+  remark?: string
+}) => http.post('/admin/paymentChannel/update', data,{autoAddCountry:false})
+
+// 更新支付通道状态
+export const updatePaymentChannelStatus = (data: {
+  id: number
+  channelStatus: number
+}) => http.post('/admin/paymentChannel/updateStatus', data,{autoAddCountry:false})
+
+// ======================== 商户渠道配置 API (旧) ========================
+
 // 获取支付渠道列表
 export const getPayChannelList = (params: {
   pageNum?: number

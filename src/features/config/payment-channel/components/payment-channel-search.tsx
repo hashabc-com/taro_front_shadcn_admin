@@ -1,6 +1,6 @@
 import { type Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
-import { Plus, Settings,RefreshCcw } from 'lucide-react'
+import { Plus, RefreshCcw } from 'lucide-react'
 import { usePaymentChannel } from './payment-channel-provider'
 import { getRouteApi } from '@tanstack/react-router'
 import { type PaymentChannel } from '../schema'
@@ -43,15 +43,7 @@ export function PaymentChannelSearch(_props: PaymentChannelSearchProps) {
           onClick={() => setOpen('create')}
         >
           <Plus className='mr-2 h-4 w-4' />
-          {t('config.paymentChannel.addMerchantConfig')}
-        </Button>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => setOpen('config')}
-        >
-          <Settings className='mr-2 h-4 w-4' />
-          {t('config.paymentChannel.oneClickConfig')}
+          {t('config.paymentChannel.addChannel')}
         </Button>
       </div>
     </div>

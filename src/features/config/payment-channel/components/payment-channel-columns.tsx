@@ -10,55 +10,81 @@ export const getPaymentChannelColumns = (
   const t = (key: string) => getTranslation(language, key)
   return [
     {
-      accessorKey: 'customerName',
-      header: t('config.paymentChannel.merchantName'),
-    },
-    // {
-    //   accessorKey: 'country',
-    //   header: t('common.country'),
-    //   cell: ({ row }) => {
-    //     const country = row.getValue('country') as string | null
-    //     return country || '-'
-    //   },
-    // },
-    {
-      accessorKey: 'type',
-      header: t('config.paymentChannel.collectionPayout'),
+      accessorKey: 'channelCode',
+      header: t('config.paymentChannel.channelCode'),
       cell: ({ row }) => {
-        const type = row.getValue('type') as number
-        return (
-          <Badge variant={type === 1 ? 'default' : 'secondary'}>
-            {type === 1 ? t('config.paymentChannel.payout') : t('config.paymentChannel.collection')}
-          </Badge>
-        )
+        const code = row.getValue('channelCode') as string
+        return <span className='font-mono text-sm'>{code}</span>
       },
     },
     {
-      accessorKey: 'channel',
-      header: t('config.paymentChannel.supportedChannels'),
+      accessorKey: 'channelName',
+      header: t('config.paymentChannel.channelName'),
+    },
+    {
+      accessorKey: 'fundType',
+      header: t('config.paymentChannel.fundType'),
       cell: ({ row }) => {
-        const channels = row.getValue('channel') as string
+        const type = row.getValue('fundType') as number
+        const typeMap = {
+          1: { label: t('config.paymentChannel.collection'), variant: 'default' as const },
+          2: { label: t('config.paymentChannel.payout'), variant: 'secondary' as const },
+          3: { label: t('config.paymentChannel.both'), variant: 'outline' as const },
+        }
+        const config = typeMap[type as keyof typeof typeMap] || { label: '-', variant: 'outline' as const }
+        return <Badge variant={config.variant}>{config.label}</Badge>
+      },
+    },
+    {
+      accessorKey: 'singleMaxAmount',
+      header: t('config.paymentChannel.singleLimit'),
+      cell: ({ row }) => {
+        const min = row.original.singleMinAmount
+        const max = row.getValue('singleMaxAmount') as number | null
+        if (!min && !max) return '-'
         return (
-          <div className='flex flex-wrap gap-1'>
-            {channels.split(',').map((ch, idx) => (
-              <Badge key={idx} variant='outline'>
-                {ch}
-              </Badge>
-            ))}
+          <div className='text-sm'>
+            {min?.toFixed(2) || '0.00'} - {max?.toFixed(2) || '∞'}
           </div>
         )
       },
     },
     {
-      accessorKey: 'status',
+      accessorKey: 'dailyMaxAmount',
+      header: t('config.paymentChannel.dailyLimit'),
+      cell: ({ row }) => {
+        const amount = row.getValue('dailyMaxAmount') as number | null
+        return amount ? amount.toFixed(2) : '-'
+      },
+    },
+    // {
+    //   accessorKey: 'externalQuoteRate',
+    //   header: t('config.paymentChannel.rate'),
+    //   cell: ({ row }) => {
+    //     const rate = row.getValue('externalQuoteRate') as number | null
+    //     return rate ? `${(rate * 100).toFixed(2)}%` : '-'
+    //   },
+    // },
+    {
+      accessorKey: 'channelStatus',
       header: t('common.status'),
       cell: ({ row }) => {
-        const status = row.getValue('status') as number
-        return (
-          <Badge variant={status === 0 ? 'default' : 'destructive'}>
-            {status === 0 ? t('common.enabled') : t('common.disabled')}
-          </Badge>
-        )
+        const status = row.getValue('channelStatus') as number
+        const statusMap = {
+          1: { label: t('config.paymentChannel.statusNormal'), variant: 'default' as const },
+          2: { label: t('config.paymentChannel.statusMaintenance'), variant: 'secondary' as const },
+          3: { label: t('config.paymentChannel.statusPaused'), variant: 'destructive' as const },
+        }
+        const config = statusMap[status as keyof typeof statusMap] || { label: '-', variant: 'outline' as const }
+        return <Badge variant={config.variant}>{config.label}</Badge>
+      },
+    },
+    {
+      accessorKey: 'country',
+      header: t('common.country'),
+      cell: ({ row }) => {
+        const country = row.getValue('country') as string | null
+        return country || '-'
       },
     },
     {

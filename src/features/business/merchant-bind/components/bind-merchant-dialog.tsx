@@ -98,7 +98,7 @@ export function BindMerchantDialog({
   }
 
   return (
-    <Dialog open={!!open} onOpenChange={(isOpen) => !isOpen && setOpen(null)}>
+    <Dialog open={open == 'bind'} onOpenChange={(isOpen) => !isOpen && setOpen(null)}>
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>绑定商户</DialogTitle>

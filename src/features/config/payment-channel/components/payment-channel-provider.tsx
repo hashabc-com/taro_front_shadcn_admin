@@ -2,17 +2,13 @@ import React, { useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { type PaymentChannel } from '../schema'
 
-type DialogType = 'create' | 'edit' | 'config' | 'detail'
+type DialogType = 'create' | 'edit' | 'rate'
 
 type ContextType = {
   open: DialogType | null
   setOpen: (str: DialogType | null) => void
   currentRow: PaymentChannel | null
   setCurrentRow: React.Dispatch<React.SetStateAction<PaymentChannel | null>>
-  detailMerchantId: string | null
-  setDetailMerchantId: React.Dispatch<React.SetStateAction<string | null>>
-  detailType: number | null
-  setDetailType: React.Dispatch<React.SetStateAction<number | null>>
 }
 
 const PaymentChannelContext = React.createContext<ContextType | null>(null)
@@ -20,8 +16,6 @@ const PaymentChannelContext = React.createContext<ContextType | null>(null)
 export function PaymentChannelProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useDialogState<DialogType>(null)
   const [currentRow, setCurrentRow] = useState<PaymentChannel | null>(null)
-  const [detailMerchantId, setDetailMerchantId] = useState<string | null>(null)
-  const [detailType, setDetailType] = useState<number | null>(null)
 
   return (
     <PaymentChannelContext.Provider
@@ -30,10 +24,6 @@ export function PaymentChannelProvider({ children }: { children: React.ReactNode
         setOpen,
         currentRow,
         setCurrentRow,
-        detailMerchantId,
-        setDetailMerchantId,
-        detailType,
-        setDetailType,
       }}
     >
       {children}

@@ -21,7 +21,8 @@ import {
 import { getBusinessRate,configureBusinessRate } from '@/api/business'
 // import { type IBusinessType } from '../schema'
 import { useCountryStore } from '@/stores'
-import { useMerchantBindProvider } from './merchant-bind-provider'
+import { usePaymentChannel } from './payment-channel-provider'
+import { useQueryClient } from '@tanstack/react-query'
 
 type RateItem = {
   id: string
@@ -31,30 +32,25 @@ type RateItem = {
   feeAmount: string | number
 }
 
-type RateConfigDialogProps = {
-  onSuccess: () => void
-}
-
-export function RateConfigDialog({
-  onSuccess,
-}: RateConfigDialogProps) {
+export function RateConfigDialog() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [collectionRates, setCollectionRates] = useState<RateItem[]>([])
   const [payoutRates, setPayoutRates] = useState<RateItem[]>([])
   const { t } = useLanguage()
   const {selectedCountry} = useCountryStore()
-  const { open,setOpen,currentRow: business } = useMerchantBindProvider()
+  const queryClient = useQueryClient()
+  const { open,setOpen,currentRow } = usePaymentChannel()
   const currency = selectedCountry?.currency || 'USD'
   
   useEffect(() => {
-    if (open == 'rate' && business) {
+    if (open == 'rate' && currentRow) {
       loadRateData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, business])
+  }, [open, currentRow])
   const loadRateData = async () => {
-    if (!business) return
+    if (!currentRow) return
 
     setIsLoading(true)
     try {
@@ -86,7 +82,7 @@ export function RateConfigDialog({
       }))
 
       // 获取现有费率数据
-      const rateRes = await getBusinessRate(business.id)
+      const rateRes = await getBusinessRate(currentRow.id)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rateData = (rateRes as any)?.result || rateRes
       
@@ -126,7 +122,7 @@ export function RateConfigDialog({
   }
 
   const handleSubmit = async () => {
-    if (!business) return
+    if (!currentRow) return
 
     // 验证数据：可以不填，但如果填了费率就必须填单笔固定
     const allItems = [...collectionRates, ...payoutRates]
@@ -163,10 +159,11 @@ export function RateConfigDialog({
         if (hasRate && hasFeeAmount) {
           submitData.push({
             id: item.id || '',
-            businessId: business.id,
+            businessId: currentRow.channelCode,
             payCode: item.payCode,
             rate: Number(item.rate),
             feeAmount: Number(item.feeAmount),
+            config_type:2,
             type: '2', // 代收
           })
         }
@@ -180,12 +177,12 @@ export function RateConfigDialog({
         if (hasRate && hasFeeAmount) {
           submitData.push({
             id: item.id || '',
-            businessId: business.id,
+            businessId: currentRow.channelCode,
             payCode: item.payCode,
             rate: Number(item.rate),
             feeAmount: Number(item.feeAmount),
             type: '1', // 代付
-            // country: merchant.country,
+            config_type:2
           })
         }
       })
@@ -194,7 +191,7 @@ export function RateConfigDialog({
       if (res.code == 200) {
         toast.success(t('fund.accountSettlement.rateUpdateSuccess'))
         setOpen(null)
-        onSuccess()
+        queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
       }else{
         toast.error(res.message || t('fund.accountSettlement.rateUpdateFailed'))
       }
@@ -232,7 +229,7 @@ export function RateConfigDialog({
         <DialogHeader>
           <DialogTitle>{t('merchant.info.rateConfig')}</DialogTitle>
           <DialogDescription>
-            {t('business.merchantBind.businessUserName')}：<span className='font-semibold'>{business?.account}</span>
+            {t('config.paymentChannel.channelCode')}：<span className='font-semibold'>{currentRow?.channelCode}</span>
           </DialogDescription>
         </DialogHeader>
 

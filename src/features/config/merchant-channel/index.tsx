@@ -32,7 +32,7 @@ export function PaymentChannelConfig() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>{t('config.paymentChannel.title')}</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t('sidebar.merchantChannel')}</h2>
           </div>
         </div>
         <PaymentChannelTable data={channels} totalRecord={totalRecord} isLoading={isLoading} />
