@@ -167,6 +167,34 @@ pnpm lint             # ESLint check
 pnpm format           # Prettier format
 ```
 
+### Code Quality & Auto-fixing
+
+**ESLint Auto-fix**:
+```bash
+pnpm lint --fix       # Auto-fix ESLint issues
+```
+
+**TypeScript Type Errors**:
+- Use VS Code's built-in TypeScript error checking
+- View all errors: Press `Ctrl+Shift+M` (Windows/Linux) or `Cmd+Shift+M` (Mac) to open Problems panel
+- Check errors in specific file: Use `get_errors` tool when working with Copilot
+- Common fixes:
+  - Remove explicit generic types from `useForm()` - let TypeScript infer them
+  - Use `z.coerce.number()` for form fields that need number coercion
+  - Avoid hardcoded error messages in Zod schemas - keep them internationalization-friendly
+
+**Common Auto-fixes**:
+1. **Import sorting**: Run `pnpm format` to auto-organize imports
+2. **Type inference issues**: Remove unnecessary type annotations and let TypeScript infer
+3. **Form type mismatches**: Use `form.handleSubmit()` wrapper instead of custom handlers
+4. **Effect cascading**: Wrap state updates in `setTimeout` when called from `useEffect`
+
+**Best Practices**:
+- Fix TypeScript errors before committing - run `pnpm build` to catch all type errors
+- Use ESLint auto-fix regularly to maintain code style consistency
+- Don't suppress errors with `@ts-ignore` or `eslint-disable` unless absolutely necessary
+- When encountering persistent type errors, simplify the type structure or remove generic constraints
+
 ### Adding a New Feature
 
 1. Create feature directory: `src/features/<domain>/<feature-name>/`
