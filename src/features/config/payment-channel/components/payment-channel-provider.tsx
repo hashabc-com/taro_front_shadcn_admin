@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { type PaymentChannel } from '../schema'
 
-type DialogType = 'create' | 'edit' | 'rate'
+type DialogType = 'create' | 'edit' | 'rate' | 'subChannel'
 
 type ContextType = {
   open: DialogType | null

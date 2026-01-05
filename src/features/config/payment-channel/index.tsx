@@ -4,6 +4,7 @@ import { Main } from '@/components/layout/main'
 import { PaymentChannelProvider } from './components/payment-channel-provider'
 import { PaymentChannelTable } from './components/payment-channel-table'
 import { PaymentChannelDialogs } from './components/payment-channel-dialogs'
+import { SubChannelDrawer } from './components/sub-channel-drawer'
 import { getPaymentChannelList } from '@/api/config'
 import { type PaymentChannel } from './schema'
 import { useLanguage } from '@/context/language-provider'
@@ -33,6 +34,7 @@ export function PaymentChannelConfig() {
         <PaymentChannelTable data={channels} totalRecord={totalRecord} isLoading={isLoading} />
       </Main>
       <PaymentChannelDialogs />
+      <SubChannelDrawer />
     </PaymentChannelProvider>
   )
 }

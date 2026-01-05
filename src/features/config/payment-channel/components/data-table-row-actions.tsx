@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { paymentChannelSchema } from '../schema'
 import { usePaymentChannel } from './payment-channel-provider'
-import { DollarSign, Edit, Power, PowerOff } from 'lucide-react'
+import { DollarSign, Edit, Power, PowerOff, List } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updatePaymentChannelStatus } from '@/api/config'
 import { toast } from 'sonner'
@@ -64,7 +64,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             <DotsHorizontalIcon className='h-4 w-4' />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align='end' className='w-[140px]'>
+        <DropdownMenuContent align='end'>
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(channel)
@@ -92,14 +92,23 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-          onClick={() => {
-            setCurrentRow(channel)
-            setOpen('rate')
-          }}
-        >
-          {t('config.paymentChannel.rateConfig')}
-        <DollarSign className='ml-auto h-4 w-4' />
-        </DropdownMenuItem>
+            onClick={() => {
+              setCurrentRow(channel)
+              setOpen('rate')
+            }}
+          >
+            {t('config.paymentChannel.rateConfig')}
+            <DollarSign className='ml-auto h-4 w-4' />
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setCurrentRow(channel)
+              setOpen('subChannel')
+            }}
+          >
+            {t('config.paymentChannel.manageSubChannels')}
+            <List className='ml-auto h-4 w-4' />
+          </DropdownMenuItem>
           {/* <DropdownMenuItem
             onClick={() => setShowDeleteDialog(true)}
             className='text-destructive'

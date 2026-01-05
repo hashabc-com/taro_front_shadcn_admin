@@ -55,6 +55,28 @@ export const updatePaymentChannelStatus = (data: {
   channelStatus: number
 }) => http.post('/admin/paymentChannel/updateStatus', data,{autoAddCountry:false})
 
+// ======================== 子渠道配置 API ========================
+
+// 获取子渠道列表
+export const getSubChannelList = (params: {
+  channelCode: string
+}) => http.get('/admin/paymentChannel/getSubChannelList', params, {autoAddCountry:false})
+
+// 添加子渠道
+export const addSubChannel = (data: {
+  channelCode: string
+  subChannelCode: string
+  subChannelName: string
+  subChannelStatus: number
+  type: number
+  country?: string
+}) => http.post('/admin/paymentChannel/addSubChannel', data, {autoAddCountry:false})
+
+// 删除子渠道
+export const deleteSubChannel = (params: {
+  id: number
+}) => http.post('/admin/paymentChannel/delSubChannel', null, { params, autoAddCountry:false })
+
 // ======================== 商户渠道配置 API (旧) ========================
 
 // 获取支付渠道列表
