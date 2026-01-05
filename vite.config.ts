@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -16,6 +17,14 @@ export default defineConfig(({ mode }) => {
       }),
       react(),
       tailwindcss(),
+      process.env.ANALYZE
+        ? visualizer({
+            open: true,
+            gzipSize: true,
+            brotliSize: true,
+            filename: 'dist/stats.html',
+          })
+        : undefined,
     ],
     server: {
       host: true,
@@ -32,5 +41,8 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    // build:{
+    //   sourcemap: true,
+    // }
   }
 })
