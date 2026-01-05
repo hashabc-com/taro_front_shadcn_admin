@@ -33,6 +33,10 @@ export const getDailySummaryColumns = (
       header: t('business.dailySummary.collectionFee')
     },
     {
+      accessorKey: 'inAmountProfit',
+      header: t('business.dailySummary.inAmountProfit')
+    },
+    {
       accessorKey: 'outBills',
       header: t('business.dailySummary.payoutCount')
     },
@@ -43,6 +47,10 @@ export const getDailySummaryColumns = (
     {
       accessorKey: 'outAmountService',
       header: t('business.dailySummary.payoutFee')
+    },
+    {
+      accessorKey: 'outAmountProfit',
+      header: t('business.dailySummary.outAmountProfit')
     },
   ]
 }

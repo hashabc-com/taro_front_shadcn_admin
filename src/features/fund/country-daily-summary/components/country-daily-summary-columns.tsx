@@ -32,6 +32,13 @@ export const getCountryDailySummaryColumns = (
       }
     },
     {
+      accessorKey: 'inAmountProfit',
+      header: t('business.dailySummary.inAmountProfit'),
+      meta:{
+        className: 'text-center'
+      }
+    },
+    {
       accessorKey: 'outAmount',
       header: t('fund.countryDailySummary.paymentAmount'),
       meta:{
@@ -41,6 +48,13 @@ export const getCountryDailySummaryColumns = (
     {
       accessorKey: 'outAmountService',
       header: t('fund.countryDailySummary.paymentFee'),
+      meta:{
+        className: 'text-center'
+      }
+    },
+    {
+      accessorKey: 'outAmountProfit',
+      header: t('business.dailySummary.outAmountProfit'),
       meta:{
         className: 'text-center'
       }

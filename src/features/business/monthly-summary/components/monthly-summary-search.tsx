@@ -53,6 +53,7 @@ export function MonthlySummarySearch<TData>({
           ? format(monthRange.to, 'yyyy-MM')
           : undefined,
         pageNum: 1,
+        refresh: Date.now(),
       }),
     })
   }

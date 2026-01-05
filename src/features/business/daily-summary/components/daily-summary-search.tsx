@@ -49,6 +49,7 @@ export function DailySummarySearch<TData>({
           ? format(dateRange.to, 'yyyy-MM-dd')
           : undefined,
         pageNum: 1,
+        refresh: Date.now(),
       }),
     })
   }
