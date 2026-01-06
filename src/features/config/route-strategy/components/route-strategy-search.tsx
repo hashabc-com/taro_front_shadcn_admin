@@ -1,19 +1,19 @@
 import { type Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
-import { Plus, Settings,RefreshCcw } from 'lucide-react'
-import { usePaymentChannel } from './payment-channel-provider'
+import { Plus, RefreshCcw } from 'lucide-react'
+import { useRouteStrategy } from './route-strategy-provider'
 import { getRouteApi } from '@tanstack/react-router'
-import { type PaymentChannel } from '../schema'
+import { type RouteStrategy } from '../schema'
 import { useLanguage } from '@/context/language-provider'
 
-const route = getRouteApi('/_authenticated/config/merchant-channel')
+const route = getRouteApi('/_authenticated/config/route-strategy')
 
-type PaymentChannelSearchProps = {
-  table: Table<PaymentChannel>
+type RouteStrategySearchProps = {
+  table: Table<RouteStrategy>
 }
 
-export function PaymentChannelSearch(_props: PaymentChannelSearchProps) {
-  const { setOpen } = usePaymentChannel()
+export function RouteStrategySearch(_props: RouteStrategySearchProps) {
+  const { setOpen } = useRouteStrategy()
   const navigate = route.useNavigate()
   const { t } = useLanguage()
 
@@ -43,15 +43,7 @@ export function PaymentChannelSearch(_props: PaymentChannelSearchProps) {
           onClick={() => setOpen('create')}
         >
           <Plus className='mr-2 h-4 w-4' />
-          {t('config.paymentChannel.addMerchantConfig')}
-        </Button>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => setOpen('config')}
-        >
-          <Settings className='mr-2 h-4 w-4' />
-          {t('config.paymentChannel.oneClickConfig')}
+          {t('config.routeStrategy.addRouteConfig')}
         </Button>
       </div>
     </div>

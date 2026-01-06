@@ -18,23 +18,23 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { type PaymentChannel } from '../schema'
-import { getPaymentChannelColumns } from './payment-channel-columns'
-import { PaymentChannelSearch } from './payment-channel-search'
+import { type RouteStrategy } from '../schema'
+import { getRouteStrategyColumns } from './route-strategy-columns'
+import { RouteStrategySearch } from './route-strategy-search'
 import { useLanguage } from '@/context/language-provider'
 
 type DataTableProps = {
-  data: PaymentChannel[]
+  data: RouteStrategy[]
   totalRecord?: number
   isLoading: boolean
 }
 
-export function PaymentChannelTable({ data, isLoading, totalRecord }: DataTableProps) {
+export function RouteStrategyTable({ data, isLoading, totalRecord }: DataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const router = useRouter()
   const navigate = useNavigate()
   const { lang } = useLanguage()
-  const columns = useMemo(() => getPaymentChannelColumns(lang), [lang])
+  const columns = useMemo(() => getRouteStrategyColumns(lang), [lang])
 
   const { pagination, onPaginationChange, ensurePageInRange } = useTableUrlState({
     search: router.latestLocation.search as never,
@@ -67,7 +67,7 @@ export function PaymentChannelTable({ data, isLoading, totalRecord }: DataTableP
 
   return (
     <div className='flex flex-1 flex-col gap-4'>
-      <PaymentChannelSearch table={table} />
+      <RouteStrategySearch table={table} />
       {isLoading ? (
         <div className='overflow-hidden rounded-md border'>
           <div className='space-y-3 p-4'>

@@ -128,3 +128,44 @@ export const configChannel = (data: {
 }) => http.post('/admin/deplop/v1/channel', data,{
  headers: { 'Content-Type': 'multipart/form-data' }
 })
+
+// ======================== 路由策略配置 API ========================
+
+// 获取路由策略列表
+export const getRouteStrategyList = (params: {
+  pageNum?: number
+  pageSize?: number
+  appid?: string | null
+}) => http.get('/admin/paymentRouteConfig/list', params)
+
+// 添加路由策略配置
+export const addRouteStrategy = (data: {
+  appid: string
+  paymentType: string
+  productCode: string
+  routeStrategy: string
+  country: string
+  paymentRouteChannelWeightList: Array<{
+    paymentPlatform: string
+    weight?: number
+  }>
+}) => http.post('/admin/paymentRouteConfig/saveOrUpdate', data)
+
+// 根据国家和支付类型获取支付方式
+export const getPaymentMethods = (params: {
+  country: string
+  type: string
+}) => http.get('/admin/paymentRouteConfig/selectBySubChannelCodeGroup', params, { autoAddCountry: false })
+
+// 根据国家、类型和支付方式获取支付渠道列表
+export const getPaymentChannelsByMethod = (params: {
+  country: string
+  type: string
+  subchannelcode: string
+}) => http.get('/admin/paymentRouteConfig/selectByChannelCode', params, { autoAddCountry: false })
+
+// 更新路由策略状态
+export const updateRouteStrategyStatus = (data: {
+  id: number
+  status: string
+}) => http.post('/admin/paymentRouteConfig/update', data,{autoAddCountry:false})

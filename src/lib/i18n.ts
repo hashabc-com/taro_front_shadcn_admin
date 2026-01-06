@@ -228,7 +228,7 @@ export const translations = {
       businessDailySummary: '商务日汇总',
       businessMonthlySummary: '商务月汇总',
       configManagement: '配置管理',
-      merchantChannel: '商户通道配置',
+      routeStrategy: '路由策略配置',
       paymentChannel: '支付通道配置',
       riskControlRule: '风控规则配置',
       logManagement: '日志管理',
@@ -768,8 +768,26 @@ export const translations = {
     },
     // 配置管理
     config: {
-      merchantChannel: {
-
+      routeStrategy: {
+        title: '路由策略配置',
+        merchantName: '商户名称',
+        type: '类型',
+        payout: '代付',
+        collection: '代收',
+        paymentMethod: '支付方式',
+        routeStrategy: '路由策略',
+        weightRoundRobin: '权重轮询',
+        costPriority: '成本优先',
+        paymentChannels: '支付渠道',
+        weight: '权重',
+        addRouteConfig: '添加路由策略配置',
+        editRouteConfig: '编辑路由策略配置',
+        selectPaymentMethodFirst: '请先选择支付方式',
+        validation: {
+          selectMerchant: '请选择商户',
+          selectPaymentMethod: '请选择支付方式',
+          selectAtLeastOneChannel: '请至少选择一个支付渠道',
+        },
       },
       paymentChannel: {
         title: '支付通道配置',
@@ -1385,7 +1403,8 @@ export const translations = {
       businessDailySummary: 'Business Daily Summary',
       businessMonthlySummary: 'Business Monthly Summary',
       configManagement: 'Config Management',
-      paymentChannel: 'Merchant Channel Config',
+      routeStrategy: 'Route Strategy Config',
+      paymentChannel: 'Payment Channel Config',
       riskControlRule: 'Risk Control Rule Config',
       logManagement: 'Log Management',
       messageRecord: 'Message Record',
@@ -1905,6 +1924,27 @@ export const translations = {
     },
     // Config Management
     config: {
+      routeStrategy: {
+        title: 'Route Strategy Config',
+        merchantName: 'Merchant Name',
+        type: 'Type',
+        payout: 'Payout',
+        collection: 'Collection',
+        paymentMethod: 'Payment Method',
+        routeStrategy: 'Route Strategy',
+        weightRoundRobin: 'Weight Round Robin',
+        costPriority: 'Cost Priority',
+        paymentChannels: 'Payment Channels',
+        weight: 'Weight',
+        addRouteConfig: 'Add Route Strategy',
+        editRouteConfig: 'Edit Route Strategy',
+        selectPaymentMethodFirst: 'Please select payment method first',
+        validation: {
+          selectMerchant: 'Please select merchant',
+          selectPaymentMethod: 'Please select payment method',
+          selectAtLeastOneChannel: 'Please select at least one payment channel',
+        },
+      },
       paymentChannel: {
         title: 'Payment Channel Config',
         channelCode: 'Channel Code',

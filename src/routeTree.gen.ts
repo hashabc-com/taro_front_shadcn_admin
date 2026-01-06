@@ -46,9 +46,9 @@ import { Route as AuthenticatedFundMerchantDailySummaryRouteImport } from './rou
 import { Route as AuthenticatedFundCountryDailySummaryRouteImport } from './routes/_authenticated/fund/country-daily-summary'
 import { Route as AuthenticatedFundAccountSettlementRouteImport } from './routes/_authenticated/fund/account-settlement'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedConfigRouteStrategyRouteImport } from './routes/_authenticated/config/route-strategy'
 import { Route as AuthenticatedConfigRiskControlRuleRouteImport } from './routes/_authenticated/config/risk-control-rule'
 import { Route as AuthenticatedConfigPaymentChannelRouteImport } from './routes/_authenticated/config/payment-channel'
-import { Route as AuthenticatedConfigMerchantChannelRouteImport } from './routes/_authenticated/config/merchant-channel'
 import { Route as AuthenticatedBusinessMonthlySummaryRouteImport } from './routes/_authenticated/business/monthly-summary'
 import { Route as AuthenticatedBusinessMerchantBindRouteImport } from './routes/_authenticated/business/merchant-bind'
 import { Route as AuthenticatedBusinessDailySummaryRouteImport } from './routes/_authenticated/business/daily-summary'
@@ -263,6 +263,12 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedConfigRouteStrategyRoute =
+  AuthenticatedConfigRouteStrategyRouteImport.update({
+    id: '/config/route-strategy',
+    path: '/config/route-strategy',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedConfigRiskControlRuleRoute =
   AuthenticatedConfigRiskControlRuleRouteImport.update({
     id: '/config/risk-control-rule',
@@ -273,12 +279,6 @@ const AuthenticatedConfigPaymentChannelRoute =
   AuthenticatedConfigPaymentChannelRouteImport.update({
     id: '/config/payment-channel',
     path: '/config/payment-channel',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedConfigMerchantChannelRoute =
-  AuthenticatedConfigMerchantChannelRouteImport.update({
-    id: '/config/merchant-channel',
-    path: '/config/merchant-channel',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedBusinessMonthlySummaryRoute =
@@ -317,9 +317,9 @@ export interface FileRoutesByFullPath {
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
-  '/config/merchant-channel': typeof AuthenticatedConfigMerchantChannelRoute
   '/config/payment-channel': typeof AuthenticatedConfigPaymentChannelRoute
   '/config/risk-control-rule': typeof AuthenticatedConfigRiskControlRuleRoute
+  '/config/route-strategy': typeof AuthenticatedConfigRouteStrategyRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
   '/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
@@ -360,9 +360,9 @@ export interface FileRoutesByTo {
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
-  '/config/merchant-channel': typeof AuthenticatedConfigMerchantChannelRoute
   '/config/payment-channel': typeof AuthenticatedConfigPaymentChannelRoute
   '/config/risk-control-rule': typeof AuthenticatedConfigRiskControlRuleRoute
+  '/config/route-strategy': typeof AuthenticatedConfigRouteStrategyRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
   '/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
@@ -406,9 +406,9 @@ export interface FileRoutesById {
   '/_authenticated/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/_authenticated/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/_authenticated/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
-  '/_authenticated/config/merchant-channel': typeof AuthenticatedConfigMerchantChannelRoute
   '/_authenticated/config/payment-channel': typeof AuthenticatedConfigPaymentChannelRoute
   '/_authenticated/config/risk-control-rule': typeof AuthenticatedConfigRiskControlRuleRoute
+  '/_authenticated/config/route-strategy': typeof AuthenticatedConfigRouteStrategyRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/fund/account-settlement': typeof AuthenticatedFundAccountSettlementRoute
   '/_authenticated/fund/country-daily-summary': typeof AuthenticatedFundCountryDailySummaryRoute
@@ -452,9 +452,9 @@ export interface FileRouteTypes {
     | '/business/daily-summary'
     | '/business/merchant-bind'
     | '/business/monthly-summary'
-    | '/config/merchant-channel'
     | '/config/payment-channel'
     | '/config/risk-control-rule'
+    | '/config/route-strategy'
     | '/errors/$error'
     | '/fund/account-settlement'
     | '/fund/country-daily-summary'
@@ -495,9 +495,9 @@ export interface FileRouteTypes {
     | '/business/daily-summary'
     | '/business/merchant-bind'
     | '/business/monthly-summary'
-    | '/config/merchant-channel'
     | '/config/payment-channel'
     | '/config/risk-control-rule'
+    | '/config/route-strategy'
     | '/errors/$error'
     | '/fund/account-settlement'
     | '/fund/country-daily-summary'
@@ -540,9 +540,9 @@ export interface FileRouteTypes {
     | '/_authenticated/business/daily-summary'
     | '/_authenticated/business/merchant-bind'
     | '/_authenticated/business/monthly-summary'
-    | '/_authenticated/config/merchant-channel'
     | '/_authenticated/config/payment-channel'
     | '/_authenticated/config/risk-control-rule'
+    | '/_authenticated/config/route-strategy'
     | '/_authenticated/errors/$error'
     | '/_authenticated/fund/account-settlement'
     | '/_authenticated/fund/country-daily-summary'
@@ -842,6 +842,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/config/route-strategy': {
+      id: '/_authenticated/config/route-strategy'
+      path: '/config/route-strategy'
+      fullPath: '/config/route-strategy'
+      preLoaderRoute: typeof AuthenticatedConfigRouteStrategyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/config/risk-control-rule': {
       id: '/_authenticated/config/risk-control-rule'
       path: '/config/risk-control-rule'
@@ -854,13 +861,6 @@ declare module '@tanstack/react-router' {
       path: '/config/payment-channel'
       fullPath: '/config/payment-channel'
       preLoaderRoute: typeof AuthenticatedConfigPaymentChannelRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/config/merchant-channel': {
-      id: '/_authenticated/config/merchant-channel'
-      path: '/config/merchant-channel'
-      fullPath: '/config/merchant-channel'
-      preLoaderRoute: typeof AuthenticatedConfigMerchantChannelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/business/monthly-summary': {
@@ -918,9 +918,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBusinessDailySummaryRoute: typeof AuthenticatedBusinessDailySummaryRoute
   AuthenticatedBusinessMerchantBindRoute: typeof AuthenticatedBusinessMerchantBindRoute
   AuthenticatedBusinessMonthlySummaryRoute: typeof AuthenticatedBusinessMonthlySummaryRoute
-  AuthenticatedConfigMerchantChannelRoute: typeof AuthenticatedConfigMerchantChannelRoute
   AuthenticatedConfigPaymentChannelRoute: typeof AuthenticatedConfigPaymentChannelRoute
   AuthenticatedConfigRiskControlRuleRoute: typeof AuthenticatedConfigRiskControlRuleRoute
+  AuthenticatedConfigRouteStrategyRoute: typeof AuthenticatedConfigRouteStrategyRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedFundAccountSettlementRoute: typeof AuthenticatedFundAccountSettlementRoute
   AuthenticatedFundCountryDailySummaryRoute: typeof AuthenticatedFundCountryDailySummaryRoute
@@ -952,12 +952,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedBusinessMerchantBindRoute,
   AuthenticatedBusinessMonthlySummaryRoute:
     AuthenticatedBusinessMonthlySummaryRoute,
-  AuthenticatedConfigMerchantChannelRoute:
-    AuthenticatedConfigMerchantChannelRoute,
   AuthenticatedConfigPaymentChannelRoute:
     AuthenticatedConfigPaymentChannelRoute,
   AuthenticatedConfigRiskControlRuleRoute:
     AuthenticatedConfigRiskControlRuleRoute,
+  AuthenticatedConfigRouteStrategyRoute: AuthenticatedConfigRouteStrategyRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedFundAccountSettlementRoute:
     AuthenticatedFundAccountSettlementRoute,
