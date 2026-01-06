@@ -1,7 +1,6 @@
-```chatagent
 ---
 description: '分析 Vite 打包结果，识别大文件和优化机会'
-tools: ['read', 'search', 'web/fetch']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'playwright/*', 'agent', 'todo']
 ---
 # Bundle Analyzer Agent
 
