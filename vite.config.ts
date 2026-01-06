@@ -63,9 +63,9 @@ export default defineConfig(({ mode }) => {
             }
             
             // 图表库
-            if (id.includes('recharts')) {
-              return 'vendor-charts'
-            }
+            // if (id.includes('recharts')) {
+            //   return 'vendor-charts'
+            // }
           }
         }
       }
