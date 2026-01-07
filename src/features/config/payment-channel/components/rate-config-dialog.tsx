@@ -55,7 +55,7 @@ export function RateConfigDialog() {
     setIsLoading(true)
     try {
       // 获取渠道列表
-      const channelRes = await getChannelTypeList(selectedCountry?.country || '', currentRow.channelCode)
+      const channelRes = await getChannelTypeList(currentRow?.country || '', currentRow.channelCode)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const channelData = (channelRes as any)?.result || channelRes
       const payinChannel = channelData?.payinChannel || []
