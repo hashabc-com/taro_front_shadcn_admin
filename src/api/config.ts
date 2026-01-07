@@ -164,6 +164,13 @@ export const getPaymentChannelsByMethod = (params: {
   subchannelcode: string
 }) => http.get('/admin/paymentRouteConfig/selectByChannelCode', params, { autoAddCountry: false })
 
+// 获取路由策略权重详情
+export const getRouteStrategyWeightDetail = (params: {
+  country: string
+  appid: string
+  productCode: string
+}) => http.get('/admin/paymentRouteConfig/weightList', params, { autoAddCountry: false })
+
 // 更新路由策略状态
 export const updateRouteStrategyStatus = (data: {
   id: number

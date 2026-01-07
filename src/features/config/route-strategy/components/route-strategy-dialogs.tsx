@@ -37,6 +37,7 @@ import {
   addRouteStrategy,
   getPaymentMethods,
   getPaymentChannelsByMethod,
+  getRouteStrategyWeightDetail,
 } from '@/api/config'
 import { type PaymentChannelOption } from '../schema'
 import { useCountryStore } from '@/stores'
@@ -114,6 +115,18 @@ export function RouteStrategyMutateDialog() {
     enabled: !!selectedCountry && !!paymentType && !!productCode,
   })
 
+  // 获取路由策略权重详情（仅在编辑权重轮询策略时调用）
+  const appid = form.watch('appid')
+  const { data: weightDetailData } = useQuery({
+    queryKey: ['route-strategy-weight-detail', selectedCountry?.code, appid, productCode],
+    queryFn: () => getRouteStrategyWeightDetail({ 
+      country: selectedCountry!.code, 
+      appid: appid,
+      productCode: productCode 
+    }),
+    enabled: isEdit && !!selectedCountry && !!appid && !!productCode && routeStrategy === '1',
+  })
+
   const merchants = (merchantData?.result || []) as Merchant[]
   const paymentMethods = (paymentMethodsData?.result || []) as string[]
 
@@ -121,19 +134,28 @@ export function RouteStrategyMutateDialog() {
   useEffect(() => {
     if (channelsData?.result) {
       setAvailableChannels(channelsData.result as PaymentChannelOption[])
-      
-      // 编辑模式下，当渠道列表加载完成后回显已选渠道
-      if (isEdit && currentRow?.paymentRouteChannelWeightList) {
-        const channelList = currentRow.paymentRouteChannelWeightList.map(item => ({
-          paymentPlatform: item.paymentPlatform,
-          weight: item.weight,
-        }))
-        form.setValue('channels', channelList as RouteStrategyFormValues['channels'])
-      }
     } else {
       setAvailableChannels([])
     }
-  }, [channelsData, isEdit, currentRow, form])
+  }, [channelsData])
+
+  // 当获取到权重详情数据时回显渠道和权重（仅在编辑权重轮询策略时）
+  useEffect(() => {
+    if (isEdit && routeStrategy === '1' && weightDetailData?.result?.paymentRouteChannelWeightList) {
+      const channelList = weightDetailData.result.paymentRouteChannelWeightList.map((item: { paymentPlatform: string; weight: number }) => ({
+        paymentPlatform: item.paymentPlatform,
+        weight: item.weight,
+      }))
+      form.setValue('channels', channelList as RouteStrategyFormValues['channels'])
+    } else if (isEdit && routeStrategy !== '1' && currentRow?.paymentRouteChannelWeightList) {
+      // 非权重轮询策略，使用 currentRow 中的数据
+      const channelList = currentRow.paymentRouteChannelWeightList.map(item => ({
+        paymentPlatform: item.paymentPlatform,
+        weight: item.weight,
+      }))
+      form.setValue('channels', channelList as RouteStrategyFormValues['channels'])
+    }
+  }, [weightDetailData, isEdit, routeStrategy, currentRow, form])
 
   // 当支付方式或类型变化时，清空已选渠道
   useEffect(() => {
