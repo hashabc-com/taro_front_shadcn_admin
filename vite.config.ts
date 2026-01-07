@@ -41,6 +41,9 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    esbuild: {
+    drop: mode === 'production' ? ['console', 'debugger'] : [],
+  },
     build: {
       rollupOptions: {
         output: {
@@ -49,26 +52,23 @@ export default defineConfig(({ mode }) => {
             if (id.includes('react') || id.includes('react-dom')) {
               return 'vendor-react'
             }
-            
+
             // TanStack 生态
-            if (id.includes('@tanstack/react-router') || 
-                id.includes('@tanstack/react-query') ||
-                id.includes('@tanstack/react-table')) {
+            if (
+              id.includes('@tanstack/react-router') ||
+              id.includes('@tanstack/react-query') ||
+              id.includes('@tanstack/react-table')
+            ) {
               return 'vendor-tanstack'
             }
-            
+
             // Radix UI 组件
             if (id.includes('@radix-ui/react-')) {
               return 'vendor-ui'
             }
-            
-            // 图表库
-            // if (id.includes('recharts')) {
-            //   return 'vendor-charts'
-            // }
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    },
   }
 })
