@@ -359,6 +359,7 @@ export function ChannelMutateDialog() {
                         <SelectTrigger
                           className='h-9 w-full sm:w-[160px]'
                           clearable={false}
+                          disabled={open == 'edit'}
                         >
                           <SelectValue placeholder='选择国家'>
                             {field.value && (
@@ -414,7 +415,7 @@ export function ChannelMutateDialog() {
                       value={String(field.value)}
                     >
                       <FormControl>
-                        <SelectTrigger clearable={false} className='sm:w-[140px]'>
+                        <SelectTrigger clearable={false} className='sm:w-[140px]' disabled={open == 'edit'}>
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
