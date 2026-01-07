@@ -1,3 +1,6 @@
+---
+applyTo: 'taro_front_shadcn_admin/**'
+---
 # Taropay Admin Copilot Instructions
 
 ## Project Overview
