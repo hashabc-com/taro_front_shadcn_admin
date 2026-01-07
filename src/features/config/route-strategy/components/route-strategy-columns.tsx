@@ -1,4 +1,4 @@
-import { type ColumnDef } from '@tantml:react-table'
+import { type ColumnDef } from '@tanstack/react-table'
 import { getTranslation, type Language } from '@/lib/i18n'
 import { Badge } from '@/components/ui/badge'
 import { type RouteStrategy } from '../schema'
