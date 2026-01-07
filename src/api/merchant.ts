@@ -63,7 +63,7 @@ export const updateMerchantRate = (data: unknown[]) =>
 
 // 获取渠道类型列表
 export const getChannelTypeList = (country: string,channelCode?: string) =>
-  http.get('/admin/user/v1/getChannelTypeList', { country, channelCode })
+  http.get('/admin/user/v1/getChannelTypeList', { country, channelCode },{autoAddCountry:false})
 
 // 获取自动登录token
 export const getAutoLoginToken = (merchantId: string, googleCode: string) =>
