@@ -10,7 +10,7 @@ export const getRouteStrategyColumns = (
   const t = (key: string) => getTranslation(language, key)
   return [
     {
-      accessorKey: 'appid',
+      accessorKey: 'customerName',
       header: t('config.routeStrategy.merchantName'),
     },
     {
