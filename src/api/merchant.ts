@@ -62,7 +62,7 @@ export const updateMerchantRate = (data: unknown[]) =>
   http.post('/admin/customerRate/update', data,{autoAddMerchantId:false,autoAddCountry:false})
 
 // 获取渠道类型列表
-export const getChannelTypeList = (country: string,channelCode: string) =>
+export const getChannelTypeList = (country: string,channelCode?: string) =>
   http.get('/admin/user/v1/getChannelTypeList', { country, channelCode })
 
 // 获取自动登录token
