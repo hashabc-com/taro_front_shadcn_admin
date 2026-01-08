@@ -140,7 +140,7 @@ export const getRouteStrategyList = (params: {
 
 // 添加路由策略配置
 export const addRouteStrategy = (data: {
-  appid: string
+  appid?: string
   paymentType: string
   productCode: string
   routeStrategy: string

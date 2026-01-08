@@ -46,7 +46,7 @@ import { getTranslation } from '@/lib/i18n'
 
 // 添加路由策略表单 Schema
 const createRouteStrategyFormSchema = (t: (key: string) => string) => z.object({
-  appid: z.string().min(1, t('config.routeStrategy.validation.selectMerchant')),
+  appid: z.string().optional(),
   paymentType: z.string(),
   productCode: z.string().min(1, t('config.routeStrategy.validation.selectPaymentMethod')),
   routeStrategy: z.string(),
@@ -121,7 +121,7 @@ export function RouteStrategyMutateDialog() {
     queryKey: ['route-strategy-weight-detail', selectedCountry?.code, appid, productCode],
     queryFn: () => getRouteStrategyWeightDetail({ 
       country: selectedCountry!.code, 
-      appid: appid,
+      appid: appid || '',
       productCode: productCode 
     }),
     enabled: isEdit && !!selectedCountry && !!appid && !!productCode && routeStrategy === '1',
@@ -264,14 +264,19 @@ export function RouteStrategyMutateDialog() {
               name='appid'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('config.routeStrategy.merchantName')}</FormLabel>
+                  <div className='space-y-1'>
+                    <FormLabel>{t('config.routeStrategy.merchantName')}</FormLabel>
+                    <p className='text-xs text-muted-foreground'>
+                      商户不选则该策略默认所有商户生效
+                    </p>
+                  </div>
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}
                     disabled={isEdit}
                   >
                     <FormControl>
-                      <SelectTrigger clearable={false}>
+                      <SelectTrigger>
                         <SelectValue placeholder={t('common.selectMerchant')} />
                       </SelectTrigger>
                     </FormControl>

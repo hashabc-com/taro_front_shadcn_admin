@@ -252,8 +252,8 @@ export function RateConfigDialog() {
               </div>
               <div className='space-y-3'>
                 {collectionRates.map((item, index) => (
-                  <div key={item.payCode} className='flex items-center gap-2'>
-                    <Label className='w-[180px] text-sm'>{item.label}:</Label>
+                  <div key={item.payCode} className='flex items-start gap-2'>
+                    <Label className='w-[180px] min-w-[180px] text-sm inline-block break-all leading-9'>{item.label}:</Label>
                     <Input
                       type='number'
                       step='0.001'
@@ -297,8 +297,8 @@ export function RateConfigDialog() {
               </div>
               <div className='space-y-3'>
                 {payoutRates.map((item, index) => (
-                  <div key={item.payCode} className='flex items-center gap-2'>
-                    <Label className='w-[180px] text-sm'>{item.label}:</Label>
+                  <div key={item.payCode} className='flex items-start gap-2'>
+                    <Label className='w-[180px] min-w-[180px] text-sm inline-block break-all leading-9'>{item.label}:</Label>
                     <Input
                       type='number'
                       step='0.001'
