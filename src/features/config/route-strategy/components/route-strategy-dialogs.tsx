@@ -106,7 +106,7 @@ export function RouteStrategyMutateDialog() {
   })
   const paymentMethods = (paymentMethodsData?.result || []) as string[]
 
-  // 3. 获取支付渠道列表（新增模式和非权重轮询编辑模式）
+  // 3. 获取支付渠道列表（仅新增模式）
   const { data: channelsData } = useQuery({
     queryKey: ['payment-channels-by-method', selectedCountry?.code, paymentType, productCode],
     queryFn: () => getPaymentChannelsByMethod({ 
@@ -114,10 +114,10 @@ export function RouteStrategyMutateDialog() {
       type: paymentType,
       subchannelcode: productCode 
     }),
-    enabled: !!selectedCountry && !!paymentType && !!productCode && isOpen && (!isEdit || routeStrategy !== '1'),
+    enabled: !!selectedCountry && !!paymentType && !!productCode && isOpen && !isEdit,
   })
 
-  // 4. 获取权重轮询渠道列表（编辑权重轮询模式）
+  // 4. 获取权重轮询渠道列表（编辑模式下两种策略都使用）
   const { data: weightDetailData } = useQuery({
     queryKey: ['route-strategy-weight-detail', selectedCountry?.code, currentRow?.appid, productCode, paymentType],
     queryFn: () => getRouteStrategyWeightDetail({ 
@@ -126,11 +126,11 @@ export function RouteStrategyMutateDialog() {
       productCode: productCode, 
       paymentType: paymentType
     }),
-    enabled: isEdit && !!selectedCountry && !!productCode && routeStrategy === '1' && isOpen,
+    enabled: isEdit && !!selectedCountry && !!productCode && isOpen,
   })
 
   // 获取当前显示的渠道列表
-  const availableChannels: Array<{ id: number; channelCode: string }> = isEdit && routeStrategy === '1'
+  const availableChannels: Array<{ id: number; channelCode: string }> = isEdit
     ? (weightDetailData?.result?.paymentRouteChannelWeightList || []).map((item: { paymentPlatform: string; weight: number; id?: number; channelCode?: string }) => ({
         id: item.id || 0,
         channelCode: item.paymentPlatform,
@@ -174,9 +174,16 @@ export function RouteStrategyMutateDialog() {
     }
   }, [paymentType, productCode, open, form])
 
+  // 当路由策略变化时，清空已选渠道（编辑模式）- 使两种策略的选择状态独立
+  // useEffect(() => {
+  //   if (isEdit && productCode) {
+  //     form.setValue('channels', [])
+  //   }
+  // }, [routeStrategy, isEdit, form, productCode])
+
   // 当权重详情数据返回时，更新表单的渠道选择和权重
   useEffect(() => {
-    if (isEdit && routeStrategy === '1' && weightDetailData?.result?.paymentRouteChannelWeightList) {
+    if (isEdit && weightDetailData?.result?.paymentRouteChannelWeightList) {
       const channelList = weightDetailData.result.paymentRouteChannelWeightList.map((item: { paymentPlatform: string; weight: number,id?: number }) => ({
         paymentPlatform: item.paymentPlatform,
         weight: item.weight,
@@ -184,7 +191,7 @@ export function RouteStrategyMutateDialog() {
       }))
       form.setValue('channels', channelList)
     }
-  }, [weightDetailData, isEdit, routeStrategy, form])
+  }, [weightDetailData, isEdit, form])
 
   const mutation = useMutation({
     mutationFn: (data: RouteStrategyFormValues) => {
@@ -407,7 +414,7 @@ export function RouteStrategyMutateDialog() {
                             <Checkbox
                               checked={isChecked}
                               onCheckedChange={(checked) => 
-                                handleChannelToggle(channel.channelCode, !!checked, isEdit && routeStrategy === '1' ? channel.id : undefined)
+                                handleChannelToggle(channel.channelCode, !!checked, isEdit ? channel.id : undefined)
                               }
                               id={`channel-${channel.id}`}
                             />
