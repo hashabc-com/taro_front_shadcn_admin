@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -66,8 +66,7 @@ export function RouteStrategyMutateDialog() {
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
   const isEdit = open === 'edit'
-  
-  const [availableChannels, setAvailableChannels] = useState<PaymentChannelOption[]>([])
+  const isOpen = open === 'create' || open === 'edit'
   
   const routeStrategyFormSchema = createRouteStrategyFormSchema((key: string) => getTranslation(lang, key))
 
@@ -78,7 +77,7 @@ export function RouteStrategyMutateDialog() {
       paymentType: '2',
       productCode: '',
       routeStrategy: '1',
-      channels: [] as RouteStrategyFormValues['channels'],
+      channels: [],
     },
   })
 
@@ -87,24 +86,26 @@ export function RouteStrategyMutateDialog() {
   const routeStrategy = form.watch('routeStrategy')
   const channels = form.watch('channels')
 
-  // 获取商户列表
+  // 1. 获取商户列表
   const { data: merchantData } = useQuery({
     queryKey: ['merchants', selectedCountry?.code, selectedMerchant?.appid],
     queryFn: getMerchantList,
-    enabled: !!selectedCountry
+    enabled: !!selectedCountry && isOpen
   })
+  const merchants = (merchantData?.result || []) as Merchant[]
 
-  // 获取支付方式列表（根据国家和类型）
+  // 2. 获取支付方式列表（根据类型）
   const { data: paymentMethodsData } = useQuery({
     queryKey: ['payment-methods', selectedCountry?.code, paymentType],
     queryFn: () => getPaymentMethods({ 
       country: selectedCountry!.code, 
       type: paymentType 
     }),
-    enabled: !!selectedCountry && !!paymentType,
+    enabled: !!selectedCountry && !!paymentType && isOpen,
   })
+  const paymentMethods = (paymentMethodsData?.result || []) as string[]
 
-  // 获取支付渠道列表（根据国家、类型和支付方式）
+  // 3. 获取支付渠道列表（新增模式和非权重轮询编辑模式）
   const { data: channelsData } = useQuery({
     queryKey: ['payment-channels-by-method', selectedCountry?.code, paymentType, productCode],
     queryFn: () => getPaymentChannelsByMethod({ 
@@ -112,85 +113,80 @@ export function RouteStrategyMutateDialog() {
       type: paymentType,
       subchannelcode: productCode 
     }),
-    enabled: !!selectedCountry && !!paymentType && !!productCode,
+    enabled: !!selectedCountry && !!paymentType && !!productCode && isOpen && (!isEdit || routeStrategy !== '1'),
   })
 
-  // 获取路由策略权重详情（仅在编辑权重轮询策略时调用）
-  const appid = form.watch('appid')
+  // 4. 获取权重轮询渠道列表（编辑权重轮询模式）
   const { data: weightDetailData } = useQuery({
-    queryKey: ['route-strategy-weight-detail', selectedCountry?.code, appid, productCode,paymentType],
+    queryKey: ['route-strategy-weight-detail', selectedCountry?.code, currentRow?.appid, productCode, paymentType],
     queryFn: () => getRouteStrategyWeightDetail({ 
       country: selectedCountry!.code, 
-      appid: appid || '',
+      appid: currentRow?.appid || '',
       productCode: productCode, 
       paymentType: paymentType
     }),
-    enabled: isEdit && !!selectedCountry && !!productCode && routeStrategy === '1',
+    enabled: isEdit && !!selectedCountry && !!productCode && routeStrategy === '1' && isOpen,
   })
 
-  const merchants = (merchantData?.result || []) as Merchant[]
-  const paymentMethods = (paymentMethodsData?.result || []) as string[]
-
-  // 当获取到渠道数据时更新可用渠道列表
-  useEffect(() => {
-    if (channelsData?.result) {
-      setAvailableChannels(channelsData.result as PaymentChannelOption[])
-    } else {
-      setAvailableChannels([])
-    }
-  }, [channelsData])
-
-  // 当获取到权重详情数据时回显渠道和权重（仅在编辑权重轮询策略时）
-  useEffect(() => {
-    if (isEdit && routeStrategy === '1' && weightDetailData?.result?.paymentRouteChannelWeightList) {
-      const channelList = weightDetailData.result.paymentRouteChannelWeightList.map((item: { paymentPlatform: string; weight: number }) => ({
-        paymentPlatform: item.paymentPlatform,
-        weight: item.weight,
+  // 获取当前显示的渠道列表
+  const availableChannels: Array<{ id: number; channelCode: string }> = isEdit && routeStrategy === '1'
+    ? (weightDetailData?.result?.paymentRouteChannelWeightList || []).map((item: { paymentPlatform: string; weight: number; id?: number; channelCode?: string }) => ({
+        id: item.id || 0,
+        channelCode: item.paymentPlatform,
       }))
-      form.setValue('channels', channelList as RouteStrategyFormValues['channels'])
-    } else if (isEdit && routeStrategy !== '1' && currentRow?.paymentRouteChannelWeightList) {
-      // 非权重轮询策略，使用 currentRow 中的数据
-      const channelList = currentRow.paymentRouteChannelWeightList.map(item => ({
-        paymentPlatform: item.paymentPlatform,
-        weight: item.weight,
-      }))
-      form.setValue('channels', channelList as RouteStrategyFormValues['channels'])
-    }
-  }, [weightDetailData, isEdit, routeStrategy, currentRow, form])
+    : (channelsData?.result || []) as PaymentChannelOption[]
 
-  // 当支付方式或类型变化时，清空已选渠道
+  // 初始化表单（只在对话框打开时执行一次）
   useEffect(() => {
-    if (open === 'create') {
-      form.setValue('channels', [])
-    }
-  }, [productCode, paymentType, open, form])
+    if (!isOpen) return
 
-  // 初始化表单数据
-  useEffect(() => {
     if (open === 'create') {
       form.reset({
         appid: '',
         paymentType: '2',
         productCode: '',
         routeStrategy: '1',
-        channels: [] as RouteStrategyFormValues['channels'],
+        channels: [],
       })
     } else if (open === 'edit' && currentRow) {
-      // 编辑模式：从 currentRow 回显数据
+      // 编辑模式：回显数据
+      const channelList = currentRow.paymentRouteChannelWeightList?.map(item => ({
+        paymentPlatform: item.paymentPlatform,
+        weight: item.weight,
+      })) || []
+      
       form.reset({
-        appid: currentRow.appid,
+        appid: currentRow.appid || '',
         paymentType: currentRow.paymentType,
         productCode: currentRow.productCode,
         routeStrategy: currentRow.routeStrategy,
-        channels: [] as RouteStrategyFormValues['channels'],
+        channels: channelList as RouteStrategyFormValues['channels'],
       })
     }
-  }, [open, currentRow, form])
+  }, [open, currentRow, isOpen, form])
+
+  // 当类型或支付方式变化时，清空已选渠道（仅新增模式）
+  useEffect(() => {
+    if (open === 'create') {
+      form.setValue('channels', [])
+    }
+  }, [paymentType, productCode, open, form])
+
+  // 当权重详情数据返回时，更新表单的渠道选择和权重
+  useEffect(() => {
+    if (isEdit && routeStrategy === '1' && weightDetailData?.result?.paymentRouteChannelWeightList) {
+      const channelList = weightDetailData.result.paymentRouteChannelWeightList.map((item: { paymentPlatform: string; weight: number }) => ({
+        paymentPlatform: item.paymentPlatform,
+        weight: item.weight,
+      }))
+      form.setValue('channels', channelList)
+    }
+  }, [weightDetailData, isEdit, routeStrategy, form])
 
   const mutation = useMutation({
     mutationFn: (data: RouteStrategyFormValues) => {
       const payload = {
-        appid: data.appid,
+        appid: data.appid || undefined,
         paymentType: data.paymentType,
         productCode: data.productCode,
         routeStrategy: data.routeStrategy,
@@ -225,32 +221,30 @@ export function RouteStrategyMutateDialog() {
 
   // 切换渠道选中状态
   const handleChannelToggle = (channelCode: string, checked: boolean) => {
-    const currentChannels = (channels || []) as RouteStrategyFormValues['channels']
+    const currentChannels = channels || []
     if (checked) {
-      // 添加渠道，权重默认为0（仅在权重模式下才需要设置）
       form.setValue('channels', [...currentChannels, { 
         paymentPlatform: channelCode, 
         weight: routeStrategy === '1' ? 0 : undefined 
-      }] as RouteStrategyFormValues['channels'])
+      }])
     } else {
-      // 移除渠道
-      form.setValue('channels', currentChannels.filter(ch => ch.paymentPlatform !== channelCode) as RouteStrategyFormValues['channels'])
+      form.setValue('channels', currentChannels.filter(ch => ch.paymentPlatform !== channelCode))
     }
   }
 
   // 更新渠道权重
   const handleWeightChange = (channelCode: string, weight: string) => {
-    const currentChannels = (channels || []) as RouteStrategyFormValues['channels']
+    const currentChannels = channels || []
     const updatedChannels = currentChannels.map(ch => 
       ch.paymentPlatform === channelCode 
         ? { ...ch, weight: Number(weight) || 0 } 
         : ch
     )
-    form.setValue('channels', updatedChannels as RouteStrategyFormValues['channels'])
+    form.setValue('channels', updatedChannels)
   }
 
   return (
-    <Dialog open={open === 'create' || open === 'edit'} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[700px] max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>
@@ -277,7 +271,7 @@ export function RouteStrategyMutateDialog() {
                     disabled={isEdit}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger clearable={false}>
                         <SelectValue placeholder={t('common.selectMerchant')} />
                       </SelectTrigger>
                     </FormControl>
