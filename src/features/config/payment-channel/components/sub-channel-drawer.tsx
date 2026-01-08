@@ -55,6 +55,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
 
 import { useLanguage } from '@/context/language-provider'
 import { getSubChannelList, addSubChannel, deleteSubChannel } from '@/api/config'
@@ -157,21 +158,41 @@ export function SubChannelDrawer() {
     }
   }, [isOpen, form])
 
-  const getStatusLabel = (status: number) => {
+  const getStatusBadge = (status: number) => {
     switch (status) {
       case 1:
-        return t('config.paymentChannel.statusNormal')
+        return (
+          <Badge variant='default' className='bg-green-500 hover:bg-green-600'>
+            {t('config.paymentChannel.statusNormal')}
+          </Badge>
+        )
       case 2:
-        return t('config.paymentChannel.statusMaintenance')
+        return (
+          <Badge variant='default' className='bg-yellow-500 hover:bg-yellow-600'>
+            {t('config.paymentChannel.statusMaintenance')}
+          </Badge>
+        )
       case 3:
-        return t('config.paymentChannel.statusPaused')
+        return (
+          <Badge variant='destructive'>
+            {t('config.paymentChannel.statusPaused')}
+          </Badge>
+        )
       default:
-        return '-'
+        return <Badge variant='outline'>-</Badge>
     }
   }
 
-  const getTypeLabel = (type: number) => {
-    return type === 1 ? t('config.paymentChannel.payout') : t('config.paymentChannel.collection')
+  const getTypeBadge = (type: number) => {
+    return type === 1 ? (
+      <Badge variant='default' className='bg-blue-500 hover:bg-blue-600'>
+        {t('config.paymentChannel.payout')}
+      </Badge>
+    ) : (
+      <Badge variant='default' className='bg-emerald-500 hover:bg-emerald-600'>
+        {t('config.paymentChannel.collection')}
+      </Badge>
+    )
   }
   return (
     <>
@@ -228,8 +249,8 @@ export function SubChannelDrawer() {
                           {subChannel.subChannelCode}
                         </TableCell>
                         <TableCell>{subChannel.subChannelName}</TableCell>
-                        <TableCell>{getTypeLabel(subChannel.type)}</TableCell>
-                        <TableCell>{getStatusLabel(subChannel.subChannelStatus)}</TableCell>
+                        <TableCell>{getTypeBadge(subChannel.type)}</TableCell>
+                        <TableCell>{getStatusBadge(subChannel.subChannelStatus)}</TableCell>
                         <TableCell className='text-right'>
                           <Button
                             type='button'
