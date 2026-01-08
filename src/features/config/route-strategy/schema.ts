@@ -18,6 +18,7 @@ export const routeStrategySchema = z.object({
   paymentRouteChannelWeightList: z.array(z.object({
     paymentPlatform: z.string(),
     weight: z.number().optional(),
+    id:z.number().optional(),
   })).optional(), // 渠道权重列表
 })
 

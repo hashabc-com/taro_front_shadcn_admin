@@ -53,6 +53,7 @@ const createRouteStrategyFormSchema = (t: (key: string) => string) => z.object({
   channels: z.array(z.object({
     paymentPlatform: z.string(),
     weight: z.number().min(0).max(100).optional(),
+    id: z.number().optional(),
   })).min(1, t('config.routeStrategy.validation.selectAtLeastOneChannel')),
 })
 
@@ -153,6 +154,7 @@ export function RouteStrategyMutateDialog() {
       const channelList = currentRow.paymentRouteChannelWeightList?.map(item => ({
         paymentPlatform: item.paymentPlatform,
         weight: item.weight,
+        id: item.id,
       })) || []
       
       form.reset({
@@ -175,9 +177,10 @@ export function RouteStrategyMutateDialog() {
   // 当权重详情数据返回时，更新表单的渠道选择和权重
   useEffect(() => {
     if (isEdit && routeStrategy === '1' && weightDetailData?.result?.paymentRouteChannelWeightList) {
-      const channelList = weightDetailData.result.paymentRouteChannelWeightList.map((item: { paymentPlatform: string; weight: number }) => ({
+      const channelList = weightDetailData.result.paymentRouteChannelWeightList.map((item: { paymentPlatform: string; weight: number,id?: number }) => ({
         paymentPlatform: item.paymentPlatform,
         weight: item.weight,
+        id: item.id,
       }))
       form.setValue('channels', channelList)
     }
@@ -186,6 +189,7 @@ export function RouteStrategyMutateDialog() {
   const mutation = useMutation({
     mutationFn: (data: RouteStrategyFormValues) => {
       const payload = {
+        id: currentRow?.id,
         appid: data.appid || undefined,
         paymentType: data.paymentType,
         productCode: data.productCode,
@@ -198,7 +202,7 @@ export function RouteStrategyMutateDialog() {
     onSuccess: (res) => {
       if (res.code == 200) {
         queryClient.invalidateQueries({ queryKey: ['route-strategies'] })
-        toast.success(t('common.addSuccess'))
+        toast.success(t( open === 'create' ? 'common.addSuccess' : 'common.updateSuccess'))
         handleClose()
       } else {
         toast.error(res.message || t('common.operationFailed'))
@@ -220,13 +224,18 @@ export function RouteStrategyMutateDialog() {
   }
 
   // 切换渠道选中状态
-  const handleChannelToggle = (channelCode: string, checked: boolean) => {
+  const handleChannelToggle = (channelCode: string, checked: boolean, channelId?: number) => {
     const currentChannels = channels || []
     if (checked) {
-      form.setValue('channels', [...currentChannels, { 
+      const newChannel: { paymentPlatform: string; weight?: number; id?: number } = {
         paymentPlatform: channelCode, 
-        weight: routeStrategy === '1' ? 0 : undefined 
-      }])
+        weight: routeStrategy === '1' ? 0 : undefined,
+      }
+      // 只在编辑模式且有id时才添加id字段
+      if (isEdit && channelId !== undefined) {
+        newChannel.id = channelId
+      }
+      form.setValue('channels', [...currentChannels, newChannel])
     } else {
       form.setValue('channels', currentChannels.filter(ch => ch.paymentPlatform !== channelCode))
     }
@@ -398,7 +407,7 @@ export function RouteStrategyMutateDialog() {
                             <Checkbox
                               checked={isChecked}
                               onCheckedChange={(checked) => 
-                                handleChannelToggle(channel.channelCode, !!checked)
+                                handleChannelToggle(channel.channelCode, !!checked, isEdit && routeStrategy === '1' ? channel.id : undefined)
                               }
                               id={`channel-${channel.id}`}
                             />
