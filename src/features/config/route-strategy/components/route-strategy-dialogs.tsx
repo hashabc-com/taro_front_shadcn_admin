@@ -118,13 +118,14 @@ export function RouteStrategyMutateDialog() {
   // 获取路由策略权重详情（仅在编辑权重轮询策略时调用）
   const appid = form.watch('appid')
   const { data: weightDetailData } = useQuery({
-    queryKey: ['route-strategy-weight-detail', selectedCountry?.code, appid, productCode],
+    queryKey: ['route-strategy-weight-detail', selectedCountry?.code, appid, productCode,paymentType],
     queryFn: () => getRouteStrategyWeightDetail({ 
       country: selectedCountry!.code, 
       appid: appid || '',
-      productCode: productCode 
+      productCode: productCode, 
+      paymentType: paymentType
     }),
-    enabled: isEdit && !!selectedCountry && !!appid && !!productCode && routeStrategy === '1',
+    enabled: isEdit && !!selectedCountry && !!productCode && routeStrategy === '1',
   })
 
   const merchants = (merchantData?.result || []) as Merchant[]
@@ -264,12 +265,12 @@ export function RouteStrategyMutateDialog() {
               name='appid'
               render={({ field }) => (
                 <FormItem>
-                  <div className='space-y-1'>
-                    <FormLabel>{t('config.routeStrategy.merchantName')}</FormLabel>
-                    <p className='text-xs text-muted-foreground'>
-                      商户不选则该策略默认所有商户生效
-                    </p>
-                  </div>
+                  <FormLabel>
+                    {t('config.routeStrategy.merchantName')}
+                    <span className='ml-2 text-xs font-normal text-orange-600 dark:text-orange-400'>
+                      {t('config.routeStrategy.merchantOptionalTip')}
+                    </span>
+                  </FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}

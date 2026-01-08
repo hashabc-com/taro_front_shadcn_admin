@@ -771,6 +771,7 @@ export const translations = {
       routeStrategy: {
         title: '路由策略配置',
         merchantName: '商户名称',
+        merchantOptionalTip: '(注：不选则对所有商户生效)',
         type: '类型',
         payout: '代付',
         collection: '代收',
@@ -1927,6 +1928,7 @@ export const translations = {
       routeStrategy: {
         title: 'Route Strategy Config',
         merchantName: 'Merchant Name',
+        merchantOptionalTip: '(Note：Optional - applies to all merchants if not selected)',
         type: 'Type',
         payout: 'Payout',
         collection: 'Collection',

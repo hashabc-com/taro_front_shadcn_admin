@@ -169,6 +169,7 @@ export const getRouteStrategyWeightDetail = (params: {
   country: string
   appid: string
   productCode: string
+  paymentType: string
 }) => http.get('/admin/paymentRouteConfig/weightList', params, { autoAddCountry: false })
 
 // 更新路由策略状态
