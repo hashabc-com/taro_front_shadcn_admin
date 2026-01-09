@@ -24,7 +24,21 @@ Sentry.init({
   dsn: "https://f2d538f47a8cc1531b86589972d21aed@o4510679191388160.ingest.us.sentry.io/4510679290019840",
   // Setting this option to true will send default PII data to Sentry.
   // For example, automatic IP address collection on events
-  sendDefaultPii: true
+  sendDefaultPii: true,
+  integrations: [
+    Sentry.replayIntegration(),
+    Sentry.browserTracingIntegration()
+  ],
+  // Session Replay
+  replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+  // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+  tracePropagationTargets: ["localhost",/^https:\/\/admin-test\.taropay\.com\/admin\//],
 });
 
 const queryClient = new QueryClient({
