@@ -1,13 +1,13 @@
 {
-  "name": "taro_front_shadcn_admin",
+  "name": "taropay_admin",
   "private": false,
-  "version": "2.2.1",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:test": "tsc -b && vite build --mode test",
-    "build:prod": "tsc -b && vite build --mode production",
+    "build:test": "cross-env RELEASE=traopay_admin@1.0.0  tsc -b && vite build --mode test",
+    "build:prod": "cross-env RELEASE=traopay_admin@1.0.0 tsc -b && vite build --mode production",
     "build:analyze": "cross-env ANALYZE=true pnpm build:prod",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -64,6 +64,7 @@
   "devDependencies": {
     "@eslint/js": "^9.37.0",
     "@faker-js/faker": "^10.0.0",
+    "@sentry/vite-plugin": "^4.6.1",
     "@tanstack/eslint-plugin-query": "^5.91.0",
     "@tanstack/react-query-devtools": "^5.90.2",
     "@tanstack/react-router-devtools": "^1.132.51",

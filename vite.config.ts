@@ -1,14 +1,16 @@
 import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
+import {name,version}  from './package.json'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-
+  const release = `${name}@${version}`
   return {
     plugins: [
       tanstackRouter({
@@ -25,6 +27,23 @@ export default defineConfig(({ mode }) => {
             filename: 'dist/stats.html',
           })
         : undefined,
+      sentryVitePlugin({
+        org: 'taropay',
+        project: 'taropay_admin',
+        release: {
+          name: release,
+        } ,
+        authToken: env.SENTRY_AUTH_TOKEN,
+        sourcemaps: {
+          // As you're enabling client source maps, you probably want to delete them after they're uploaded to Sentry.
+          // Set the appropriate glob pattern for your output folder - some glob examples below:
+          filesToDeleteAfterUpload: [
+            './**/*.map',
+            '.*/**/public/**/*.map',
+            './dist/**/client/**/*.map',
+          ],
+        },
+      }),
     ],
     server: {
       host: true,
@@ -36,15 +55,19 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    define: {
+      '__RELEASE__': JSON.stringify(release),
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
     },
     esbuild: {
-    drop: mode === 'production' ? ['console', 'debugger'] : [],
-  },
+      drop: mode === 'production' ? ['console', 'debugger'] : [],
+    },
     build: {
+      sourcemap:'hidden',
       rollupOptions: {
         output: {
           manualChunks(id) {

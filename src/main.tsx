@@ -20,27 +20,6 @@ import { routeTree } from './routeTree.gen'
 // Styles
 import './styles/index.css'
 
-Sentry.init({
-  dsn: "https://f2d538f47a8cc1531b86589972d21aed@o4510679191388160.ingest.us.sentry.io/4510679290019840",
-  // Setting this option to true will send default PII data to Sentry.
-  // For example, automatic IP address collection on events
-  sendDefaultPii: true,
-  integrations: [
-    Sentry.replayIntegration(),
-    Sentry.browserTracingIntegration()
-  ],
-  // Session Replay
-  replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: 1.0,
-  // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-  tracePropagationTargets: ["localhost",/^https:\/\/admin-test\.taropay\.com\/admin\//],
-});
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -105,6 +84,35 @@ export const router = createRouter({
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
 })
+// Initialize Sentry in test and production environments (not in dev)
+if (!import.meta.env.DEV) {
+  Sentry.init({
+    dsn: "https://f2d538f47a8cc1531b86589972d21aed@o4510679191388160.ingest.us.sentry.io/4510679290019840",
+    // Setting this option to true will send default PII data to Sentry.
+    // For example, automatic IP address collection on events
+    sendDefaultPii: true,
+    integrations: [
+      Sentry.replayIntegration({
+        maskAllText: false, // 是否对所有文本打码（false 表示原样录入）
+        blockAllMedia: false, // 是否屏蔽图像、视频、SVG 等（false 表示保留媒体）
+      }),
+      Sentry.browserTracingIntegration(),
+      Sentry.tanstackRouterBrowserTracingIntegration(router)
+    ],
+    // Session Replay
+    replaysSessionSampleRate: 0, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production. // 普通会话是否录像（设为 0 表示不录像）
+    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur. 控制发生 JS 报错、Promise 拒绝等错误时是否开启录制。建议设为 1.0，即每次出错都能录像
+
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+    // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+    tracePropagationTargets: [/^https:\/\/admin-test\.taropay\.com\/admin\//],
+    release: __RELEASE__ || 'unknown_release',
+    environment: import.meta.env.PROD ? 'production' : 'test',
+  });
+}
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
