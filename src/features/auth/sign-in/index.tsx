@@ -10,6 +10,18 @@ import {
 import { AuthLayout } from '../auth-layout'
 import { UserAuthForm } from './components/user-auth-form'
 
+function ErrorButton() {
+  return (
+    <button
+      onClick={() => {
+        throw new Error('这是您的第一个错误！');
+      }}
+    >
+      测试按钮请勿点击
+    </button>
+  );
+}
+
 export function SignIn() {
   const { redirect } = useSearch({ from: '/(auth)/sign-in' })
 
@@ -18,6 +30,7 @@ export function SignIn() {
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>Sign in</CardTitle>
+          <ErrorButton />
           <CardDescription>
             在下面输入您的账号和密码 <br />
             登录您的账号

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { AxiosError } from 'axios'
+import * as Sentry from "@sentry/react";
 import {
   QueryCache,
   QueryClient,
@@ -18,6 +19,13 @@ import { LanguageProvider } from './context/language-provider'
 import { routeTree } from './routeTree.gen'
 // Styles
 import './styles/index.css'
+
+Sentry.init({
+  dsn: "https://f2d538f47a8cc1531b86589972d21aed@o4510679191388160.ingest.us.sentry.io/4510679290019840",
+  // Setting this option to true will send default PII data to Sentry.
+  // For example, automatic IP address collection on events
+  sendDefaultPii: true
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {
