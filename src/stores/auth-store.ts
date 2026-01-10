@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { useCountryStore,useMerchantStore } from './index'
 import { router } from '@/main'
+import * as Sentry from "@sentry/react";
 
 type IUserInfo = {
   id: number
@@ -44,6 +45,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     localStorage.setItem('_token', token)
     localStorage.setItem('_userInfo', JSON.stringify(userInfo))
     set({ token, isAuthenticated: true,userInfo })
+    Sentry.setUser({id:userInfo.id,username:userInfo.name})
   },
   logout: () => {
     const redirect = `${router.history.location.href}`;
@@ -53,7 +55,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     localStorage.removeItem('_userInfo')
     localStorage.removeItem('_permissions')
     set({ token: null, isAuthenticated: false,userInfo: null, permissions: null })
-    
+    Sentry.setUser(null);
     // 重置其他 store
     useCountryStore.getState().clearSelectedCountry()
     useMerchantStore.getState().clearSelectedMerchant()

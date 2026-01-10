@@ -110,7 +110,7 @@ if (!import.meta.env.DEV) {
     // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
     tracePropagationTargets: [/^https:\/\/admin-test\.taropay\.com\/admin\//],
     release: __RELEASE__ || 'unknown_release',
-    environment: import.meta.env.PROD ? 'production' : 'test',
+    environment: import.meta.env.MODE === 'production' ? 'production' : 'test',
   });
 }
 

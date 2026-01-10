@@ -16,6 +16,18 @@ import { useAuthStore } from '@/stores'
 import { useMemo } from 'react'
 // import { TeamSwitcher } from './team-switcher'
 
+function ErrorButton() {
+  return (
+    <button
+      onClick={() => {
+        throw new Error('这是您的第二个错误！');
+      }}
+    >
+      测试按钮请勿点击
+    </button>
+  );
+}
+
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
   const { lang } = useLanguage()
@@ -33,6 +45,7 @@ export function AppSidebar() {
         <h2 className="text-2xl font-bold">
           {state === 'collapsed' ? 'TP' : 'TaroPay'}
         </h2>
+        <ErrorButton/>
         {/* <TeamSwitcher teams={sidebarData.teams} /> */}
 
         {/* Replace <TeamSwitch /> with the following <AppTitle />
