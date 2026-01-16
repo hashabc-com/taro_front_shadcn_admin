@@ -72,6 +72,14 @@ export const getImg = async (params: {
   }
 }
 
+// 测试环境条件下发通知 / 收款订单
+export const payOutNotify = (data: { transId: string; status: number }) =>
+  http.get<ResponseData>('/admin/collection/payInNotify', data)
+
+// 测试环境条件下发通知 / 付款订单
+export const payInNotify = (data: { transId: string; status: number }) =>
+  http.get<ResponseData>('/admin/disbursement/payOutNotify', data)
+
 // 下载图片
 export const downloadImg = async (
   params: { mediaId: string; type: boolean },

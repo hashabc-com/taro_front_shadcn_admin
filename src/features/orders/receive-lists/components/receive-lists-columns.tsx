@@ -31,6 +31,10 @@ export const getTasksColumns = (
       ),
     },
     {
+      accessorKey: 'paymentCompany',
+      header: t('common.channel'),
+    },
+    {
       accessorKey: 'transId',
       header: t('orders.receiveOrders.platformOrderNo'),
       enableHiding: false,
