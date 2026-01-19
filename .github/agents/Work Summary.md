@@ -12,7 +12,8 @@ description: '生成近 7 天的技术工作总结（基于 Git 提交记录）'
 **重要**：你需要**主动使用 `run_in_terminal` 工具**执行以下 PowerShell 脚本，无需等待用户手动运行：
 
 ## 限定项目
-工作区的taro_front_shadcn_admin 和 taropay_merchant_admin项目
+工作区的所有项目
+<!-- 工作区的taro_front_shadcn_admin 和 taropay_merchant_admin项目 -->
 
 **执行步骤**：
 1. 使用 `run_in_terminal` 工具执行上述脚本

@@ -170,6 +170,7 @@ export const translations = {
         BD: '孟加拉',
         PH: '菲律宾',
         NG: '尼日利亚',
+        PK:'巴基斯坦',
       },
       validation: {
         required: '此字段为必填项',
@@ -1327,6 +1328,7 @@ export const translations = {
         BD: 'Bangladesh',
         PH: 'Philippines',
         NG: 'Nigeria',
+        PK: 'Pakistan',
       },
       validation: {
         required: 'This field is required',
