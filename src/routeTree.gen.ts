@@ -52,6 +52,7 @@ import { Route as AuthenticatedConfigPaymentChannelRouteImport } from './routes/
 import { Route as AuthenticatedBusinessMonthlySummaryRouteImport } from './routes/_authenticated/business/monthly-summary'
 import { Route as AuthenticatedBusinessMerchantBindRouteImport } from './routes/_authenticated/business/merchant-bind'
 import { Route as AuthenticatedBusinessDailySummaryRouteImport } from './routes/_authenticated/business/daily-summary'
+import { Route as AuthenticatedBusinessCustomerConsultRouteImport } from './routes/_authenticated/business/customer-consult'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -299,6 +300,12 @@ const AuthenticatedBusinessDailySummaryRoute =
     path: '/business/daily-summary',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBusinessCustomerConsultRoute =
+  AuthenticatedBusinessCustomerConsultRouteImport.update({
+    id: '/business/customer-consult',
+    path: '/business/customer-consult',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
@@ -314,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/export-management': typeof AuthenticatedExportManagementRoute
   '/send-announcement': typeof AuthenticatedSendAnnouncementRoute
   '/': typeof AuthenticatedIndexRoute
+  '/business/customer-consult': typeof AuthenticatedBusinessCustomerConsultRoute
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
@@ -357,6 +365,7 @@ export interface FileRoutesByTo {
   '/export-management': typeof AuthenticatedExportManagementRoute
   '/send-announcement': typeof AuthenticatedSendAnnouncementRoute
   '/': typeof AuthenticatedIndexRoute
+  '/business/customer-consult': typeof AuthenticatedBusinessCustomerConsultRoute
   '/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
@@ -403,6 +412,7 @@ export interface FileRoutesById {
   '/_authenticated/export-management': typeof AuthenticatedExportManagementRoute
   '/_authenticated/send-announcement': typeof AuthenticatedSendAnnouncementRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/business/customer-consult': typeof AuthenticatedBusinessCustomerConsultRoute
   '/_authenticated/business/daily-summary': typeof AuthenticatedBusinessDailySummaryRoute
   '/_authenticated/business/merchant-bind': typeof AuthenticatedBusinessMerchantBindRoute
   '/_authenticated/business/monthly-summary': typeof AuthenticatedBusinessMonthlySummaryRoute
@@ -449,6 +459,7 @@ export interface FileRouteTypes {
     | '/export-management'
     | '/send-announcement'
     | '/'
+    | '/business/customer-consult'
     | '/business/daily-summary'
     | '/business/merchant-bind'
     | '/business/monthly-summary'
@@ -492,6 +503,7 @@ export interface FileRouteTypes {
     | '/export-management'
     | '/send-announcement'
     | '/'
+    | '/business/customer-consult'
     | '/business/daily-summary'
     | '/business/merchant-bind'
     | '/business/monthly-summary'
@@ -537,6 +549,7 @@ export interface FileRouteTypes {
     | '/_authenticated/export-management'
     | '/_authenticated/send-announcement'
     | '/_authenticated/'
+    | '/_authenticated/business/customer-consult'
     | '/_authenticated/business/daily-summary'
     | '/_authenticated/business/merchant-bind'
     | '/_authenticated/business/monthly-summary'
@@ -884,6 +897,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBusinessDailySummaryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/business/customer-consult': {
+      id: '/_authenticated/business/customer-consult'
+      path: '/business/customer-consult'
+      fullPath: '/business/customer-consult'
+      preLoaderRoute: typeof AuthenticatedBusinessCustomerConsultRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -915,6 +935,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedExportManagementRoute: typeof AuthenticatedExportManagementRoute
   AuthenticatedSendAnnouncementRoute: typeof AuthenticatedSendAnnouncementRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedBusinessCustomerConsultRoute: typeof AuthenticatedBusinessCustomerConsultRoute
   AuthenticatedBusinessDailySummaryRoute: typeof AuthenticatedBusinessDailySummaryRoute
   AuthenticatedBusinessMerchantBindRoute: typeof AuthenticatedBusinessMerchantBindRoute
   AuthenticatedBusinessMonthlySummaryRoute: typeof AuthenticatedBusinessMonthlySummaryRoute
@@ -946,6 +967,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedExportManagementRoute: AuthenticatedExportManagementRoute,
   AuthenticatedSendAnnouncementRoute: AuthenticatedSendAnnouncementRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedBusinessCustomerConsultRoute:
+    AuthenticatedBusinessCustomerConsultRoute,
   AuthenticatedBusinessDailySummaryRoute:
     AuthenticatedBusinessDailySummaryRoute,
   AuthenticatedBusinessMerchantBindRoute:

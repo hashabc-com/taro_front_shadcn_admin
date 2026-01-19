@@ -139,6 +139,10 @@ export const getSidebarData = (language: Language): SidebarData => {
               title: t('sidebar.businessMonthlySummary'),
               url: '/business/monthly-summary',
             },
+            {
+              title: t('sidebar.consultingService'),
+              url: '/business/customer-consult',
+            }
           ],
         },
         {

@@ -37,3 +37,21 @@ export const getBusinessRate = (businessId: number | string) =>
 // 配置商务汇率
 export const configureBusinessRate = (data: unknown[]) =>
   http.post('/admin/costRateConfig/saveOrUpdate', data,{autoAddMerchantId:false,autoAddCountry:false})
+
+// 获取客户咨询列表
+export const getCustomerConsultList = (params: {
+  pageNum: number
+  pageSize: number
+  country?: string
+}) => http.get('/admin/customerInfoFollowUp/getList', params)
+
+// 更新客户跟进信息
+export const updateCustomerFollowUp = (data: {
+  id: number | string
+  followType?: string
+  followContent?: string
+  followResult?: string
+  nextFollowTime?: string | null
+  attachmentUrls?: string
+  followBy?: string
+}) => http.post('/admin/customerInfoFollowUp/update', data)
