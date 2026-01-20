@@ -56,9 +56,9 @@ export const followUpFormSchema = z.object({
   followType: z.string().min(1, { message: 'pleaseSelectFollowType' }),
   followContent: z.string().min(1, { message: 'pleaseEnterFollowContent' }),
   followResult: z.string().min(1, { message: 'pleaseSelectFollowResult' }),
-  nextFollowTime: z.string().optional().nullable(),
-  attachmentUrls: z.string().optional(),
-  followBy: z.string().min(1, { message: 'pleaseEnterFollowBy' }),
+  // nextFollowTime: z.string().optional().nullable(),
+  // attachmentUrls: z.string().optional(),
+  // followBy: z.string().optional(),
 })
 
 export type FollowUpFormData = z.infer<typeof followUpFormSchema>

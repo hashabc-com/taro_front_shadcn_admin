@@ -11,7 +11,7 @@ export const getCustomerConsultColumns = (
   {
     accessorKey: 'contactPerson',
     header: t('business.customerConsult.contactPerson'),
-    meta: { className: 'min-w-[100px]' },
+    meta: { className: 'min-w-[100px]', enableTooltip: true },
   },
   {
     accessorKey: 'phone',
@@ -28,13 +28,13 @@ export const getCustomerConsultColumns = (
     accessorKey: 'email',
     header: t('business.customerConsult.email'),
     cell: ({ row }) => row.original.email || '-',
-    meta: { className: 'min-w-[200px]' },
+    meta: { className: 'min-w-[200px]', enableTooltip: true },
   },
   {
     accessorKey: 'company',
     header: t('business.customerConsult.company'),
     cell: ({ row }) => row.original.company || '-',
-    meta: { className: 'min-w-[150px]' },
+    meta: { className: 'max-w-[200px]', enableTooltip: true },
   },
   {
     accessorKey: 'source',
@@ -78,16 +78,8 @@ export const getCustomerConsultColumns = (
   {
     accessorKey: 'consultContent',
     header: t('business.customerConsult.consultContent'),
-    cell: ({ row }) => {
-      const content = row.original.consultContent
-      if (!content) return '-'
-      return (
-        <div className='max-w-[200px] truncate' title={content}>
-          {content}
-        </div>
-      )
-    },
-    meta: { className: 'min-w-[200px]' },
+    cell: ({ row }) => row.original.consultContent || '-',
+    meta: { className: 'max-w-[100px]', enableTooltip: true },
   },
   {
     accessorKey: 'followResult',
@@ -99,20 +91,20 @@ export const getCustomerConsultColumns = (
     },
     meta: { className: 'min-w-[120px]' },
   },
-  {
-    accessorKey: 'nextFollowTime',
-    header: t('business.customerConsult.nextFollowTime'),
-    cell: ({ row }) => {
-      const time = row.original.nextFollowTime
-      if (!time) return '-'
-      try {
-        return format(new Date(time), 'yyyy-MM-dd HH:mm')
-      } catch {
-        return time
-      }
-    },
-    meta: { className: 'min-w-[150px]' },
-  },
+//   {
+//     accessorKey: 'nextFollowTime',
+//     header: t('business.customerConsult.nextFollowTime'),
+//     cell: ({ row }) => {
+//       const time = row.original.nextFollowTime
+//       if (!time) return '-'
+//       try {
+//         return format(new Date(time), 'yyyy-MM-dd HH:mm')
+//       } catch {
+//         return time
+//       }
+//     },
+//     meta: { className: 'min-w-[150px]' },
+//   },
   {
     accessorKey: 'followBy',
     header: t('business.customerConsult.followBy'),
@@ -138,8 +130,9 @@ export const getCustomerConsultColumns = (
     header: t('common.action'),
     cell: ({ row }) => (
       <Button
-        variant='ghost'
+        variant='link'
         size='sm'
+        className='px-0'
         onClick={() => onFollowUp(row.original)}
       >
         {t('business.customerConsult.followUp')}

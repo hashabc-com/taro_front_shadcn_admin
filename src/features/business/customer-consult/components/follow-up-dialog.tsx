@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
+// import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useEffect } from 'react'
@@ -56,9 +56,9 @@ export function FollowUpDialog({
       followType: '',
       followContent: '',
       followResult: '',
-      nextFollowTime: null,
-      attachmentUrls: '',
-      followBy: '',
+      // nextFollowTime: null,
+      // attachmentUrls: '',
+      // followBy: '',
     },
   })
 
@@ -68,9 +68,9 @@ export function FollowUpDialog({
         followType: customer.followType || '',
         followContent: customer.followContent || '',
         followResult: customer.followResult || '',
-        nextFollowTime: customer.nextFollowTime || null,
-        attachmentUrls: customer.attachmentUrls || '',
-        followBy: customer.followBy || '',
+        // nextFollowTime: customer.nextFollowTime || null,
+        // attachmentUrls: customer.attachmentUrls || '',
+        // followBy: customer.followBy || '',
       })
     }
   }, [customer, form])
@@ -82,7 +82,7 @@ export function FollowUpDialog({
         ...data,
       }),
     onSuccess: (res) => {
-      if (res.code === '200') {
+      if (res.code == 200) {
         toast.success(t('common.updateSuccess'))
         queryClient.invalidateQueries({ queryKey: ['customer-consult-list'] })
         onOpenChange(false)
@@ -157,10 +157,10 @@ export function FollowUpDialog({
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger clearable={false}>
                             <SelectValue
                               placeholder={t('business.customerConsult.pleaseSelectFollowType')}
                             />
@@ -199,10 +199,10 @@ export function FollowUpDialog({
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger clearable={false}>
                             <SelectValue
                               placeholder={t('business.customerConsult.pleaseSelectFollowResult')}
                             />
@@ -249,7 +249,7 @@ export function FollowUpDialog({
                 )}
               />
 
-              <div className='grid grid-cols-2 gap-4'>
+              {/* <div className='grid grid-cols-2 gap-4'>
                 <FormField
                   control={form.control}
                   name='followBy'
@@ -288,9 +288,9 @@ export function FollowUpDialog({
                     </FormItem>
                   )}
                 />
-              </div>
+              </div> */}
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name='attachmentUrls'
                 render={({ field }) => (
@@ -307,7 +307,7 @@ export function FollowUpDialog({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <div className='flex justify-end gap-2'>
                 <Button
@@ -318,7 +318,7 @@ export function FollowUpDialog({
                   {t('common.cancel')}
                 </Button>
                 <Button type='submit' disabled={mutation.isPending}>
-                  {mutation.isPending ? t('common.loading') : t('common.submit')}
+                  {mutation.isPending ? t('common.submitting') : t('common.submit')}
                 </Button>
               </div>
             </form>

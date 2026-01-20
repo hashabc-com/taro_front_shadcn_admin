@@ -51,7 +51,7 @@ export const updateCustomerFollowUp = (data: {
   followType?: string
   followContent?: string
   followResult?: string
-  nextFollowTime?: string | null
-  attachmentUrls?: string
-  followBy?: string
+  // nextFollowTime?: string | null
+  // attachmentUrls?: string
+  // followBy?: string
 }) => http.post('/admin/customerInfoFollowUp/update', data)

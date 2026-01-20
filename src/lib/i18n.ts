@@ -1986,7 +1986,7 @@ export const translations = {
         source: 'Source',
         status: 'Status',
         level: 'Level',
-        consultContent: 'Consultation Content',
+        consultContent: 'Content',
         followType: 'Follow-up Type',
         followContent: 'Follow-up Content',
         followResult: 'Follow-up Result',

@@ -17,6 +17,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { DataTablePagination } from '@/components/data-table'
 import { useLanguage } from '@/context/language-provider'
 import { getCustomerConsultColumns } from './customer-consult-columns'
@@ -113,20 +118,38 @@ export function CustomerConsultTable() {
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className={cn(
-                          cell.column.columnDef.meta?.className,
-                          cell.column.columnDef.meta?.tdClassName
-                        )}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
+                    {row.getVisibleCells().map((cell) => {
+                      const enableTooltip = cell.column.columnDef.meta?.enableTooltip
+                      const cellContent = flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )
+                      
+                      return (
+                        <TableCell
+                          key={cell.id}
+                          className={cn(
+                            cell.column.columnDef.meta?.className,
+                            cell.column.columnDef.meta?.tdClassName
+                          )}
+                        >
+                          {enableTooltip ? (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className='block truncate cursor-default'>
+                                  {cellContent}
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent side='top' className='max-w-sm break-words'>
+                                {cellContent}
+                              </TooltipContent>
+                            </Tooltip>
+                          ) : (
+                            cellContent
+                          )}
+                        </TableCell>
+                      )
+                    })}
                   </TableRow>
                 ))
               ) : (
