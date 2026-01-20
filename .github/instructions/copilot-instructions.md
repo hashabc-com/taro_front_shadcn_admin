@@ -44,6 +44,7 @@ http.get('/admin/paymentChannel/list', params, { autoAddCountry: false })
 - One file per domain (e.g., `config.ts`, `merchant.ts`, `order.ts`)
 - Export named functions, not default exports
 - Use descriptive names: `getPaymentChannelList`, `updatePaymentChannel`
+- **All API endpoints MUST start with `/admin` prefix** (e.g., `/admin/paymentChannel/list`, `/admin/merchant/update`)
 
 ### 3. Data Fetching with TanStack Query
 
@@ -258,6 +259,10 @@ VITE_PROXY_TARGET=http://localhost:8080
   - API functions: camelCase with verb prefix (`getPaymentChannelList`)
 - **Exports**: Named exports for components, default export for route components
 - **Styling**: Tailwind CSS utility classes, use `cn()` helper for conditional classes
+- **Page Structure**:
+  - **Do NOT add `DialogDescription` in page dialogs/sheets** - keep UI clean without redundant descriptions
+  - Focus on clear labels and intuitive form layouts instead of explanatory text
+  - Use placeholder text in form fields to guide users when necessary
 
 ## Testing
 

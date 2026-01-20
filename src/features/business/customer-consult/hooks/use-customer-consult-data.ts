@@ -3,21 +3,18 @@ import { getRouteApi } from '@tanstack/react-router'
 import { getCustomerConsultList } from '@/api/business'
 import { type ICustomerConsult } from '../schema'
 import { useCountryStore } from '@/stores/country-store'
+import { useMerchantStore } from '@/stores'
 
 const route = getRouteApi('/_authenticated/business/customer-consult')
 
 export function useCustomerConsultData() {
   const search = route.useSearch()
   const { selectedCountry } = useCountryStore()
+  const { selectedMerchant } = useMerchantStore()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['customer-consult-list', search, selectedCountry],
-    queryFn: () =>
-      getCustomerConsultList({
-        pageNum: search.pageNum ?? 1,
-        pageSize: search.pageSize ?? 10,
-        country: selectedCountry,
-      }),
+    queryKey: ['customer-consult-list', search, selectedCountry?.code, selectedMerchant?.appid],
+    queryFn: () => getCustomerConsultList(search),
     placeholderData: (prev) => prev ?? undefined,
   })
 
