@@ -1,6 +1,6 @@
+import { useLanguage } from '@/context/language-provider'
 import { Main } from '@/components/layout/main'
 import { ReceiveSummaryTable } from './components/collection-success-rate-table'
-import { useLanguage } from '@/context/language-provider'
 
 export function CollectionSuccessRate() {
   const { t } = useLanguage()

@@ -1,9 +1,12 @@
 import { type ColumnDef } from '@tanstack/react-table'
-import { getTranslation, type Language } from '@/lib/i18n'
 import { Eye } from 'lucide-react'
+import { getTranslation, type Language } from '@/lib/i18n'
 import type { IMerchantRequest } from '../schema'
 
-const getTransactionTypeLabel = (type: string | undefined, t: (key: string) => string) => {
+const getTransactionTypeLabel = (
+  type: string | undefined,
+  t: (key: string) => string
+) => {
   if (!type) return '-'
   switch (type) {
     case 'P':
@@ -60,30 +63,31 @@ export const getColumns = (
     {
       accessorKey: 'transactionType',
       header: t('logs.merchantRequest.transactionType'),
-      cell: ({ row }) => getTransactionTypeLabel(row.original.transactionType, t),
-      enableHiding: false
+      cell: ({ row }) =>
+        getTransactionTypeLabel(row.original.transactionType, t),
+      enableHiding: false,
     },
     {
       accessorKey: 'referenceno',
       header: t('logs.merchantRequest.referenceno'),
       enableHiding: false,
       cell: ({ row }) => {
-        if(row.original.transactionType === 'P') {
+        if (row.original.transactionType === 'P') {
           return row.original.referenceno
         }
         return row.original.transactionReferenceNo
-      }
+      },
     },
     {
       accessorKey: 'transId',
       header: t('logs.merchantRequest.transId'),
       enableHiding: false,
       cell: ({ row }) => {
-        if(row.original.transactionType === 'P') {
+        if (row.original.transactionType === 'P') {
           return row.original.transId
         }
         return row.original.transactionid
-      }
+      },
     },
     {
       accessorKey: 'paymentCompany',
@@ -103,7 +107,7 @@ export const getColumns = (
     },
     {
       accessorKey: 'serviceAmount',
-      header: t('logs.merchantRequest.serviceAmount')
+      header: t('logs.merchantRequest.serviceAmount'),
     },
     // {
     //   accessorKey: 'statusQuery',
@@ -126,7 +130,7 @@ export const getColumns = (
       header: t('common.action'),
       cell: ({ row }) => (
         <div
-          className='flex justify-center items-center gap-1 cursor-pointer'
+          className='flex cursor-pointer items-center justify-center gap-1'
           onClick={() => onViewDetail(row.original)}
         >
           <Eye className='h-4 w-4' />

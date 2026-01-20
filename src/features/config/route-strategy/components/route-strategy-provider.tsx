@@ -13,7 +13,11 @@ type ContextType = {
 
 const RouteStrategyContext = React.createContext<ContextType | null>(null)
 
-export function RouteStrategyProvider({ children }: { children: React.ReactNode }) {
+export function RouteStrategyProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const [open, setOpen] = useDialogState<DialogType>(null)
   const [currentRow, setCurrentRow] = useState<RouteStrategy | null>(null)
 
@@ -36,7 +40,9 @@ export const useRouteStrategy = () => {
   const routeStrategyContext = React.useContext(RouteStrategyContext)
 
   if (!routeStrategyContext) {
-    throw new Error('useRouteStrategy has to be used within <RouteStrategyContext.Provider>')
+    throw new Error(
+      'useRouteStrategy has to be used within <RouteStrategyContext.Provider>'
+    )
   }
 
   return routeStrategyContext

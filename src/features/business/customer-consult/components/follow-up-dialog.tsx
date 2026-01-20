@@ -1,14 +1,12 @@
+import { useEffect, useMemo } from 'react'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { useLanguage } from '@/context/language-provider'
 import { updateCustomerFollowUp } from '@/api/business'
-import {
-  type ICustomerConsult,
-  type FollowUpFormData,
-  followUpFormSchema,
-} from '../schema'
+import { useLanguage } from '@/context/language-provider'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -33,8 +31,7 @@ import {
 } from '@/components/ui/select'
 // import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { useEffect } from 'react'
+import { type ICustomerConsult, type FollowUpFormData } from '../schema'
 
 interface FollowUpDialogProps {
   customer: ICustomerConsult | null
@@ -49,6 +46,30 @@ export function FollowUpDialog({
 }: FollowUpDialogProps) {
   const { t } = useLanguage()
   const queryClient = useQueryClient()
+
+  // 动态创建 schema 以支持国际化错误消息
+  const followUpFormSchema = useMemo(
+    () =>
+      z.object({
+        followType: z
+          .string()
+          .min(1, {
+            message: t('business.customerConsult.pleaseSelectFollowType'),
+          }),
+        followContent: z
+          .string()
+          .min(1, {
+            message: t('business.customerConsult.pleaseEnterFollowContent'),
+          }),
+        followResult: z
+          .string()
+          .min(1, {
+            message: t('business.customerConsult.pleaseSelectFollowResult'),
+          }),
+        remark: z.string().optional(),
+      }),
+    [t]
+  )
 
   const form = useForm<FollowUpFormData>({
     resolver: zodResolver(followUpFormSchema),
@@ -65,12 +86,9 @@ export function FollowUpDialog({
   useEffect(() => {
     if (customer) {
       form.reset({
-        followType: customer.followType || '',
-        followContent: customer.followContent || '',
-        followResult: customer.followResult || '',
-        // nextFollowTime: customer.nextFollowTime || null,
-        // attachmentUrls: customer.attachmentUrls || '',
-        // followBy: customer.followBy || '',
+        followType: '',
+        followContent: '',
+        followResult: '',
       })
     }
   }, [customer, form])
@@ -102,7 +120,7 @@ export function FollowUpDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
+      <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>{t('business.customerConsult.followUp')}</DialogTitle>
           <DialogDescription>
@@ -112,32 +130,37 @@ export function FollowUpDialog({
 
         <div className='grid gap-4 py-4'>
           {/* Customer Info Display */}
-          <div className='grid grid-cols-2 gap-4 rounded-lg bg-muted p-4'>
+          <div className='bg-muted grid grid-cols-2 gap-4 rounded-lg p-4'>
             <div>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 {t('business.customerConsult.contactPerson')}
               </p>
               <p className='font-medium'>{customer.contactPerson || '-'}</p>
             </div>
             <div>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 {t('business.customerConsult.phone')}
               </p>
               <p className='font-medium'>
-                {customer.phone ? `+${customer.countryCode} ${customer.phone}` : '-'}
+                {customer.phone
+                  ? `+${customer.countryCode} ${customer.phone}`
+                  : '-'}
               </p>
             </div>
             <div>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 {t('business.customerConsult.company')}
               </p>
               <p className='font-medium'>{customer.company || '-'}</p>
             </div>
             <div>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 {t('business.customerConsult.consultContent')}
               </p>
-              <p className='font-medium line-clamp-2' title={customer.consultContent || ''}>
+              <p
+                className='line-clamp-2 font-medium'
+                title={customer.consultContent || ''}
+              >
                 {customer.consultContent || '-'}
               </p>
             </div>
@@ -162,25 +185,37 @@ export function FollowUpDialog({
                         <FormControl>
                           <SelectTrigger clearable={false}>
                             <SelectValue
-                              placeholder={t('business.customerConsult.pleaseSelectFollowType')}
+                              placeholder={t(
+                                'business.customerConsult.pleaseSelectFollowType'
+                              )}
                             />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value='PHONE'>
-                            {t('business.customerConsult.followTypeValues.PHONE')}
+                            {t(
+                              'business.customerConsult.followTypeValues.PHONE'
+                            )}
                           </SelectItem>
                           <SelectItem value='VISIT'>
-                            {t('business.customerConsult.followTypeValues.VISIT')}
+                            {t(
+                              'business.customerConsult.followTypeValues.VISIT'
+                            )}
                           </SelectItem>
                           <SelectItem value='EMAIL'>
-                            {t('business.customerConsult.followTypeValues.EMAIL')}
+                            {t(
+                              'business.customerConsult.followTypeValues.EMAIL'
+                            )}
                           </SelectItem>
                           <SelectItem value='WECHAT'>
-                            {t('business.customerConsult.followTypeValues.WECHAT')}
+                            {t(
+                              'business.customerConsult.followTypeValues.WECHAT'
+                            )}
                           </SelectItem>
                           <SelectItem value='OTHER'>
-                            {t('business.customerConsult.followTypeValues.OTHER')}
+                            {t(
+                              'business.customerConsult.followTypeValues.OTHER'
+                            )}
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -204,22 +239,32 @@ export function FollowUpDialog({
                         <FormControl>
                           <SelectTrigger clearable={false}>
                             <SelectValue
-                              placeholder={t('business.customerConsult.pleaseSelectFollowResult')}
+                              placeholder={t(
+                                'business.customerConsult.pleaseSelectFollowResult'
+                              )}
                             />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value='INTERESTED'>
-                            {t('business.customerConsult.followResultValues.INTERESTED')}
+                            {t(
+                              'business.customerConsult.followResultValues.INTERESTED'
+                            )}
                           </SelectItem>
                           <SelectItem value='CONSIDERING'>
-                            {t('business.customerConsult.followResultValues.CONSIDERING')}
+                            {t(
+                              'business.customerConsult.followResultValues.CONSIDERING'
+                            )}
                           </SelectItem>
                           <SelectItem value='REFUSED'>
-                            {t('business.customerConsult.followResultValues.REFUSED')}
+                            {t(
+                              'business.customerConsult.followResultValues.REFUSED'
+                            )}
                           </SelectItem>
                           <SelectItem value='SUCCESS'>
-                            {t('business.customerConsult.followResultValues.SUCCESS')}
+                            {t(
+                              'business.customerConsult.followResultValues.SUCCESS'
+                            )}
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -239,7 +284,9 @@ export function FollowUpDialog({
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={t('business.customerConsult.pleaseEnterFollowContent')}
+                        placeholder={t(
+                          'business.customerConsult.pleaseEnterFollowContent'
+                        )}
                         className='min-h-[100px]'
                         {...field}
                       />
@@ -318,7 +365,9 @@ export function FollowUpDialog({
                   {t('common.cancel')}
                 </Button>
                 <Button type='submit' disabled={mutation.isPending}>
-                  {mutation.isPending ? t('common.submitting') : t('common.submit')}
+                  {mutation.isPending
+                    ? t('common.submitting')
+                    : t('common.submit')}
                 </Button>
               </div>
             </form>

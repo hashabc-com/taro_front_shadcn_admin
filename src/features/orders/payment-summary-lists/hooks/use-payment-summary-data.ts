@@ -14,18 +14,25 @@ export function usePaymentSummaryData() {
   const convertAmount = useConvertAmount()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['orders', 'payment-summary', search, selectedCountry?.code, selectedMerchant?.appid],
+    queryKey: [
+      'orders',
+      'payment-summary',
+      search,
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: () => getPaymentSummary(search),
     enabled: !!selectedCountry,
-    placeholderData:(prev) => prev ?? undefined
+    placeholderData: (prev) => prev ?? undefined,
   })
 
-  const orders = data?.result?.listRecord?.map((item: IOrderSummaryType) => ({
-    ...item,
-    amount: convertAmount(item.amount,false),
-    serviceAmount: convertAmount(item.serviceAmount,false),
-    totalAmount: convertAmount(item.totalAmount,false),
-  })) || []
+  const orders =
+    data?.result?.listRecord?.map((item: IOrderSummaryType) => ({
+      ...item,
+      amount: convertAmount(item.amount, false),
+      serviceAmount: convertAmount(item.serviceAmount, false),
+      totalAmount: convertAmount(item.totalAmount, false),
+    })) || []
 
   const totalRecord = data?.result?.totalRecord || 0
 
@@ -33,7 +40,10 @@ export function usePaymentSummaryData() {
   const summaryData = {
     orderTotal: data?.result?.orderTotal || '0',
     amountTotal: convertAmount(data?.result?.amountTotal || 0, false),
-    amountServiceTotal: convertAmount(data?.result?.amountServiceTotal || 0, false),
+    amountServiceTotal: convertAmount(
+      data?.result?.amountServiceTotal || 0,
+      false
+    ),
     totalAmountTotal: convertAmount(data?.result?.totalAmountTotal || 0, false),
   }
 

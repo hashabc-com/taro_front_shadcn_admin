@@ -4,7 +4,13 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { unbindGoogle, addIP, bindTgGroup, getAutoLoginToken } from '@/api/merchant'
+import {
+  unbindGoogle,
+  addIP,
+  bindTgGroup,
+  getAutoLoginToken,
+} from '@/api/merchant'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -25,18 +31,23 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { type IMerchantInfoType } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 
 const isProduction = import.meta.env.MODE === 'production'
 
-const createUnbindKeySchema = (t: (key: string) => string) => z.object({
-  googleCode: z.string().min(1, t('merchant.info.validation.googleCodeRequired')),
-})
+const createUnbindKeySchema = (t: (key: string) => string) =>
+  z.object({
+    googleCode: z
+      .string()
+      .min(1, t('merchant.info.validation.googleCodeRequired')),
+  })
 
-const createAddIpSchema = (t: (key: string) => string) => z.object({
-  ip: z.string().min(1, t('merchant.info.validation.ipRequired')),
-  googleCode: z.string().min(1, t('merchant.info.validation.googleCodeRequired')),
-})
+const createAddIpSchema = (t: (key: string) => string) =>
+  z.object({
+    ip: z.string().min(1, t('merchant.info.validation.ipRequired')),
+    googleCode: z
+      .string()
+      .min(1, t('merchant.info.validation.googleCodeRequired')),
+  })
 
 type UnbindKeyFormValues = z.infer<ReturnType<typeof createUnbindKeySchema>>
 type AddIpFormValues = z.infer<ReturnType<typeof createAddIpSchema>>
@@ -114,7 +125,10 @@ export function UnbindKeyDialog({
                 <FormItem>
                   <FormLabel>{t('password.googleAuthCode')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('password.enterGoogleAuthCode')} {...field} />
+                    <Input
+                      placeholder={t('password.enterGoogleAuthCode')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -144,9 +158,12 @@ export function UnbindKeyDialog({
   )
 }
 
-const createAutoLoginSchema = (t: (key: string) => string) => z.object({
-  googleCode: z.string().min(1, t('merchant.info.validation.googleCodeRequired')),
-})
+const createAutoLoginSchema = (t: (key: string) => string) =>
+  z.object({
+    googleCode: z
+      .string()
+      .min(1, t('merchant.info.validation.googleCodeRequired')),
+  })
 
 type AutoLoginFormValues = z.infer<ReturnType<typeof createAutoLoginSchema>>
 
@@ -176,21 +193,21 @@ export function AutoLoginDialog({
     setIsSubmitting(true)
 
     try {
-        const res = await getAutoLoginToken(merchant.appid, values.googleCode)
-        if (res.code == 200) {
-            const baseUrl = isProduction
-              ? 'https://merchant.taropay.com'
-              : 'https://merchant-test.taropay.com'
-            window.open(`${baseUrl}?token=${res.result}`, '_blank')
-            onOpenChange(false)
-            form.reset()
-        } else {
-             toast.error(res.result || t('merchant.info.error.autoLoginFailed'))
-        }
-    } catch{
-        toast.error(t('merchant.info.error.autoLoginFailed'))
+      const res = await getAutoLoginToken(merchant.appid, values.googleCode)
+      if (res.code == 200) {
+        const baseUrl = isProduction
+          ? 'https://merchant.taropay.com'
+          : 'https://merchant-test.taropay.com'
+        window.open(`${baseUrl}?token=${res.result}`, '_blank')
+        onOpenChange(false)
+        form.reset()
+      } else {
+        toast.error(res.result || t('merchant.info.error.autoLoginFailed'))
+      }
+    } catch {
+      toast.error(t('merchant.info.error.autoLoginFailed'))
     } finally {
-        setIsSubmitting(false)
+      setIsSubmitting(false)
     }
   }
 
@@ -217,7 +234,10 @@ export function AutoLoginDialog({
                 <FormItem>
                   <FormLabel>{t('merchant.info.googleCode')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('merchant.info.placeholder.googleCode')} {...field} />
+                    <Input
+                      placeholder={t('merchant.info.placeholder.googleCode')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -247,9 +267,10 @@ export function AutoLoginDialog({
   )
 }
 
-const createBindTgGroupSchema = (t: (key: string) => string) => z.object({
-  chatId: z.string().min(1, t('merchant.info.validation.chatIdRequired')),
-})
+const createBindTgGroupSchema = (t: (key: string) => string) =>
+  z.object({
+    chatId: z.string().min(1, t('merchant.info.validation.chatIdRequired')),
+  })
 
 type BindTgGroupFormValues = z.infer<ReturnType<typeof createBindTgGroupSchema>>
 
@@ -282,7 +303,7 @@ export function BindTgGroupDialog({
 
     const formData = new FormData()
     formData.append('merchantId', merchant.appid)
-    
+
     formData.append('chatId', values.chatId)
 
     const res = await bindTgGroup(formData)
@@ -321,7 +342,10 @@ export function BindTgGroupDialog({
                 <FormItem>
                   <FormLabel>{t('merchant.info.chatId')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('merchant.info.placeholder.chatId')} {...field} />
+                    <Input
+                      placeholder={t('merchant.info.placeholder.chatId')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -441,7 +465,10 @@ export function AddIpDialog({
                 <FormItem>
                   <FormLabel>{t('password.googleAuthCode')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('password.enterGoogleAuthCode')} {...field} />
+                    <Input
+                      placeholder={t('password.enterGoogleAuthCode')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

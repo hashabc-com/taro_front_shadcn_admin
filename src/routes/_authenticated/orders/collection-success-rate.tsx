@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { CollectionSuccessRate } from '@/features/orders/collection-success-rate'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { CollectionSuccessRate } from '@/features/orders/collection-success-rate'
 
 const collectionSuccessRateSearchSchema = createBaseSearchSchema({
   channel: z.string().optional(),
@@ -10,9 +10,13 @@ const collectionSuccessRateSearchSchema = createBaseSearchSchema({
   pickupCenter: z.string().optional(),
 })
 
-export type ICollectionRateSearch = z.infer<typeof collectionSuccessRateSearchSchema>
+export type ICollectionRateSearch = z.infer<
+  typeof collectionSuccessRateSearchSchema
+>
 
-export const Route = createFileRoute('/_authenticated/orders/collection-success-rate')({
+export const Route = createFileRoute(
+  '/_authenticated/orders/collection-success-rate'
+)({
   component: CollectionSuccessRate,
   validateSearch: collectionSuccessRateSearchSchema,
 })

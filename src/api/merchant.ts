@@ -1,6 +1,5 @@
-import http from '@/lib/http'
 import { type IMerchantInfoSearch } from '@/routes/_authenticated/merchant/info-lists'
-
+import http from '@/lib/http'
 import { type IMerchantInfoType } from '@/features/merchant/info-lists/schema'
 
 // export interface IMerchantInfoType {
@@ -40,7 +39,8 @@ export const updateCustomer = (data: IMerchantInfoType) =>
   http.post('/admin/user/v1/updateUser', data)
 
 // 解绑Google验证
-export const unbindGoogle = (data: FormData) => http.post('/admin/deplop/v1/unbindGoogle', data,{autoAddMerchantId:false})
+export const unbindGoogle = (data: FormData) =>
+  http.post('/admin/deplop/v1/unbindGoogle', data, { autoAddMerchantId: false })
 
 // 添加IP
 export const addIP = (data: {
@@ -51,21 +51,33 @@ export const addIP = (data: {
 
 // 绑定TG群组
 export const bindTgGroup = (data: FormData) =>
-  http.post('/admin/user/v1/bindTgGroup', data,{autoAddCountry:false})
+  http.post('/admin/user/v1/bindTgGroup', data, { autoAddCountry: false })
 
 // 获取商户费率
 export const getMerchantRate = (params: { merchantId: string }) =>
-  http.get('/admin/customerRate/getRateListByAppid', params,{autoAddMerchantId:false})
+  http.get('/admin/customerRate/getRateListByAppid', params, {
+    autoAddMerchantId: false,
+  })
 
 // 更新商户费率
 export const updateMerchantRate = (data: unknown[]) =>
-  http.post('/admin/customerRate/update', data,{autoAddMerchantId:false,autoAddCountry:false})
+  http.post('/admin/customerRate/update', data, {
+    autoAddMerchantId: false,
+    autoAddCountry: false,
+  })
 
 // 获取渠道类型列表
-export const getChannelTypeList = (country: string,channelCode?: string) =>
-  http.get('/admin/user/v1/getChannelTypeList', { country, channelCode },{autoAddCountry:false})
+export const getChannelTypeList = (country: string, channelCode?: string) =>
+  http.get(
+    '/admin/user/v1/getChannelTypeList',
+    { country, channelCode },
+    { autoAddCountry: false }
+  )
 
 // 获取自动登录token
 export const getAutoLoginToken = (merchantId: string, googleCode: string) =>
-  http.post(`/admin/user/v1/loginCustomerBackstage?merchantId=${merchantId}&gauthKey=${googleCode}`,{},{autoAddMerchantId:false,autoAddCountry:false})
-
+  http.post(
+    `/admin/user/v1/loginCustomerBackstage?merchantId=${merchantId}&gauthKey=${googleCode}`,
+    {},
+    { autoAddMerchantId: false, autoAddCountry: false }
+  )

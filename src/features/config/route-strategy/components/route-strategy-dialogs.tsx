@@ -1,8 +1,22 @@
 import { useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useCountryStore } from '@/stores'
+import { toast } from 'sonner'
+import { getMerchantList } from '@/api/common'
+import {
+  addRouteStrategy,
+  getPaymentMethods,
+  getPaymentChannelsByMethod,
+  getRouteStrategyWeightDetail,
+} from '@/api/config'
+import { useMerchantStore, type Merchant } from '@/stores/merchant-store'
+import { getTranslation } from '@/lib/i18n'
+import { useLanguage } from '@/context/language-provider'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -19,9 +33,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Select,
   SelectContent,
@@ -29,35 +41,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { toast } from 'sonner'
-import { useRouteStrategy } from './route-strategy-provider'
-import { getMerchantList } from '@/api/common'
-import { useMerchantStore, type Merchant } from '@/stores/merchant-store'
-import {
-  addRouteStrategy,
-  getPaymentMethods,
-  getPaymentChannelsByMethod,
-  getRouteStrategyWeightDetail,
-} from '@/api/config'
 import { type PaymentChannelOption } from '../schema'
-import { useCountryStore } from '@/stores'
-import { useLanguage } from '@/context/language-provider'
-import { getTranslation } from '@/lib/i18n'
+import { useRouteStrategy } from './route-strategy-provider'
 
 // 添加路由策略表单 Schema
-const createRouteStrategyFormSchema = (t: (key: string) => string) => z.object({
-  appid: z.string().optional(),
-  paymentType: z.string(),
-  productCode: z.string().min(1, t('config.routeStrategy.validation.selectPaymentMethod')),
-  routeStrategy: z.string(),
-  channels: z.array(z.object({
-    paymentPlatform: z.string(),
-    weight: z.number().min(0).max(100).optional(),
-    id: z.number().optional(),
-  })).min(1, t('config.routeStrategy.validation.selectAtLeastOneChannel')),
-})
+const createRouteStrategyFormSchema = (t: (key: string) => string) =>
+  z.object({
+    appid: z.string().optional(),
+    paymentType: z.string(),
+    productCode: z
+      .string()
+      .min(1, t('config.routeStrategy.validation.selectPaymentMethod')),
+    routeStrategy: z.string(),
+    channels: z
+      .array(
+        z.object({
+          paymentPlatform: z.string(),
+          weight: z.number().min(0).max(100).optional(),
+          id: z.number().optional(),
+        })
+      )
+      .min(1, t('config.routeStrategy.validation.selectAtLeastOneChannel')),
+  })
 
-type RouteStrategyFormValues = z.infer<ReturnType<typeof createRouteStrategyFormSchema>>
+type RouteStrategyFormValues = z.infer<
+  ReturnType<typeof createRouteStrategyFormSchema>
+>
 
 // 添加/编辑对话框
 export function RouteStrategyMutateDialog() {
@@ -68,8 +77,10 @@ export function RouteStrategyMutateDialog() {
   const { selectedMerchant } = useMerchantStore()
   const isEdit = open === 'edit'
   const isOpen = open === 'create' || open === 'edit'
-  
-  const routeStrategyFormSchema = createRouteStrategyFormSchema((key: string) => getTranslation(lang, key))
+
+  const routeStrategyFormSchema = createRouteStrategyFormSchema((key: string) =>
+    getTranslation(lang, key)
+  )
 
   const form = useForm<RouteStrategyFormValues>({
     resolver: zodResolver(routeStrategyFormSchema),
@@ -91,51 +102,73 @@ export function RouteStrategyMutateDialog() {
   const { data: merchantData } = useQuery({
     queryKey: ['merchants', selectedCountry?.code, selectedMerchant?.appid],
     queryFn: getMerchantList,
-    enabled: !!selectedCountry && isOpen
+    enabled: !!selectedCountry && isOpen,
   })
   const merchants = (merchantData?.result || []) as Merchant[]
 
   // 2. 获取支付方式列表（根据类型）
   const { data: paymentMethodsData } = useQuery({
     queryKey: ['payment-methods', selectedCountry?.code, paymentType],
-    queryFn: () => getPaymentMethods({ 
-      country: selectedCountry!.code, 
-      type: paymentType 
-    }),
+    queryFn: () =>
+      getPaymentMethods({
+        country: selectedCountry!.code,
+        type: paymentType,
+      }),
     enabled: !!selectedCountry && !!paymentType && isOpen,
   })
   const paymentMethods = (paymentMethodsData?.result || []) as string[]
 
   // 3. 获取支付渠道列表（仅新增模式）
   const { data: channelsData } = useQuery({
-    queryKey: ['payment-channels-by-method', selectedCountry?.code, paymentType, productCode],
-    queryFn: () => getPaymentChannelsByMethod({ 
-      country: selectedCountry!.code, 
-      type: paymentType,
-      subchannelcode: productCode 
-    }),
-    enabled: !!selectedCountry && !!paymentType && !!productCode && isOpen && !isEdit,
+    queryKey: [
+      'payment-channels-by-method',
+      selectedCountry?.code,
+      paymentType,
+      productCode,
+    ],
+    queryFn: () =>
+      getPaymentChannelsByMethod({
+        country: selectedCountry!.code,
+        type: paymentType,
+        subchannelcode: productCode,
+      }),
+    enabled:
+      !!selectedCountry && !!paymentType && !!productCode && isOpen && !isEdit,
   })
 
   // 4. 获取权重轮询渠道列表（编辑模式下两种策略都使用）
   const { data: weightDetailData } = useQuery({
-    queryKey: ['route-strategy-weight-detail', selectedCountry?.code, currentRow?.appid, productCode, paymentType],
-    queryFn: () => getRouteStrategyWeightDetail({ 
-      country: selectedCountry!.code, 
-      appid: currentRow?.appid || '',
-      productCode: productCode, 
-      paymentType: paymentType
-    }),
+    queryKey: [
+      'route-strategy-weight-detail',
+      selectedCountry?.code,
+      currentRow?.appid,
+      productCode,
+      paymentType,
+    ],
+    queryFn: () =>
+      getRouteStrategyWeightDetail({
+        country: selectedCountry!.code,
+        appid: currentRow?.appid || '',
+        productCode: productCode,
+        paymentType: paymentType,
+      }),
     enabled: isEdit && !!selectedCountry && !!productCode && isOpen,
   })
 
   // 获取当前显示的渠道列表
   const availableChannels: Array<{ id: number; channelCode: string }> = isEdit
-    ? (weightDetailData?.result?.paymentRouteChannelWeightList || []).map((item: { paymentPlatform: string; weight: number; id?: number; channelCode?: string }) => ({
-        id: item.id || 0,
-        channelCode: item.paymentPlatform,
-      }))
-    : (channelsData?.result || []) as PaymentChannelOption[]
+    ? (weightDetailData?.result?.paymentRouteChannelWeightList || []).map(
+        (item: {
+          paymentPlatform: string
+          weight: number
+          id?: number
+          channelCode?: string
+        }) => ({
+          id: item.id || 0,
+          channelCode: item.paymentPlatform,
+        })
+      )
+    : ((channelsData?.result || []) as PaymentChannelOption[])
 
   // 初始化表单（只在对话框打开时执行一次）
   useEffect(() => {
@@ -151,12 +184,13 @@ export function RouteStrategyMutateDialog() {
       })
     } else if (open === 'edit' && currentRow) {
       // 编辑模式：回显数据
-      const channelList = currentRow.paymentRouteChannelWeightList?.map(item => ({
-        paymentPlatform: item.paymentPlatform,
-        weight: item.weight,
-        id: item.id,
-      })) || []
-      
+      const channelList =
+        currentRow.paymentRouteChannelWeightList?.map((item) => ({
+          paymentPlatform: item.paymentPlatform,
+          weight: item.weight,
+          id: item.id,
+        })) || []
+
       form.reset({
         appid: currentRow.appid || '',
         paymentType: currentRow.paymentType,
@@ -184,11 +218,14 @@ export function RouteStrategyMutateDialog() {
   // 当权重详情数据返回时，更新表单的渠道选择和权重
   useEffect(() => {
     if (isEdit && weightDetailData?.result?.paymentRouteChannelWeightList) {
-      const channelList = weightDetailData.result.paymentRouteChannelWeightList.map((item: { paymentPlatform: string; weight: number,id?: number }) => ({
-        paymentPlatform: item.paymentPlatform,
-        weight: item.weight,
-        id: item.id,
-      }))
+      const channelList =
+        weightDetailData.result.paymentRouteChannelWeightList.map(
+          (item: { paymentPlatform: string; weight: number; id?: number }) => ({
+            paymentPlatform: item.paymentPlatform,
+            weight: item.weight,
+            id: item.id,
+          })
+        )
       form.setValue('channels', channelList)
     }
   }, [weightDetailData, isEdit, form])
@@ -209,7 +246,9 @@ export function RouteStrategyMutateDialog() {
     onSuccess: (res) => {
       if (res.code == 200) {
         queryClient.invalidateQueries({ queryKey: ['route-strategies'] })
-        toast.success(t( open === 'create' ? 'common.addSuccess' : 'common.updateSuccess'))
+        toast.success(
+          t(open === 'create' ? 'common.addSuccess' : 'common.updateSuccess')
+        )
         handleClose()
       } else {
         toast.error(res.message || t('common.operationFailed'))
@@ -231,11 +270,19 @@ export function RouteStrategyMutateDialog() {
   }
 
   // 切换渠道选中状态
-  const handleChannelToggle = (channelCode: string, checked: boolean, channelId?: number) => {
+  const handleChannelToggle = (
+    channelCode: string,
+    checked: boolean,
+    channelId?: number
+  ) => {
     const currentChannels = channels || []
     if (checked) {
-      const newChannel: { paymentPlatform: string; weight?: number; id?: number } = {
-        paymentPlatform: channelCode, 
+      const newChannel: {
+        paymentPlatform: string
+        weight?: number
+        id?: number
+      } = {
+        paymentPlatform: channelCode,
         weight: routeStrategy === '1' ? 0 : undefined,
       }
       // 只在编辑模式且有id时才添加id字段
@@ -244,16 +291,19 @@ export function RouteStrategyMutateDialog() {
       }
       form.setValue('channels', [...currentChannels, newChannel])
     } else {
-      form.setValue('channels', currentChannels.filter(ch => ch.paymentPlatform !== channelCode))
+      form.setValue(
+        'channels',
+        currentChannels.filter((ch) => ch.paymentPlatform !== channelCode)
+      )
     }
   }
 
   // 更新渠道权重
   const handleWeightChange = (channelCode: string, weight: string) => {
     const currentChannels = channels || []
-    const updatedChannels = currentChannels.map(ch => 
-      ch.paymentPlatform === channelCode 
-        ? { ...ch, weight: Number(weight) || 0 } 
+    const updatedChannels = currentChannels.map((ch) =>
+      ch.paymentPlatform === channelCode
+        ? { ...ch, weight: Number(weight) || 0 }
         : ch
     )
     form.setValue('channels', updatedChannels)
@@ -261,15 +311,20 @@ export function RouteStrategyMutateDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-[700px] max-h-[90vh] overflow-y-auto'>
+      <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-[700px]'>
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? t('config.routeStrategy.editRouteConfig') : t('config.routeStrategy.addRouteConfig')}
+            {isEdit
+              ? t('config.routeStrategy.editRouteConfig')
+              : t('config.routeStrategy.addRouteConfig')}
           </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6 mt-4'>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='mt-4 space-y-6'
+          >
             <FormField
               control={form.control}
               name='appid'
@@ -322,13 +377,19 @@ export function RouteStrategyMutateDialog() {
                     >
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='1' id='type-1' />
-                        <label htmlFor='type-1' className='cursor-pointer text-sm'>
+                        <label
+                          htmlFor='type-1'
+                          className='cursor-pointer text-sm'
+                        >
                           {t('config.routeStrategy.payout')}
                         </label>
                       </div>
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='2' id='type-2' />
-                        <label htmlFor='type-2' className='cursor-pointer text-sm'>
+                        <label
+                          htmlFor='type-2'
+                          className='cursor-pointer text-sm'
+                        >
                           {t('config.routeStrategy.collection')}
                         </label>
                       </div>
@@ -344,7 +405,9 @@ export function RouteStrategyMutateDialog() {
               name='productCode'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('config.routeStrategy.paymentMethod')}</FormLabel>
+                  <FormLabel>
+                    {t('config.routeStrategy.paymentMethod')}
+                  </FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -352,9 +415,18 @@ export function RouteStrategyMutateDialog() {
                       className='flex flex-wrap gap-4'
                     >
                       {paymentMethods.map((method) => (
-                        <div key={method} className='flex items-center space-x-2'>
-                          <RadioGroupItem value={method} id={`method-${method}`} />
-                          <label htmlFor={`method-${method}`} className='cursor-pointer text-sm'>
+                        <div
+                          key={method}
+                          className='flex items-center space-x-2'
+                        >
+                          <RadioGroupItem
+                            value={method}
+                            id={`method-${method}`}
+                          />
+                          <label
+                            htmlFor={`method-${method}`}
+                            className='cursor-pointer text-sm'
+                          >
                             {method}
                           </label>
                         </div>
@@ -371,7 +443,9 @@ export function RouteStrategyMutateDialog() {
               name='routeStrategy'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('config.routeStrategy.routeStrategy')}</FormLabel>
+                  <FormLabel>
+                    {t('config.routeStrategy.routeStrategy')}
+                  </FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -380,13 +454,19 @@ export function RouteStrategyMutateDialog() {
                     >
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='1' id='strategy-1' />
-                        <label htmlFor='strategy-1' className='cursor-pointer text-sm'>
+                        <label
+                          htmlFor='strategy-1'
+                          className='cursor-pointer text-sm'
+                        >
                           {t('config.routeStrategy.weightRoundRobin')}
                         </label>
                       </div>
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='2' id='strategy-2' />
-                        <label htmlFor='strategy-2' className='cursor-pointer text-sm'>
+                        <label
+                          htmlFor='strategy-2'
+                          className='cursor-pointer text-sm'
+                        >
                           {t('config.routeStrategy.costPriority')}
                         </label>
                       </div>
@@ -402,31 +482,45 @@ export function RouteStrategyMutateDialog() {
               name='channels'
               render={() => (
                 <FormItem>
-                  <FormLabel>{t('config.routeStrategy.paymentChannels')}</FormLabel>
-                  <div className='space-y-3 border rounded-md p-4'>
+                  <FormLabel>
+                    {t('config.routeStrategy.paymentChannels')}
+                  </FormLabel>
+                  <div className='space-y-3 rounded-md border p-4'>
                     {availableChannels.length > 0 ? (
                       availableChannels.map((channel) => {
-                        const isChecked = channels?.some(ch => ch.paymentPlatform === channel.channelCode)
-                        const channelWeight = channels?.find(ch => ch.paymentPlatform === channel.channelCode)?.weight || 0
-                        
+                        const isChecked = channels?.some(
+                          (ch) => ch.paymentPlatform === channel.channelCode
+                        )
+                        const channelWeight =
+                          channels?.find(
+                            (ch) => ch.paymentPlatform === channel.channelCode
+                          )?.weight || 0
+
                         return (
-                          <div key={channel.id} className='flex items-center gap-4'>
+                          <div
+                            key={channel.id}
+                            className='flex items-center gap-4'
+                          >
                             <Checkbox
                               checked={isChecked}
-                              onCheckedChange={(checked) => 
-                                handleChannelToggle(channel.channelCode, !!checked, isEdit ? channel.id : undefined)
+                              onCheckedChange={(checked) =>
+                                handleChannelToggle(
+                                  channel.channelCode,
+                                  !!checked,
+                                  isEdit ? channel.id : undefined
+                                )
                               }
                               id={`channel-${channel.id}`}
                             />
-                            <label 
-                              htmlFor={`channel-${channel.id}`} 
+                            <label
+                              htmlFor={`channel-${channel.id}`}
                               className='flex-1 cursor-pointer font-medium'
                             >
                               {channel.channelCode}
                             </label>
                             {routeStrategy === '1' && isChecked && (
                               <div className='flex items-center gap-2'>
-                                <span className='text-sm text-muted-foreground'>
+                                <span className='text-muted-foreground text-sm'>
                                   {t('config.routeStrategy.weight')}:
                                 </span>
                                 <Input
@@ -434,7 +528,12 @@ export function RouteStrategyMutateDialog() {
                                   min='0'
                                   max='100'
                                   value={channelWeight}
-                                  onChange={(e) => handleWeightChange(channel.channelCode, e.target.value)}
+                                  onChange={(e) =>
+                                    handleWeightChange(
+                                      channel.channelCode,
+                                      e.target.value
+                                    )
+                                  }
                                   className='w-20'
                                   placeholder='0-100'
                                 />
@@ -444,8 +543,10 @@ export function RouteStrategyMutateDialog() {
                         )
                       })
                     ) : (
-                      <div className='text-sm text-muted-foreground text-center py-4'>
-                        {productCode ? t('common.noData') : t('config.routeStrategy.selectPaymentMethodFirst')}
+                      <div className='text-muted-foreground py-4 text-center text-sm'>
+                        {productCode
+                          ? t('common.noData')
+                          : t('config.routeStrategy.selectPaymentMethodFirst')}
                       </div>
                     )}
                   </div>
@@ -459,7 +560,9 @@ export function RouteStrategyMutateDialog() {
                 {t('common.cancel')}
               </Button>
               <Button type='submit' disabled={mutation.isPending}>
-                {mutation.isPending ? t('common.submitting') : t('common.confirm')}
+                {mutation.isPending
+                  ? t('common.submitting')
+                  : t('common.confirm')}
               </Button>
             </DialogFooter>
           </form>

@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
+// import { type IBusinessType } from '../schema'
+import { useCountryStore } from '@/stores'
 import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { getBusinessRate, configureBusinessRate } from '@/api/business'
+import {
+  getChannelTypeList,
+  //   getMerchantRate,
+  //   updateMerchantRate,
+} from '@/api/merchant'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,14 +21,6 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  getChannelTypeList,
-//   getMerchantRate,
-//   updateMerchantRate,
-} from '@/api/merchant'
-import { getBusinessRate,configureBusinessRate } from '@/api/business'
-// import { type IBusinessType } from '../schema'
-import { useCountryStore } from '@/stores'
 import { useMerchantBindProvider } from './merchant-bind-provider'
 
 type RateItem = {
@@ -35,18 +35,16 @@ type RateConfigDialogProps = {
   onSuccess: () => void
 }
 
-export function RateConfigDialog({
-  onSuccess,
-}: RateConfigDialogProps) {
+export function RateConfigDialog({ onSuccess }: RateConfigDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [collectionRates, setCollectionRates] = useState<RateItem[]>([])
   const [payoutRates, setPayoutRates] = useState<RateItem[]>([])
   const { t } = useLanguage()
-  const {selectedCountry} = useCountryStore()
-  const { open,setOpen,currentRow: business } = useMerchantBindProvider()
+  const { selectedCountry } = useCountryStore()
+  const { open, setOpen, currentRow: business } = useMerchantBindProvider()
   const currency = selectedCountry?.currency || 'USD'
-  
+
   useEffect(() => {
     if (open == 'rate' && business) {
       loadRateData()
@@ -59,7 +57,9 @@ export function RateConfigDialog({
     setIsLoading(true)
     try {
       // 获取渠道列表
-      const channelRes = await getChannelTypeList(selectedCountry?.country || '')
+      const channelRes = await getChannelTypeList(
+        selectedCountry?.country || ''
+      )
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const channelData = (channelRes as any)?.result || channelRes
       const payinChannel = channelData?.payinChannel || []
@@ -89,7 +89,7 @@ export function RateConfigDialog({
       const rateRes = await getBusinessRate(business.id)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rateData = (rateRes as any)?.result || rateRes
-      
+
       if (Array.isArray(rateData)) {
         rateData.forEach((rateItem) => {
           const { payCode, rate, feeAmount, type, id } = rateItem
@@ -131,9 +131,17 @@ export function RateConfigDialog({
     // 验证数据：可以不填，但如果填了费率就必须填单笔固定
     const allItems = [...collectionRates, ...payoutRates]
     const hasInvalidData = allItems.some((item) => {
-      const hasRate = item.rate !== null && item.rate !== undefined && item.rate !== '' && String(item.rate).trim() !== ''
-      const hasFeeAmount = item.feeAmount !== null && item.feeAmount !== undefined && item.feeAmount !== '' && String(item.feeAmount).trim() !== ''
-      
+      const hasRate =
+        item.rate !== null &&
+        item.rate !== undefined &&
+        item.rate !== '' &&
+        String(item.rate).trim() !== ''
+      const hasFeeAmount =
+        item.feeAmount !== null &&
+        item.feeAmount !== undefined &&
+        item.feeAmount !== '' &&
+        String(item.feeAmount).trim() !== ''
+
       // 如果填了费率但没填单笔固定，或者填了单笔固定但没填费率，则无效
       if (hasRate && !hasFeeAmount) {
         return true // 只填费率不填单笔固定
@@ -141,7 +149,7 @@ export function RateConfigDialog({
       if (!hasRate && hasFeeAmount) {
         return true // 只填单笔固定不填费率
       }
-      
+
       return false
     })
 
@@ -157,9 +165,17 @@ export function RateConfigDialog({
 
       // 添加代收费率（只提交有数据的项）
       collectionRates.forEach((item) => {
-        const hasRate = item.rate !== null && item.rate !== undefined && item.rate !== '' && String(item.rate).trim() !== ''
-        const hasFeeAmount = item.feeAmount !== null && item.feeAmount !== undefined && item.feeAmount !== '' && String(item.feeAmount).trim() !== ''
-        
+        const hasRate =
+          item.rate !== null &&
+          item.rate !== undefined &&
+          item.rate !== '' &&
+          String(item.rate).trim() !== ''
+        const hasFeeAmount =
+          item.feeAmount !== null &&
+          item.feeAmount !== undefined &&
+          item.feeAmount !== '' &&
+          String(item.feeAmount).trim() !== ''
+
         if (hasRate && hasFeeAmount) {
           submitData.push({
             id: item.id || '',
@@ -175,9 +191,17 @@ export function RateConfigDialog({
 
       // 添加代付费率（只提交有数据的项）
       payoutRates.forEach((item) => {
-        const hasRate = item.rate !== null && item.rate !== undefined && item.rate !== '' && String(item.rate).trim() !== ''
-        const hasFeeAmount = item.feeAmount !== null && item.feeAmount !== undefined && item.feeAmount !== '' && String(item.feeAmount).trim() !== ''
-        
+        const hasRate =
+          item.rate !== null &&
+          item.rate !== undefined &&
+          item.rate !== '' &&
+          String(item.rate).trim() !== ''
+        const hasFeeAmount =
+          item.feeAmount !== null &&
+          item.feeAmount !== undefined &&
+          item.feeAmount !== '' &&
+          String(item.feeAmount).trim() !== ''
+
         if (hasRate && hasFeeAmount) {
           submitData.push({
             id: item.id || '',
@@ -196,7 +220,7 @@ export function RateConfigDialog({
         toast.success(t('fund.accountSettlement.rateUpdateSuccess'))
         setOpen(null)
         onSuccess()
-      }else{
+      } else {
         toast.error(res.message || t('fund.accountSettlement.rateUpdateFailed'))
       }
     } catch (_error) {
@@ -214,26 +238,30 @@ export function RateConfigDialog({
   ) => {
     const items = type === 'collection' ? collectionRates : payoutRates
     const setItems = type === 'collection' ? setCollectionRates : setPayoutRates
-    
+
     const newItems = [...items]
     const numValue = value === '' ? '' : Number(value)
-    
+
     if (numValue !== '' && numValue < 0) {
       newItems[index][field] = 0
     } else {
       newItems[index][field] = numValue
     }
-    
+
     setItems(newItems)
   }
 
   return (
-    <Dialog open={open == 'rate'} onOpenChange={(isOpen) => !isOpen && setOpen(null)}>
-      <DialogContent className='sm:max-w-[600px] max-h-[80vh] overflow-y-auto'>
+    <Dialog
+      open={open == 'rate'}
+      onOpenChange={(isOpen) => !isOpen && setOpen(null)}
+    >
+      <DialogContent className='max-h-[80vh] overflow-y-auto sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>{t('merchant.info.rateConfig')}</DialogTitle>
           <DialogDescription>
-            {t('business.merchantBind.businessUserName')}：<span className='font-semibold'>{business?.account}</span>
+            {t('business.merchantBind.businessUserName')}：
+            <span className='font-semibold'>{business?.account}</span>
           </DialogDescription>
         </DialogHeader>
 
@@ -246,10 +274,16 @@ export function RateConfigDialog({
             {/* 代收渠道配置 */}
             <div>
               <div className='mb-4 flex items-center justify-between border-b pb-2'>
-                <h3 className='text-base font-semibold'>{t('merchant.info.collectionChannel')}</h3>
+                <h3 className='text-base font-semibold'>
+                  {t('merchant.info.collectionChannel')}
+                </h3>
                 <div className='flex gap-2 text-sm font-semibold'>
-                  <span className='w-[150px] flex items-center'>{t('merchant.info.rate')}</span>
-                  <span className='w-[150px]'>{t('merchant.info.singleFixedAmount')}({currency})</span>
+                  <span className='flex w-[150px] items-center'>
+                    {t('merchant.info.rate')}
+                  </span>
+                  <span className='w-[150px]'>
+                    {t('merchant.info.singleFixedAmount')}({currency})
+                  </span>
                 </div>
               </div>
               <div className='space-y-3'>
@@ -281,7 +315,7 @@ export function RateConfigDialog({
                           e.target.value
                         )
                       }
-                      className='w-[150px] ml-9'
+                      className='ml-9 w-[150px]'
                     />
                   </div>
                 ))}
@@ -291,10 +325,16 @@ export function RateConfigDialog({
             {/* 代付渠道配置 */}
             <div>
               <div className='mb-4 flex items-center justify-between border-b pb-2'>
-                <h3 className='text-base font-semibold'>{t('merchant.info.payoutChannel')}</h3>
+                <h3 className='text-base font-semibold'>
+                  {t('merchant.info.payoutChannel')}
+                </h3>
                 <div className='flex gap-2 text-sm font-semibold'>
-                  <span className='w-[150px] flex items-center'>{t('merchant.info.rate')}</span>
-                  <span className='w-[150px]'>{t('merchant.info.singleFixedAmount')}({currency})</span>
+                  <span className='flex w-[150px] items-center'>
+                    {t('merchant.info.rate')}
+                  </span>
+                  <span className='w-[150px]'>
+                    {t('merchant.info.singleFixedAmount')}({currency})
+                  </span>
                 </div>
               </div>
               <div className='space-y-3'>
@@ -321,7 +361,7 @@ export function RateConfigDialog({
                       onChange={(e) =>
                         updateRate('payout', index, 'feeAmount', e.target.value)
                       }
-                      className='w-[150px] ml-9'
+                      className='ml-9 w-[150px]'
                     />
                   </div>
                 ))}
@@ -339,13 +379,8 @@ export function RateConfigDialog({
           >
             {t('common.cancel')}
           </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={isSubmitting || isLoading}
-          >
-            {isSubmitting && (
-              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-            )}
+          <Button onClick={handleSubmit} disabled={isSubmitting || isLoading}>
+            {isSubmitting && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
             {t('common.save')}
           </Button>
         </DialogFooter>

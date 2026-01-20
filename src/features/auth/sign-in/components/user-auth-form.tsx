@@ -5,8 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores'
 import { Loader2, LogIn, RefreshCw } from 'lucide-react'
-import { toast } from 'sonner';
 import QRCode from 'react-qr-code'
+import { toast } from 'sonner'
+import { getAccountPermissions } from '@/api/account'
 // import { IconFacebook, IconGithub } from '@/assets/brand-icons'
 import {
   login,
@@ -16,7 +17,6 @@ import {
   type ILoginForm,
   type IUserInfo,
 } from '@/api/login'
-import { getAccountPermissions } from '@/api/account'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -40,10 +40,8 @@ import { PasswordInput } from '@/components/password-input'
 
 const formSchema = z.object({
   username: z.string().min(1, '请输入您的用户名'),
-  password: z
-    .string()
-    .min(1, '请输入您的密码'),
-    // .min(6, 'Password must be at least 6 characters long'),
+  password: z.string().min(1, '请输入您的密码'),
+  // .min(6, 'Password must be at least 6 characters long'),
   validatecode: z.string().min(1, '请输入验证码'),
 })
 
@@ -107,7 +105,7 @@ export function UserAuthForm({
       if (res.result) {
         setVerifyCode(res.result)
       }
-    } catch{
+    } catch {
       toast.error('获取验证码失败')
     }
   }, [form])
@@ -213,7 +211,10 @@ export function UserAuthForm({
         } catch (error) {
           console.error('Failed to fetch permissions:', error)
           // 权限获取失败不影响登录，使用默认权限（只有系统设置）
-          setPermissions({ menu: [{ name: '外观设置', url: '/settings/appearance' }], user: { roleId: 0, account: res.result.userInfo.name } })
+          setPermissions({
+            menu: [{ name: '外观设置', url: '/settings/appearance' }],
+            user: { roleId: 0, account: res.result.userInfo.name },
+          })
         }
 
         setShowGoogleAuthModal(false)
@@ -402,8 +403,8 @@ export function UserAuthForm({
       </Form>
 
       {/* Google Authentication Modal */}
-      <Dialog 
-        open={showGoogleAuthModal} 
+      <Dialog
+        open={showGoogleAuthModal}
         onOpenChange={(open) => {
           setShowGoogleAuthModal(open)
           if (!open) {
@@ -429,11 +430,11 @@ export function UserAuthForm({
             <div className='flex justify-center py-4'>
               <div className='rounded-lg border p-4'>
                 <QRCode
-                value={window.atob(userInfo.roleIds)}
-                size={250}
-                style={{ backgroundColor: '#ffffff', padding: '16px' }}
-                fgColor="#8b1538"
-              />
+                  value={window.atob(userInfo.roleIds)}
+                  size={250}
+                  style={{ backgroundColor: '#ffffff', padding: '16px' }}
+                  fgColor='#8b1538'
+                />
               </div>
             </div>
           )}

@@ -49,7 +49,7 @@ const createChannelFormSchema = (t: (key: string) => string) =>
     channelDesc: z.string().optional(),
     singleMinAmount: z.number().or(z.string()).optional(),
     singleMaxAmount: z.number().or(z.string()).optional(),
-    dailyMaxAmount:z.number().or(z.string()).optional(),
+    dailyMaxAmount: z.number().or(z.string()).optional(),
     channelStatus: z.number(),
     transProcessTime: z.string().optional(),
     runTimeRange: z.string().optional(),
@@ -415,7 +415,11 @@ export function ChannelMutateDialog() {
                       value={String(field.value)}
                     >
                       <FormControl>
-                        <SelectTrigger clearable={false} className='sm:w-[140px]' disabled={open == 'edit'}>
+                        <SelectTrigger
+                          clearable={false}
+                          className='sm:w-[140px]'
+                          disabled={open == 'edit'}
+                        >
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>

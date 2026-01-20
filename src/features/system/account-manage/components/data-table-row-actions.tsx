@@ -1,8 +1,10 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { type Row } from '@tanstack/react-table'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { type Row } from '@tanstack/react-table'
+import { toast } from 'sonner'
+import { updateDisabledStatus } from '@/api/account'
+import { useI18n } from '@/hooks/use-i18n'
 import { Button } from '@/components/ui/button'
-import { Switch } from '@/components/ui/switch'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,17 +12,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { toast } from 'sonner'
+import { Switch } from '@/components/ui/switch'
 import { accountSchema } from '../schema'
 import { useAccount } from './account-provider'
-import { updateDisabledStatus } from '@/api/account'
-import { useI18n } from '@/hooks/use-i18n'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
 }
 
-export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
+export function DataTableRowActions<TData>({
+  row,
+}: DataTableRowActionsProps<TData>) {
   const account = accountSchema.parse(row.original)
   const { setOpen, setCurrentRow } = useAccount()
   const queryClient = useQueryClient()
@@ -33,10 +35,12 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         disableStatus,
       }),
     onSuccess: (res) => {
-      if(res.code == 200){
-        queryClient.invalidateQueries({ queryKey: ['system','account-manage'] })
+      if (res.code == 200) {
+        queryClient.invalidateQueries({
+          queryKey: ['system', 'account-manage'],
+        })
         toast.success(t('common.statusUpdateSuccess'))
-      }else{
+      } else {
         toast.error(res.message || t('common.statusUpdateFailed'))
       }
     },
@@ -52,10 +56,12 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
 
   return (
     <div className='flex items-center gap-2'>
-      
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='data-[state=open]:bg-muted flex h-8 w-8 p-0'>
+          <Button
+            variant='ghost'
+            className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
+          >
             <DotsHorizontalIcon className='h-4 w-4' />
             <span className='sr-only'>Open menu</span>
           </Button>
@@ -81,9 +87,9 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           <DropdownMenuItem>
             {t('common.status')}
             <Switch
-                checked={account.disabledStatus === 0}
-                onCheckedChange={handleStatusChange}
-                disabled={statusMutation.isPending}
+              checked={account.disabledStatus === 0}
+              onCheckedChange={handleStatusChange}
+              disabled={statusMutation.isPending}
             />
           </DropdownMenuItem>
           <DropdownMenuSeparator />

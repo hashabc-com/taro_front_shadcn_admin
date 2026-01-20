@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { RechargeWithdrawPage } from '@/features/fund/recharge-withdraw'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { RechargeWithdrawPage } from '@/features/fund/recharge-withdraw'
 
 const searchSchema = createBaseSearchSchema({
   status: z.string().optional(),

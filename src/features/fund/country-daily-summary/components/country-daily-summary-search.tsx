@@ -4,6 +4,7 @@ import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Search, X } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -12,7 +13,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/fund/country-daily-summary')
 
@@ -37,15 +37,17 @@ export function CountryDailySummarySearch<TData>({
   })
 
   const hasFilters = dateRange.from || dateRange.to
-  
+
   const handleSearch = () => {
     navigate({
       search: (prev) => ({
         ...prev,
         pageNum: 1,
-        startTime: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
+        startTime: dateRange.from
+          ? format(dateRange.from, 'yyyy-MM-dd')
+          : undefined,
         endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
@@ -81,7 +83,9 @@ export function CountryDailySummarySearch<TData>({
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                <span className='text-muted-foreground'>
+                  {t('common.selectDateRange')}
+                </span>
               )}
             </Button>
           </PopoverTrigger>

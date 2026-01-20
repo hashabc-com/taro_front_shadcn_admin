@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
+import { type Table } from '@tanstack/react-table'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Search, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
@@ -11,10 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
 import { DataTableViewOptions } from '@/components/data-table'
-import { type Table } from '@tanstack/react-table'
-import { useLanguage } from '@/context/language-provider'
 
 type MonthRange = {
   from: Date | undefined
@@ -35,9 +35,7 @@ export function MonthlySummarySearch<TData>({
   const { t } = useLanguage()
   const [businessName, setBusinessName] = useState(search.businessName || '')
   const [monthRange, setMonthRange] = useState<MonthRange>({
-    from: search.startMonth
-      ? new Date(search.startMonth + '-01')
-      : undefined,
+    from: search.startMonth ? new Date(search.startMonth + '-01') : undefined,
     to: search.endMonth ? new Date(search.endMonth + '-01') : undefined,
   })
 
@@ -49,9 +47,7 @@ export function MonthlySummarySearch<TData>({
         startMonth: monthRange.from
           ? format(monthRange.from, 'yyyy-MM')
           : undefined,
-        endMonth: monthRange.to
-          ? format(monthRange.to, 'yyyy-MM')
-          : undefined,
+        endMonth: monthRange.to ? format(monthRange.to, 'yyyy-MM') : undefined,
         pageNum: 1,
         refresh: Date.now(),
       }),
@@ -74,7 +70,7 @@ export function MonthlySummarySearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 商务名称 */}
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
+      <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           placeholder={t('business.merchantBind.businessUserName')}
           value={businessName}
@@ -130,7 +126,7 @@ export function MonthlySummarySearch<TData>({
       </div>
 
       {/* 操作按钮 */}
-      <div className='flex gap-2 mt-0.5'>
+      <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
           {t('common.search')}

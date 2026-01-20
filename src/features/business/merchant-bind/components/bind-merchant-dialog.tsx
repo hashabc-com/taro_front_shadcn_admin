@@ -20,15 +20,12 @@ type BindMerchantDialogProps = {
   onSuccess: () => void
 }
 
-export function BindMerchantDialog({
-  onSuccess,
-}: BindMerchantDialogProps) {
+export function BindMerchantDialog({ onSuccess }: BindMerchantDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [merchants, setMerchants] = useState<IMerchantItem[]>([])
   const [selectedMerchants, setSelectedMerchants] = useState<string[]>([])
-  const { open,setOpen,currentRow: business } = useMerchantBindProvider()
-
+  const { open, setOpen, currentRow: business } = useMerchantBindProvider()
 
   useEffect(() => {
     if (open == 'bind' && business) {
@@ -98,7 +95,10 @@ export function BindMerchantDialog({
   }
 
   return (
-    <Dialog open={open == 'bind'} onOpenChange={(isOpen) => !isOpen && setOpen(null)}>
+    <Dialog
+      open={open == 'bind'}
+      onOpenChange={(isOpen) => !isOpen && setOpen(null)}
+    >
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>绑定商户</DialogTitle>

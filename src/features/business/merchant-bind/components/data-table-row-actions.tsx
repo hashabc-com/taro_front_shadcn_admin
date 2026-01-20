@@ -1,6 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { Link,DollarSign } from 'lucide-react'
 import { type Row } from '@tanstack/react-table'
+import { Link, DollarSign } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -10,7 +11,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { businessSchema } from '../schema'
 import { useMerchantBindProvider } from './merchant-bind-provider'
-import { useLanguage } from '@/context/language-provider'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -50,7 +50,7 @@ export function DataTableRowActions<TData>({
           }}
         >
           {t('config.paymentChannel.rateConfig')}
-        <DollarSign className='ml-auto h-4 w-4' />
+          <DollarSign className='ml-auto h-4 w-4' />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

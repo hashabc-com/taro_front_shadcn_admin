@@ -9,11 +9,22 @@ export const customerLevelEnum = z.enum(['A', 'B', 'C'])
 export type CustomerLevel = z.infer<typeof customerLevelEnum>
 
 // 跟进方式
-export const followTypeEnum = z.enum(['PHONE', 'VISIT', 'EMAIL', 'WECHAT', 'OTHER'])
+export const followTypeEnum = z.enum([
+  'PHONE',
+  'VISIT',
+  'EMAIL',
+  'WECHAT',
+  'OTHER',
+])
 export type FollowType = z.infer<typeof followTypeEnum>
 
 // 跟进结果
-export const followResultEnum = z.enum(['INTERESTED', 'CONSIDERING', 'REFUSED', 'SUCCESS'])
+export const followResultEnum = z.enum([
+  'INTERESTED',
+  'CONSIDERING',
+  'REFUSED',
+  'SUCCESS',
+])
 export type FollowResult = z.infer<typeof followResultEnum>
 
 // 客户咨询信息
@@ -31,17 +42,24 @@ export interface ICustomerConsult {
   status: CustomerStatus
   level: CustomerLevel | null
   consultContent: string | null
-  followType: FollowType | null
-  followContent: string | null
-  followResult: FollowResult | null
-  nextFollowTime: string | null
-  attachmentUrls: string | null
-  followBy: string | null
-  followAt: string | null
   remark: string | null
   createdAt: string
   updatedAt: string | null
   isDeleted: string
+}
+
+// 客户跟进记录
+export interface IFollowRecord {
+  id: number
+  customerId: number
+  followType: FollowType
+  followContent: string
+  followResult: FollowResult
+  followBy: string | null
+  followAt: string
+  remark: string | null
+  createdAt: string
+  updatedAt: string | null
 }
 
 // 列表搜索参数
@@ -51,14 +69,23 @@ export interface ICustomerConsultSearch {
   country?: string
 }
 
-// 跟进表单数据
-export const followUpFormSchema = z.object({
-  followType: z.string().min(1, { message: 'pleaseSelectFollowType' }),
-  followContent: z.string().min(1, { message: 'pleaseEnterFollowContent' }),
-  followResult: z.string().min(1, { message: 'pleaseSelectFollowResult' }),
-  // nextFollowTime: z.string().optional().nullable(),
-  // attachmentUrls: z.string().optional(),
-  // followBy: z.string().optional(),
-})
+// 新增客户表单类型（schema 在组件内动态创建以支持国际化）
+export interface AddCustomerFormData {
+  contactPerson: string
+  countryCode: string
+  phone: string
+  email: string
+  company?: string
+  source?: string
+  country: string
+  consultContent?: string
+  remark?: string
+}
 
-export type FollowUpFormData = z.infer<typeof followUpFormSchema>
+// 跟进表单数据类型（schema 在组件内动态创建以支持国际化）
+export interface FollowUpFormData {
+  followType: string
+  followContent: string
+  followResult: string
+  remark?: string
+}

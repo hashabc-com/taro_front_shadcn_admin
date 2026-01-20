@@ -1,6 +1,6 @@
+import { useLanguage } from '@/context/language-provider'
 import { Main } from '@/components/layout/main'
 import { RechargeWithdrawTable } from './components/recharge-withdraw-table'
-import { useLanguage } from '@/context/language-provider'
 
 export function RechargeWithdrawPage() {
   const { t } = useLanguage()

@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { MerchantInfoPage } from '@/features/merchant/info-lists'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { MerchantInfoPage } from '@/features/merchant/info-lists'
 
 const searchSchema = createBaseSearchSchema({
   startTime: z.string().optional(),

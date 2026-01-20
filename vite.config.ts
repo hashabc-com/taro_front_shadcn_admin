@@ -5,7 +5,7 @@ import { sentryVitePlugin } from '@sentry/vite-plugin'
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
-import {name,version}  from './package.json'
+import { name, version } from './package.json'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
         project: 'taropay_admin',
         release: {
           name: release,
-        } ,
+        },
         authToken: env.SENTRY_AUTH_TOKEN,
         sourcemaps: {
           // As you're enabling client source maps, you probably want to delete them after they're uploaded to Sentry.
@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
-      '__RELEASE__': JSON.stringify(release),
+      __RELEASE__: JSON.stringify(release),
     },
     resolve: {
       alias: {
@@ -67,7 +67,7 @@ export default defineConfig(({ mode }) => {
       drop: mode === 'production' ? ['console', 'debugger'] : [],
     },
     build: {
-      sourcemap:'hidden',
+      sourcemap: 'hidden',
       rollupOptions: {
         output: {
           manualChunks(id) {

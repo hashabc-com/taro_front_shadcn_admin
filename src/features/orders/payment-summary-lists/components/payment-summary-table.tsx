@@ -6,7 +6,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { getTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -18,22 +20,19 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
+import { usePaymentSummaryData } from '../hooks/use-payment-summary-data'
 import { getTasksColumns } from './payment-summary-columns'
 import { PaymentSummarySearch } from './payment-summary-search'
-import { usePaymentSummaryData } from '../hooks/use-payment-summary-data'
-import { useLanguage } from '@/context/language-provider'
-import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/orders/payment-summary-lists')
-
 
 export function PaymentSummaryTable() {
   const { lang } = useLanguage()
   const t = (key: string) => getTranslation(lang, key)
-  const { data, isLoading,totalRecord, summaryData } = usePaymentSummaryData()
+  const { data, isLoading, totalRecord, summaryData } = usePaymentSummaryData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  
+
   // Synced with URL states (updated to match route search schema defaults)
   const { pagination, onPaginationChange, ensurePageInRange } =
     useTableUrlState({
@@ -43,10 +42,10 @@ export function PaymentSummaryTable() {
     })
 
   const pageCount = useMemo(() => {
-      const pageSize = pagination.pageSize ?? 10
-      // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
-      return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
-    }, [totalRecord, pagination.pageSize])
+    const pageSize = pagination.pageSize ?? 10
+    // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
+    return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
+  }, [totalRecord, pagination.pageSize])
 
   const columns = useMemo(() => getTasksColumns(lang), [lang])
 
@@ -60,7 +59,7 @@ export function PaymentSummaryTable() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,  
+    manualPagination: true,
     pageCount,
     onPaginationChange,
   })
@@ -73,15 +72,15 @@ export function PaymentSummaryTable() {
     <div className='flex flex-1 flex-col gap-4'>
       <PaymentSummarySearch table={table} />
       {isLoading ? (
-          <div className='overflow-hidden rounded-md border'>
-            <div className='space-y-3 p-4'>
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div key={i} className='flex gap-4'>
-                  <Skeleton className='h-12 flex-1' />
-                </div>
-              ))}
-            </div>
+        <div className='overflow-hidden rounded-md border'>
+          <div className='space-y-3 p-4'>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className='flex gap-4'>
+                <Skeleton className='h-12 flex-1' />
+              </div>
+            ))}
           </div>
+        </div>
       ) : (
         <div className='overflow-hidden rounded-md border'>
           <Table>
@@ -139,18 +138,10 @@ export function PaymentSummaryTable() {
                     <TableCell colSpan={3} className='text-right'>
                       {t('common.total')}
                     </TableCell>
-                    <TableCell>
-                      {summaryData.orderTotal}
-                    </TableCell>
-                    <TableCell>
-                      {summaryData.amountTotal}
-                    </TableCell>
-                    <TableCell>
-                      {summaryData.amountServiceTotal}
-                    </TableCell>
-                    <TableCell>
-                      {summaryData.totalAmountTotal}
-                    </TableCell>
+                    <TableCell>{summaryData.orderTotal}</TableCell>
+                    <TableCell>{summaryData.amountTotal}</TableCell>
+                    <TableCell>{summaryData.amountServiceTotal}</TableCell>
+                    <TableCell>{summaryData.totalAmountTotal}</TableCell>
                   </TableRow>
                 </>
               ) : (

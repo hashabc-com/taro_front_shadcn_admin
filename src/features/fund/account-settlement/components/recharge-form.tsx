@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react'
+import { useAuthStore } from '@/stores'
 import { toast } from 'sonner'
 import { addRechargeRecord } from '@/api/fund'
 import { useCountryStore } from '@/stores/country-store'
 import { useMerchantStore } from '@/stores/merchant-store'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -15,8 +17,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { useAuthStore } from '@/stores'
-import { useLanguage } from '@/context/language-provider'
 
 const CURRENCY_TYPES = [
   { title: '美金', value: 'USD' },
@@ -172,7 +172,10 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
         </div>
 
         <div className='space-y-2'>
-          <Label>{t('fund.accountSettlement.actualDepositAmount')}（{selectedCountry?.currency}）</Label>
+          <Label>
+            {t('fund.accountSettlement.actualDepositAmount')}（
+            {selectedCountry?.currency}）
+          </Label>
           <Input value={finalAmount} disabled className='bg-muted' />
         </div>
 
@@ -217,7 +220,9 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
           onClick={handleSubmit}
           disabled={isSubmitting}
         >
-          {isSubmitting ? t('fund.accountSettlement.recharging') : t('fund.accountSettlement.recharge')}
+          {isSubmitting
+            ? t('fund.accountSettlement.recharging')
+            : t('fund.accountSettlement.recharge')}
         </Button>
       </CardContent>
     </Card>

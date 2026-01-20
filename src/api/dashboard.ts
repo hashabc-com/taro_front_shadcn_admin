@@ -51,5 +51,8 @@ export const getAmountInformation = () => {
 
 // 获取日交易统计
 export const getChartDataOfDay = () => {
-  return http.post<ChartDataOfDay>('/admin/home/v1/chartDataOfDay', new FormData())
+  return http.post<ChartDataOfDay>(
+    '/admin/home/v1/chartDataOfDay',
+    new FormData()
+  )
 }

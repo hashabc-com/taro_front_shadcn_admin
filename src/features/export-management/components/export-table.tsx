@@ -6,6 +6,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { toast } from 'sonner'
+import { downloadExportFile, type IExportRecord } from '@/api/export'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -17,11 +20,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import { getExportColumns } from './export-columns'
 import { useExportData } from '../hooks/use-export-data'
-import { useLanguage } from '@/context/language-provider'
-import { downloadExportFile, type IExportRecord } from '@/api/export'
-import { toast } from 'sonner'
+import { getExportColumns } from './export-columns'
 
 const route = getRouteApi('/_authenticated/export-management')
 
@@ -49,7 +49,7 @@ export function ExportTable() {
       link.click()
       link.remove()
       window.URL.revokeObjectURL(url)
-      
+
       toast.success(t('export.downloadSuccess'))
     } catch (error) {
       console.error('下载失败:', error)
@@ -59,11 +59,12 @@ export function ExportTable() {
 
   const columns = useMemo(() => getExportColumns(lang, handleDownload), [lang])
 
-  const { pagination, onPaginationChange, ensurePageInRange } = useTableUrlState({
-    search: route.useSearch(),
-    navigate: route.useNavigate(),
-    pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
-  })
+  const { pagination, onPaginationChange, ensurePageInRange } =
+    useTableUrlState({
+      search: route.useSearch(),
+      navigate: route.useNavigate(),
+      pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
+    })
 
   const pageCount = useMemo(() => {
     const pageSize = pagination.pageSize ?? 10
@@ -110,7 +111,10 @@ export function ExportTable() {
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -119,17 +123,26 @@ export function ExportTable() {
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className='h-24 text-center'>
+                  <TableCell
+                    colSpan={columns.length}
+                    className='h-24 text-center'
+                  >
                     {t('common.noData')}
                   </TableCell>
                 </TableRow>

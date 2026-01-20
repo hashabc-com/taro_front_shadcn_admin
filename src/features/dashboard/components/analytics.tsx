@@ -1,16 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
+import { useMerchantStore, useCountryStore } from '@/stores'
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  DollarSign,
+  Wallet,
+  Lock,
+  ArrowDownToLine,
+  ArrowUpFromLine,
+} from 'lucide-react'
 import { getAmountInformation, getChartDataOfDay } from '@/api/dashboard'
-import { DollarSign, Wallet, Lock, ArrowDownToLine, ArrowUpFromLine } from 'lucide-react'
-import { useConvertAmount } from '@/hooks/use-convert-amount'
-import ChartLineMultiple from './chart-line'
-import { useMerchantStore,useCountryStore } from '@/stores'
 import { useLanguage } from '@/context/language-provider'
+import { useConvertAmount } from '@/hooks/use-convert-amount'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import ChartLineMultiple from './chart-line'
 
 export function Analytics() {
   const { selectedCountry } = useCountryStore()
@@ -19,16 +20,26 @@ export function Analytics() {
   const convertAmount = useConvertAmount()
   // 获取账户金额信息
   const { data: amountData } = useQuery({
-    queryKey: ['dashboard', 'amount-info', selectedCountry?.code,selectedMerchant?.appid],
+    queryKey: [
+      'dashboard',
+      'amount-info',
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: getAmountInformation,
-    enabled: !!selectedCountry?.code
+    enabled: !!selectedCountry?.code,
   })
 
   // 获取交易统计
   const { data: chartData } = useQuery({
-    queryKey: ['dashboard', 'chart-data', selectedCountry?.code,selectedMerchant?.appid],
+    queryKey: [
+      'dashboard',
+      'chart-data',
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: getChartDataOfDay,
-    enabled: !!selectedCountry?.code
+    enabled: !!selectedCountry?.code,
   })
 
   const amountInfo = amountData?.result || amountData?.data
@@ -43,7 +54,9 @@ export function Analytics() {
       <div className='grid gap-3 sm:grid-cols-2 lg:grid-cols-3'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1.5'>
-            <CardTitle className='text-base font-medium'>{t('dashboard.availableBalance')}</CardTitle>
+            <CardTitle className='text-base font-medium'>
+              {t('dashboard.availableBalance')}
+            </CardTitle>
             <Wallet className='text-muted-foreground h-4 w-4' />
           </CardHeader>
           <CardContent className='pb-3'>
@@ -58,7 +71,9 @@ export function Analytics() {
 
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1.5'>
-            <CardTitle className='text-base font-medium'>{t('dashboard.pendingSettlement')}</CardTitle>
+            <CardTitle className='text-base font-medium'>
+              {t('dashboard.pendingSettlement')}
+            </CardTitle>
             <DollarSign className='text-muted-foreground h-4 w-4' />
           </CardHeader>
           <CardContent className='pb-3'>
@@ -73,7 +88,9 @@ export function Analytics() {
 
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1.5'>
-            <CardTitle className='text-base font-medium'>{t('dashboard.frozenAmount')}</CardTitle>
+            <CardTitle className='text-base font-medium'>
+              {t('dashboard.frozenAmount')}
+            </CardTitle>
             <Lock className='text-muted-foreground h-4 w-4' />
           </CardHeader>
           <CardContent className='pb-3'>
@@ -93,7 +110,9 @@ export function Analytics() {
           <CardContent className='pt-4 pb-3'>
             <div className='flex items-center justify-between'>
               <div className='space-y-1'>
-                <p className='text-sm text-muted-foreground'>{t('dashboard.rechargeAmount')}</p>
+                <p className='text-muted-foreground text-sm'>
+                  {t('dashboard.rechargeAmount')}
+                </p>
                 <div className='text-2xl font-bold'>
                   {convertAmount(transactionStats?.rechargeAmount || 0)}
                 </div>
@@ -112,7 +131,9 @@ export function Analytics() {
           <CardContent className='pt-4 pb-3'>
             <div className='flex items-center justify-between'>
               <div className='space-y-1'>
-                <p className='text-sm text-muted-foreground'>{t('dashboard.withdrawalAmount')}</p>
+                <p className='text-muted-foreground text-sm'>
+                  {t('dashboard.withdrawalAmount')}
+                </p>
                 <div className='text-2xl font-bold'>
                   {convertAmount(transactionStats?.withdrawalAmount || 0)}
                 </div>

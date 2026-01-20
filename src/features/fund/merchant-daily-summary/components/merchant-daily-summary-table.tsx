@@ -6,7 +6,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { getTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -18,11 +20,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
+import { useMerchantDailySummaryData } from '../hooks/use-merchant-daily-summary-data'
 import { getMerchantDailySummaryColumns } from './merchant-daily-summary-columns'
 import { MerchantDailySummarySearch } from './merchant-daily-summary-search'
-import { useMerchantDailySummaryData } from '../hooks/use-merchant-daily-summary-data'
-import { useLanguage } from '@/context/language-provider'
-import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/fund/merchant-daily-summary')
 
@@ -39,7 +39,7 @@ export function MerchantDailySummaryTable() {
       navigate: route.useNavigate(),
       pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
     })
-  
+
   const columns = useMemo(() => getMerchantDailySummaryColumns(lang), [lang])
 
   const pageCount = useMemo(() => {
@@ -56,7 +56,7 @@ export function MerchantDailySummaryTable() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,  
+    manualPagination: true,
     pageCount,
     onPaginationChange,
   })

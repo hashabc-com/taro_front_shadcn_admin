@@ -1,5 +1,5 @@
-import { CheckCircle, Clock, XCircle } from 'lucide-react'
 import { z } from 'zod'
+import { CheckCircle, Clock, XCircle } from 'lucide-react'
 
 // 订单数据结构
 export const paymentListsSchema = z.object({
@@ -44,23 +44,23 @@ export const paymentListsResponseSchema = z.object({
 })
 
 export const statuses = {
-  0:{
+  0: {
     label: '付款成功',
     icon: CheckCircle,
     color: 'green',
-    i18n:'orders.paymentOrders.paymentSuccess'
+    i18n: 'orders.paymentOrders.paymentSuccess',
   },
-  1:{
+  1: {
     label: '待付款',
     icon: Clock,
     color: 'blue',
-    i18n:'orders.paymentOrders.pendingPayment'
+    i18n: 'orders.paymentOrders.pendingPayment',
   },
-  2:{
+  2: {
     label: '付款失败',
     icon: XCircle,
     color: 'red',
-    i18n:'orders.paymentOrders.paymentFailed'
+    i18n: 'orders.paymentOrders.paymentFailed',
   },
 }
 

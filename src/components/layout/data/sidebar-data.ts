@@ -13,7 +13,7 @@ import {
   FileText,
   Download,
   MonitorCog,
-  Send
+  Send,
 } from 'lucide-react'
 import { getTranslation, type Language } from '@/lib/i18n'
 import { type SidebarData, type NavItem } from '../types'
@@ -142,7 +142,7 @@ export const getSidebarData = (language: Language): SidebarData => {
             {
               title: t('sidebar.consultingService'),
               url: '/business/customer-consult',
-            }
+            },
           ],
         },
         {

@@ -1,8 +1,8 @@
+import { format } from 'date-fns'
 import { type ColumnDef } from '@tanstack/react-table'
-import { type ICustomerConsult } from '../schema'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { format } from 'date-fns'
+import { type ICustomerConsult } from '../schema'
 
 export const getCustomerConsultColumns = (
   t: (key: string) => string,
@@ -23,6 +23,12 @@ export const getCustomerConsultColumns = (
       return `+${countryCode} ${phone}`
     },
     meta: { className: 'min-w-[140px]' },
+  },
+  {
+    accessorKey: 'country',
+    header: t('business.customerConsult.country'),
+    cell: ({ row }) => row.original.country || '-',
+    meta: { className: 'min-w-[80px] text-center' },
   },
   {
     accessorKey: 'email',
@@ -47,7 +53,10 @@ export const getCustomerConsultColumns = (
     header: t('business.customerConsult.status'),
     cell: ({ row }) => {
       const status = row.original.status
-      const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+      const variants: Record<
+        string,
+        'default' | 'secondary' | 'destructive' | 'outline'
+      > = {
         NEW: 'default',
         FOLLOWING: 'secondary',
         DEAL: 'outline',
@@ -79,37 +88,7 @@ export const getCustomerConsultColumns = (
     accessorKey: 'consultContent',
     header: t('business.customerConsult.consultContent'),
     cell: ({ row }) => row.original.consultContent || '-',
-    meta: { className: 'max-w-[100px]', enableTooltip: true },
-  },
-  {
-    accessorKey: 'followResult',
-    header: t('business.customerConsult.followResult'),
-    cell: ({ row }) => {
-      const result = row.original.followResult
-      if (!result) return '-'
-      return t(`business.customerConsult.followResultValues.${result}`)
-    },
-    meta: { className: 'min-w-[120px]' },
-  },
-//   {
-//     accessorKey: 'nextFollowTime',
-//     header: t('business.customerConsult.nextFollowTime'),
-//     cell: ({ row }) => {
-//       const time = row.original.nextFollowTime
-//       if (!time) return '-'
-//       try {
-//         return format(new Date(time), 'yyyy-MM-dd HH:mm')
-//       } catch {
-//         return time
-//       }
-//     },
-//     meta: { className: 'min-w-[150px]' },
-//   },
-  {
-    accessorKey: 'followBy',
-    header: t('business.customerConsult.followBy'),
-    cell: ({ row }) => row.original.followBy || '-',
-    meta: { className: 'min-w-[100px]' },
+    meta: { className: 'max-w-[200px]', enableTooltip: true },
   },
   {
     accessorKey: 'createdAt',

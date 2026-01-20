@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -23,7 +24,6 @@ import { type RuleConfig } from '../schema'
 import { getColumns } from './rule-config-columns'
 import { RuleConfigSearch } from './rule-config-search'
 import { RuleEditDialog } from './rule-edit-dialog'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/config/risk-control-rule')
 

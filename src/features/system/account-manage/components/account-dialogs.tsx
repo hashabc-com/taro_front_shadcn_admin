@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { updatePassword, deleteAccount } from '@/api/account'
+import { useI18n } from '@/hooks/use-i18n'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,18 +34,21 @@ import {
 import { Input } from '@/components/ui/input'
 import { AccountMutateDrawer } from './account-mutate-drawer'
 import { useAccount } from './account-provider'
-import { useI18n } from '@/hooks/use-i18n'
 
 export function AccountDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useAccount()
   const queryClient = useQueryClient()
   const { t } = useI18n()
-  
+
   // 密码表单验证
   const passwordFormSchema = z
     .object({
-      pwd: z.string().min(1, t('system.accountManage.validation.newPasswordRequired')),
-      rePwd: z.string().min(1, t('system.accountManage.validation.confirmPasswordRequired')),
+      pwd: z
+        .string()
+        .min(1, t('system.accountManage.validation.newPasswordRequired')),
+      rePwd: z
+        .string()
+        .min(1, t('system.accountManage.validation.confirmPasswordRequired')),
     })
     .refine((data) => data.pwd === data.rePwd, {
       message: t('system.accountManage.passwordMismatch'),
@@ -75,12 +79,16 @@ export function AccountDialogs() {
           queryKey: ['system', 'account-manage'],
         })
       } else {
-        toast.error(res.message || t('system.accountManage.passwordUpdateFailed'))
+        toast.error(
+          res.message || t('system.accountManage.passwordUpdateFailed')
+        )
       }
       handlePasswordClose()
     },
     onError: (error: { message?: string }) => {
-      toast.error(error.message || t('system.accountManage.passwordUpdateFailed'))
+      toast.error(
+        error.message || t('system.accountManage.passwordUpdateFailed')
+      )
     },
   })
 
@@ -139,7 +147,9 @@ export function AccountDialogs() {
       <Dialog open={open === 'password'} onOpenChange={handlePasswordClose}>
         <DialogContent className='sm:max-w-[425px]'>
           <DialogHeader>
-            <DialogTitle>{t('system.accountManage.changePassword')}</DialogTitle>
+            <DialogTitle>
+              {t('system.accountManage.changePassword')}
+            </DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form
@@ -151,11 +161,15 @@ export function AccountDialogs() {
                 name='pwd'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('system.accountManage.newPassword')}</FormLabel>
+                    <FormLabel>
+                      {t('system.accountManage.newPassword')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type='password'
-                        placeholder={t('system.accountManage.placeholder.newPassword')}
+                        placeholder={t(
+                          'system.accountManage.placeholder.newPassword'
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -172,7 +186,9 @@ export function AccountDialogs() {
                     <FormControl>
                       <Input
                         type='password'
-                        placeholder={t('system.accountManage.placeholder.confirmPassword')}
+                        placeholder={t(
+                          'system.accountManage.placeholder.confirmPassword'
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -189,7 +205,9 @@ export function AccountDialogs() {
                   {t('common.cancel')}
                 </Button>
                 <Button type='submit' disabled={passwordMutation.isPending}>
-                  {passwordMutation.isPending ? t('common.submitting') : t('common.confirm')}
+                  {passwordMutation.isPending
+                    ? t('common.submitting')
+                    : t('common.confirm')}
                 </Button>
               </DialogFooter>
             </form>
@@ -223,7 +241,9 @@ export function AccountDialogs() {
               disabled={deleteMutation.isPending}
               className='bg-red-600 hover:bg-red-700'
             >
-              {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
+              {deleteMutation.isPending
+                ? t('common.deleting')
+                : t('common.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

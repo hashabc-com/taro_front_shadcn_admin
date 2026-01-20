@@ -1,11 +1,20 @@
 import { type ReactNode, useState, useEffect } from 'react'
 import { Link, useLocation } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -17,15 +26,6 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Badge } from '@/components/ui/badge'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import {
   type NavCollapsible,
   type NavItem,
@@ -105,16 +105,16 @@ function SidebarMenuCollapsible({
   const { setOpenMobile } = useSidebar()
   const isActive = checkIsActive(href, item, true)
   const [isOpen, setIsOpen] = useState(isActive)
-  
+
   // 当路由变化时,如果该菜单组包含当前激活的路由,则自动展开
   useEffect(() => {
     if (isActive) {
       requestAnimationFrame(() => {
-        setIsOpen(true);
-      });
+        setIsOpen(true)
+      })
     }
   }, [isActive])
-  
+
   return (
     <Collapsible
       asChild
@@ -203,10 +203,10 @@ function SidebarMenuCollapsedDropdown({
 function checkIsActive(href: string, item: NavItem, mainNav = false) {
   const currentPath = href.split('?')[0]
   const itemPath = typeof item.url === 'string' ? item.url : ''
-  
+
   // 检查当前路径是否匹配
   if (currentPath === itemPath) return true
-  
+
   // 检查子菜单是否有激活项
   if (item?.items) {
     const hasActiveChild = item.items.some((subItem) => {
@@ -215,11 +215,15 @@ function checkIsActive(href: string, item: NavItem, mainNav = false) {
     })
     if (hasActiveChild) return true
   }
-  
+
   // 主导航的路径匹配检查
-  if (mainNav && currentPath.split('/')[1] !== '' && itemPath.split('/')[1] !== '') {
+  if (
+    mainNav &&
+    currentPath.split('/')[1] !== '' &&
+    itemPath.split('/')[1] !== ''
+  ) {
     return currentPath.split('/')[1] === itemPath.split('/')[1]
   }
-  
+
   return false
 }

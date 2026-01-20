@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { RiskControlRulePage } from '@/features/config/risk-control-rule'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { RiskControlRulePage } from '@/features/config/risk-control-rule'
 
 const riskControlRuleSearchSchema = createBaseSearchSchema({
   ruleName: z.string().optional(),
@@ -9,7 +9,9 @@ const riskControlRuleSearchSchema = createBaseSearchSchema({
   status: z.string().optional(),
 })
 
-export const Route = createFileRoute('/_authenticated/config/risk-control-rule')({
+export const Route = createFileRoute(
+  '/_authenticated/config/risk-control-rule'
+)({
   component: RiskControlRulePage,
   validateSearch: riskControlRuleSearchSchema,
 })

@@ -10,6 +10,7 @@ import {
   Trash2,
   Users,
 } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -19,7 +20,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { type IMerchantInfoType } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>

@@ -1,8 +1,8 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { getTranslation, type Language } from '@/lib/i18n'
 import { Badge } from '@/components/ui/badge'
-import { DataTableRowActions } from './data-table-row-actions'
 import { type RuleConfig, sceneCodeMap, actionCodeMap } from '../schema'
+import { DataTableRowActions } from './data-table-row-actions'
 
 export function getColumns(
   onEdit: (rule: RuleConfig) => void,
@@ -71,9 +71,9 @@ export function getColumns(
     {
       accessorKey: 'priority',
       header: t('config.riskControlRule.priority'),
-      meta:{
+      meta: {
         className: 'text-center',
-      }
+      },
     },
     {
       accessorKey: 'status',

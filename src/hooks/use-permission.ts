@@ -22,7 +22,7 @@ export function usePermission() {
    */
   const getAllowedRoutes = (): string[] => {
     if (!permissions || !permissions.menu) return ['/']
-    return permissions.menu.map(item => item.url)
+    return permissions.menu.map((item) => item.url)
   }
 
   return {

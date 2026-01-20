@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -18,17 +19,15 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
+import { useRechargeWithdrawData } from '../hooks/use-recharge-withdraw-data'
 import { getTasksColumns } from './recharge-withdraw-columns'
 import { RechargeWithdrawSearch } from './recharge-withdraw-search'
-import { useRechargeWithdrawData } from '../hooks/use-recharge-withdraw-data'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/fund/recharge-withdraw')
 
-
 export function RechargeWithdrawTable() {
   const { lang } = useLanguage()
-  const { data, isLoading,totalRecord } = useRechargeWithdrawData()
+  const { data, isLoading, totalRecord } = useRechargeWithdrawData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -39,7 +38,7 @@ export function RechargeWithdrawTable() {
       navigate: route.useNavigate(),
       pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
     })
-  
+
   const columns = useMemo(() => getTasksColumns(lang), [lang])
 
   const pageCount = useMemo(() => {
@@ -57,7 +56,7 @@ export function RechargeWithdrawTable() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,  
+    manualPagination: true,
     pageCount,
     onPaginationChange,
   })
@@ -70,15 +69,15 @@ export function RechargeWithdrawTable() {
     <div className='flex flex-1 flex-col gap-4'>
       <RechargeWithdrawSearch table={table} />
       {isLoading ? (
-          <div className='overflow-hidden rounded-md border'>
-            <div className='space-y-3 p-4'>
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div key={i} className='flex gap-4'>
-                  <Skeleton className='h-12 flex-1' />
-                </div>
-              ))}
-            </div>
+        <div className='overflow-hidden rounded-md border'>
+          <div className='space-y-3 p-4'>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className='flex gap-4'>
+                <Skeleton className='h-12 flex-1' />
+              </div>
+            ))}
           </div>
+        </div>
       ) : (
         <div className='overflow-hidden rounded-md border'>
           <Table>

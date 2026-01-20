@@ -20,7 +20,9 @@ export const getRouteStrategyColumns = (
         const type = row.getValue('paymentType') as string
         return (
           <Badge variant={type === '1' ? 'default' : 'secondary'}>
-            {type === '1' ? t('config.routeStrategy.payout') : t('config.routeStrategy.collection')}
+            {type === '1'
+              ? t('config.routeStrategy.payout')
+              : t('config.routeStrategy.collection')}
           </Badge>
         )
       },
@@ -36,7 +38,9 @@ export const getRouteStrategyColumns = (
         const strategy = row.getValue('routeStrategy') as string
         return (
           <Badge variant='outline'>
-            {strategy === '1' ? t('config.routeStrategy.weightRoundRobin') : t('config.routeStrategy.costPriority')}
+            {strategy === '1'
+              ? t('config.routeStrategy.weightRoundRobin')
+              : t('config.routeStrategy.costPriority')}
           </Badge>
         )
       },

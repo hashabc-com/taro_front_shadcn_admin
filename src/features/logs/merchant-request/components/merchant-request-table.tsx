@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -19,11 +20,10 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 import { useMerchantRequestData } from '../hooks/use-merchant-request-data'
-import { getColumns } from './merchant-request-columns'
-import { MerchantRequestSearch } from './merchant-request-search'
-import { MerchantRequestDetailDialog } from './merchant-request-detail-dialog'
 import type { IMerchantRequest } from '../schema'
-import { useLanguage } from '@/context/language-provider'
+import { getColumns } from './merchant-request-columns'
+import { MerchantRequestDetailDialog } from './merchant-request-detail-dialog'
+import { MerchantRequestSearch } from './merchant-request-search'
 
 const route = getRouteApi('/_authenticated/logs/merchant-request')
 
@@ -31,13 +31,16 @@ export function MerchantRequestTable() {
   const { data, isLoading, totalRecord } = useMerchantRequestData()
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [detailOpen, setDetailOpen] = useState(false)
-  const [selectedRecord, setSelectedRecord] = useState<IMerchantRequest | null>(null)
+  const [selectedRecord, setSelectedRecord] = useState<IMerchantRequest | null>(
+    null
+  )
   const { lang } = useLanguage()
-  const { pagination, onPaginationChange, ensurePageInRange } = useTableUrlState({
-    search: route.useSearch(),
-    navigate: route.useNavigate(),
-    pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
-  })
+  const { pagination, onPaginationChange, ensurePageInRange } =
+    useTableUrlState({
+      search: route.useSearch(),
+      navigate: route.useNavigate(),
+      pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
+    })
 
   const pageCount = useMemo(() => {
     const pageSize = pagination.pageSize ?? 10

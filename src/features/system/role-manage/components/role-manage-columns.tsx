@@ -1,8 +1,8 @@
+import { format } from 'date-fns'
 import { type ColumnDef } from '@tanstack/react-table'
 import { getTranslation, type Language } from '@/lib/i18n'
 import { type Role } from '../schema'
 import { DataTableRowActions } from './data-table-row-actions'
-import { format } from 'date-fns'
 
 export const getRoleColumns = (
   language: Language = 'zh'

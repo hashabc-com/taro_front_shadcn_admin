@@ -2,17 +2,34 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
 import { Trash2, Plus } from 'lucide-react'
-
+import { toast } from 'sonner'
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
+  getSubChannelList,
+  addSubChannel,
+  deleteSubChannel,
+} from '@/api/config'
+import { useLanguage } from '@/context/language-provider'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -30,23 +47,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import {
   Table,
   TableBody,
@@ -55,11 +61,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
-
-import { useLanguage } from '@/context/language-provider'
-import { getSubChannelList, addSubChannel, deleteSubChannel } from '@/api/config'
-import { paymentSubChannelFormSchema, type PaymentSubChannel, type PaymentSubChannelFormData } from '../schema'
+import {
+  paymentSubChannelFormSchema,
+  type PaymentSubChannel,
+  type PaymentSubChannelFormData,
+} from '../schema'
 import { usePaymentChannel } from './payment-channel-provider'
 
 export function SubChannelDrawer() {
@@ -67,7 +73,9 @@ export function SubChannelDrawer() {
   const queryClient = useQueryClient()
   const { open, setOpen, currentRow } = usePaymentChannel()
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [deleteTarget, setDeleteTarget] = useState<PaymentSubChannel | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<PaymentSubChannel | null>(
+    null
+  )
   const [showAddDialog, setShowAddDialog] = useState(false)
 
   const isOpen = open === 'subChannel'
@@ -87,7 +95,7 @@ export function SubChannelDrawer() {
     queryKey: ['sub-channels', currentRow?.channelCode],
     queryFn: () => getSubChannelList({ channelCode: currentRow!.channelCode }),
     enabled: isOpen && !!currentRow?.channelCode,
-    select: (res) => res.result as PaymentSubChannel[] || [],
+    select: (res) => (res.result as PaymentSubChannel[]) || [],
   })
 
   // 添加子渠道
@@ -102,7 +110,9 @@ export function SubChannelDrawer() {
     onSuccess: (res) => {
       if (res.code == 200) {
         toast.success(t('common.addSuccess'))
-        queryClient.invalidateQueries({ queryKey: ['sub-channels', currentRow?.channelCode] })
+        queryClient.invalidateQueries({
+          queryKey: ['sub-channels', currentRow?.channelCode],
+        })
         form.reset()
         setShowAddDialog(false)
       } else {
@@ -120,7 +130,9 @@ export function SubChannelDrawer() {
     onSuccess: (res) => {
       if (res.code == 200) {
         toast.success(t('common.deleteSuccess'))
-        queryClient.invalidateQueries({ queryKey: ['sub-channels', currentRow?.channelCode] })
+        queryClient.invalidateQueries({
+          queryKey: ['sub-channels', currentRow?.channelCode],
+        })
         setShowDeleteDialog(false)
         setDeleteTarget(null)
       } else {
@@ -168,7 +180,10 @@ export function SubChannelDrawer() {
         )
       case 2:
         return (
-          <Badge variant='default' className='bg-yellow-500 hover:bg-yellow-600'>
+          <Badge
+            variant='default'
+            className='bg-yellow-500 hover:bg-yellow-600'
+          >
             {t('config.paymentChannel.statusMaintenance')}
           </Badge>
         )
@@ -197,9 +212,11 @@ export function SubChannelDrawer() {
   return (
     <>
       <Sheet open={isOpen} onOpenChange={(open) => !open && setOpen(null)}>
-        <SheetContent className='sm:max-w-2xl overflow-y-auto'>
+        <SheetContent className='overflow-y-auto sm:max-w-2xl'>
           <SheetHeader>
-            <SheetTitle>{t('config.paymentChannel.subChannelManagement')}</SheetTitle>
+            <SheetTitle>
+              {t('config.paymentChannel.subChannelManagement')}
+            </SheetTitle>
             <SheetDescription>
               {currentRow?.channelName} ({currentRow?.channelCode})
             </SheetDescription>
@@ -218,15 +235,23 @@ export function SubChannelDrawer() {
             </Button>
 
             {/* 子渠道列表 */}
-            <div className='border rounded-lg'>
+            <div className='rounded-lg border'>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t('config.paymentChannel.subChannelCode')}</TableHead>
-                    <TableHead>{t('config.paymentChannel.subChannelName')}</TableHead>
-                    <TableHead>{t('config.paymentChannel.subChannelType')}</TableHead>
+                    <TableHead>
+                      {t('config.paymentChannel.subChannelCode')}
+                    </TableHead>
+                    <TableHead>
+                      {t('config.paymentChannel.subChannelName')}
+                    </TableHead>
+                    <TableHead>
+                      {t('config.paymentChannel.subChannelType')}
+                    </TableHead>
                     <TableHead>{t('config.paymentChannel.status')}</TableHead>
-                    <TableHead className='text-right'>{t('common.action')}</TableHead>
+                    <TableHead className='text-right'>
+                      {t('common.action')}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -238,7 +263,10 @@ export function SubChannelDrawer() {
                     </TableRow>
                   ) : !subChannels || subChannels.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className='text-center text-muted-foreground'>
+                      <TableCell
+                        colSpan={5}
+                        className='text-muted-foreground text-center'
+                      >
                         {t('config.paymentChannel.noSubChannels')}
                       </TableCell>
                     </TableRow>
@@ -250,7 +278,9 @@ export function SubChannelDrawer() {
                         </TableCell>
                         <TableCell>{subChannel.subChannelName}</TableCell>
                         <TableCell>{getTypeBadge(subChannel.type)}</TableCell>
-                        <TableCell>{getStatusBadge(subChannel.subChannelStatus)}</TableCell>
+                        <TableCell>
+                          {getStatusBadge(subChannel.subChannelStatus)}
+                        </TableCell>
                         <TableCell className='text-right'>
                           <Button
                             type='button'
@@ -259,7 +289,7 @@ export function SubChannelDrawer() {
                             onClick={() => handleDelete(subChannel)}
                             disabled={deleteMutation.isPending}
                           >
-                            <Trash2 className='h-4 w-4 text-destructive' />
+                            <Trash2 className='text-destructive h-4 w-4' />
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -276,7 +306,9 @@ export function SubChannelDrawer() {
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('config.paymentChannel.addSubChannel')}</DialogTitle>
+            <DialogTitle>
+              {t('config.paymentChannel.addSubChannel')}
+            </DialogTitle>
             <DialogDescription>
               {currentRow?.channelName} ({currentRow?.channelCode})
             </DialogDescription>
@@ -288,10 +320,14 @@ export function SubChannelDrawer() {
                 name='subChannelCode'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('config.paymentChannel.subChannelCode')}</FormLabel>
+                    <FormLabel>
+                      {t('config.paymentChannel.subChannelCode')}
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={t('config.paymentChannel.subChannelCodePlaceholder')}
+                        placeholder={t(
+                          'config.paymentChannel.subChannelCodePlaceholder'
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -305,10 +341,14 @@ export function SubChannelDrawer() {
                 name='subChannelName'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('config.paymentChannel.subChannelName')}</FormLabel>
+                    <FormLabel>
+                      {t('config.paymentChannel.subChannelName')}
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={t('config.paymentChannel.subChannelNamePlaceholder')}
+                        placeholder={t(
+                          'config.paymentChannel.subChannelNamePlaceholder'
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -322,7 +362,9 @@ export function SubChannelDrawer() {
                 name='type'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('config.paymentChannel.subChannelType')}</FormLabel>
+                    <FormLabel>
+                      {t('config.paymentChannel.subChannelType')}
+                    </FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
                       value={field.value?.toString()}
@@ -333,8 +375,12 @@ export function SubChannelDrawer() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='1'>{t('config.paymentChannel.payout')}</SelectItem>
-                        <SelectItem value='2'>{t('config.paymentChannel.collection')}</SelectItem>
+                        <SelectItem value='1'>
+                          {t('config.paymentChannel.payout')}
+                        </SelectItem>
+                        <SelectItem value='2'>
+                          {t('config.paymentChannel.collection')}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -358,9 +404,15 @@ export function SubChannelDrawer() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='1'>{t('config.paymentChannel.statusNormal')}</SelectItem>
-                        <SelectItem value='2'>{t('config.paymentChannel.statusMaintenance')}</SelectItem>
-                        <SelectItem value='3'>{t('config.paymentChannel.statusPaused')}</SelectItem>
+                        <SelectItem value='1'>
+                          {t('config.paymentChannel.statusNormal')}
+                        </SelectItem>
+                        <SelectItem value='2'>
+                          {t('config.paymentChannel.statusMaintenance')}
+                        </SelectItem>
+                        <SelectItem value='3'>
+                          {t('config.paymentChannel.statusPaused')}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -394,7 +446,10 @@ export function SubChannelDrawer() {
           <AlertDialogHeader>
             <AlertDialogTitle>{t('common.confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('config.paymentChannel.deleteSubChannelConfirmation').replace('{name}', deleteTarget?.subChannelName || '')}
+              {t('config.paymentChannel.deleteSubChannelConfirmation').replace(
+                '{name}',
+                deleteTarget?.subChannelName || ''
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

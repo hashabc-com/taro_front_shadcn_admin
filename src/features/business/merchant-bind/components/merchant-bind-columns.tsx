@@ -1,24 +1,30 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { getTranslation, type Language } from '@/lib/i18n'
-import { DataTableRowActions } from './data-table-row-actions'
 import { type IBusinessType } from '../schema'
+import { DataTableRowActions } from './data-table-row-actions'
 
 interface GetColumnsOptions {
   language?: Language
 }
 
-export function getColumns({ language = 'zh' }: GetColumnsOptions): ColumnDef<IBusinessType>[] {
+export function getColumns({
+  language = 'zh',
+}: GetColumnsOptions): ColumnDef<IBusinessType>[] {
   const t = (key: string) => getTranslation(language, key)
   return [
     {
       accessorKey: 'account',
       header: t('business.merchantBind.businessAccount'),
-      cell: ({ row }) => <div className='max-w-[220px]'>{row.getValue('account')}</div>,
+      cell: ({ row }) => (
+        <div className='max-w-[220px]'>{row.getValue('account')}</div>
+      ),
     },
     {
       accessorKey: 'userName',
       header: t('business.merchantBind.businessUserName'),
-      cell: ({ row }) => <div className='max-w-[220px]'>{row.getValue('userName')}</div>,
+      cell: ({ row }) => (
+        <div className='max-w-[220px]'>{row.getValue('userName')}</div>
+      ),
     },
     {
       accessorKey: 'disabledStatus',
@@ -26,11 +32,7 @@ export function getColumns({ language = 'zh' }: GetColumnsOptions): ColumnDef<IB
       cell: ({ row }) => {
         const status = row.getValue('disabledStatus') as number
         return (
-          <span
-            className={
-              status === 0 ? 'text-green-600' : 'text-red-600'
-            }
-          >
+          <span className={status === 0 ? 'text-green-600' : 'text-red-600'}>
             {status === 0 ? t('common.enabled') : t('common.disabled')}
           </span>
         )
@@ -52,7 +54,7 @@ export function getColumns({ language = 'zh' }: GetColumnsOptions): ColumnDef<IB
     {
       id: 'actions',
       header: t('common.action'),
-      cell: ({ row }) => <DataTableRowActions row={row} />
+      cell: ({ row }) => <DataTableRowActions row={row} />,
       // cell: ({ row }) => (
       //   <Button
       //     variant='outline'

@@ -1,11 +1,11 @@
+import { useEffect, useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { useCountryStore, useMerchantStore } from '@/stores'
+import { getImg } from '@/api/common'
 import { getRechargeWithdrawList } from '@/api/fund'
 import { useConvertAmount } from '@/hooks/use-convert-amount'
 import { type IRechargeWithdrawType } from '../schema'
-import { useEffect, useState, useMemo } from 'react'
-import { getImg } from '@/api/common'
 
 const route = getRouteApi('/_authenticated/fund/recharge-withdraw')
 
@@ -14,21 +14,30 @@ export function useRechargeWithdrawData() {
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
   const convertAmount = useConvertAmount()
-  const [dataWithImages, setDataWithImages] = useState<IRechargeWithdrawType[]>([])
+  const [dataWithImages, setDataWithImages] = useState<IRechargeWithdrawType[]>(
+    []
+  )
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['fund', 'recharge-withdraw', search, selectedCountry?.code, selectedMerchant?.appid],
+    queryKey: [
+      'fund',
+      'recharge-withdraw',
+      search,
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: () => getRechargeWithdrawList(search),
     enabled: !!selectedCountry,
-    placeholderData:(prev) => prev ?? undefined
+    placeholderData: (prev) => prev ?? undefined,
   })
 
-  const dataList = useMemo(() => 
-    data?.result?.listRecord?.map((item: IRechargeWithdrawType) => ({
-      ...item,
-      rechargeAmount: convertAmount(item.rechargeAmount,false),
-      finalAmount: convertAmount(item.finalAmount,false)
-    })) || [],
+  const dataList = useMemo(
+    () =>
+      data?.result?.listRecord?.map((item: IRechargeWithdrawType) => ({
+        ...item,
+        rechargeAmount: convertAmount(item.rechargeAmount, false),
+        finalAmount: convertAmount(item.finalAmount, false),
+      })) || [],
     [data?.result?.listRecord, convertAmount]
   )
 
@@ -63,7 +72,7 @@ export function useRechargeWithdrawData() {
           return item
         })
       )
-      
+
       if (isMounted) {
         setDataWithImages(updatedData)
       }

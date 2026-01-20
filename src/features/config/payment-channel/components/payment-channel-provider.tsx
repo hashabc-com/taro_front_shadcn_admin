@@ -13,7 +13,11 @@ type ContextType = {
 
 const PaymentChannelContext = React.createContext<ContextType | null>(null)
 
-export function PaymentChannelProvider({ children }: { children: React.ReactNode }) {
+export function PaymentChannelProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const [open, setOpen] = useDialogState<DialogType>(null)
   const [currentRow, setCurrentRow] = useState<PaymentChannel | null>(null)
 
@@ -36,7 +40,9 @@ export const usePaymentChannel = () => {
   const paymentChannelContext = React.useContext(PaymentChannelContext)
 
   if (!paymentChannelContext) {
-    throw new Error('usePaymentChannel has to be used within <PaymentChannelContext.Provider>')
+    throw new Error(
+      'usePaymentChannel has to be used within <PaymentChannelContext.Provider>'
+    )
   }
 
   return paymentChannelContext

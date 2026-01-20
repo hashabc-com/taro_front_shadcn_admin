@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 // 订单数据结构
 export const orderSummarySchema = z.object({
-
   companyName: z.string(),
   paymentCompany: z.string(),
   dealTime: z.string(),

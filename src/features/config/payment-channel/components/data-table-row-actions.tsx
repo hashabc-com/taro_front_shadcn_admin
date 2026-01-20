@@ -1,5 +1,10 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
+import { DollarSign, Edit, Power, PowerOff, List } from 'lucide-react'
+import { toast } from 'sonner'
+import { updatePaymentChannelStatus } from '@/api/config'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -10,34 +15,31 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { paymentChannelSchema } from '../schema'
 import { usePaymentChannel } from './payment-channel-provider'
-import { DollarSign, Edit, Power, PowerOff, List } from 'lucide-react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { updatePaymentChannelStatus } from '@/api/config'
-import { toast } from 'sonner'
-import { useLanguage } from '@/context/language-provider'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
 }
 
-export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
+export function DataTableRowActions<TData>({
+  row,
+}: DataTableRowActionsProps<TData>) {
   const channel = paymentChannelSchema.parse(row.original)
   const { setOpen, setCurrentRow } = usePaymentChannel()
   const queryClient = useQueryClient()
   const { t } = useLanguage()
-  
+
   const statusMutation = useMutation({
     mutationFn: (status: number) => {
       return updatePaymentChannelStatus({
         id: channel.id,
-        channelStatus: status
+        channelStatus: status,
       })
     },
     onSuccess: (res) => {
-      if(res.code == 200){
+      if (res.code == 200) {
         queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
         toast.success(t('common.statusUpdateSuccess'))
-      }else{
+      } else {
         toast.error(res.message || t('common.statusUpdateFailed'))
       }
     },
@@ -52,7 +54,8 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
       2: 1, // 维护 -> 正常
       3: 1, // 暂停 -> 正常
     }
-    const newStatus = statusMap[channel.channelStatus as keyof typeof statusMap] || 1
+    const newStatus =
+      statusMap[channel.channelStatus as keyof typeof statusMap] || 1
     statusMutation.mutate(newStatus)
   }
 
@@ -60,7 +63,10 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='data-[state=open]:bg-muted flex h-8 w-8 p-0'>
+          <Button
+            variant='ghost'
+            className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
+          >
             <DotsHorizontalIcon className='h-4 w-4' />
           </Button>
         </DropdownMenuTrigger>
@@ -80,8 +86,8 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           >
             {channel.channelStatus === 1 ? (
               <>
-              {t('config.paymentChannel.pauseChannel')}
-                <PowerOff className='ml-auto h-4 w-4' /> 
+                {t('config.paymentChannel.pauseChannel')}
+                <PowerOff className='ml-auto h-4 w-4' />
               </>
             ) : (
               <>

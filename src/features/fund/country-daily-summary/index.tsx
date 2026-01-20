@@ -1,6 +1,6 @@
+import { useLanguage } from '@/context/language-provider'
 import { Main } from '@/components/layout/main'
 import { CountryDailySummaryTable } from './components/country-daily-summary-table'
-import { useLanguage } from '@/context/language-provider'
 
 export function CountryDailySummaryPage() {
   const { t } = useLanguage()

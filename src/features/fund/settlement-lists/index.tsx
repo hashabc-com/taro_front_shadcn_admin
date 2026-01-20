@@ -1,6 +1,6 @@
+import { useLanguage } from '@/context/language-provider'
 import { Main } from '@/components/layout/main'
 import { SettlementListTable } from './components/settlement-lists-table'
-import { useLanguage } from '@/context/language-provider'
 
 export function SettlementPage() {
   const { t } = useLanguage()

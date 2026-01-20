@@ -9,7 +9,10 @@ const businessTypeMap: Record<string, { zh: string; en: string }> = {
   PAY_PAYOUT: { zh: '代付', en: 'Payout' },
 }
 
-const businessTypeColorMap: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+const businessTypeColorMap: Record<
+  string,
+  'default' | 'secondary' | 'destructive' | 'outline'
+> = {
   PAY_PAYIN: 'default',
   PAY_PAYOUT: 'secondary',
 }
@@ -20,7 +23,10 @@ const actionCodeMap: Record<string, { zh: string; en: string }> = {
   BLOCK: { zh: '阻止', en: 'Block' },
 }
 
-const actionCodeColorMap: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+const actionCodeColorMap: Record<
+  string,
+  'default' | 'secondary' | 'destructive' | 'outline'
+> = {
   REJECT: 'destructive',
   ALARM: 'secondary',
   BLOCK: 'outline',
@@ -35,17 +41,17 @@ export const getColumns = (
     {
       accessorKey: 'id',
       header: 'ID',
-      enableHiding:false
+      enableHiding: false,
     },
     {
       accessorKey: 'ruleName',
       header: t('logs.riskControl.ruleName'),
-      enableHiding:false
+      enableHiding: false,
     },
     {
       accessorKey: 'ruleId',
       header: t('logs.riskControl.ruleId'),
-      enableHiding:false
+      enableHiding: false,
     },
     {
       accessorKey: 'customerName',
@@ -67,7 +73,7 @@ export const getColumns = (
     },
     {
       accessorKey: 'businessId',
-      header: t('logs.riskControl.orderNo')
+      header: t('logs.riskControl.orderNo'),
     },
     {
       accessorKey: 'actionCode',
@@ -85,7 +91,7 @@ export const getColumns = (
     },
     {
       accessorKey: 'reason',
-      header: t('logs.riskControl.interceptReason')
+      header: t('logs.riskControl.interceptReason'),
     },
     {
       accessorKey: 'requestParams',
@@ -94,25 +100,6 @@ export const getColumns = (
         const text = row.getValue('requestParams') as string
         if (!text) return <div className='text-center'>-</div>
         return (
-            <Button
-              variant='link'
-              size='sm'
-              className='px-0'
-              onClick={() => onViewDetail(text)}
-            >
-            {t('common.viewDetails')}
-          </Button>
-      )
-    },
-    size: 120,
-  },
-  {
-    accessorKey: 'responseParams',
-    header: t('logs.riskControl.responseParams'),
-    cell: ({ row }) => {
-      const text = row.getValue('responseParams') as string
-      if (!text) return
-      return (
           <Button
             variant='link'
             size='sm'
@@ -121,32 +108,43 @@ export const getColumns = (
           >
             {t('common.viewDetails')}
           </Button>
-      )
-    }
-  },
-  {
-    accessorKey: 'createTime',
-    header: t('logs.riskControl.createTime'),
-    cell: ({ row }) => {
-      const time = row.getValue('createTime') as string
-      return (
-        <div>
-          {time ? time.replace('T', ' ').substring(0, 19) : '-'}
-        </div>
-      )
-    }
-  },
-  {
-    accessorKey: 'localTime',
-    header: t('logs.riskControl.triggerTime'),
-    cell: ({ row }) => {
-      const time = row.getValue('localTime') as string
-      return (
-        <div>
-          {time ? time.replace('T', ' ').substring(0, 19) : '-'}
-        </div>
-      )
-    }
-  },
-]
+        )
+      },
+      size: 120,
+    },
+    {
+      accessorKey: 'responseParams',
+      header: t('logs.riskControl.responseParams'),
+      cell: ({ row }) => {
+        const text = row.getValue('responseParams') as string
+        if (!text) return
+        return (
+          <Button
+            variant='link'
+            size='sm'
+            className='px-0'
+            onClick={() => onViewDetail(text)}
+          >
+            {t('common.viewDetails')}
+          </Button>
+        )
+      },
+    },
+    {
+      accessorKey: 'createTime',
+      header: t('logs.riskControl.createTime'),
+      cell: ({ row }) => {
+        const time = row.getValue('createTime') as string
+        return <div>{time ? time.replace('T', ' ').substring(0, 19) : '-'}</div>
+      },
+    },
+    {
+      accessorKey: 'localTime',
+      header: t('logs.riskControl.triggerTime'),
+      cell: ({ row }) => {
+        const time = row.getValue('localTime') as string
+        return <div>{time ? time.replace('T', ' ').substring(0, 19) : '-'}</div>
+      },
+    },
+  ]
 }

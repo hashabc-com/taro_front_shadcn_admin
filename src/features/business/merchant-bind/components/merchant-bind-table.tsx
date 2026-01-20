@@ -7,6 +7,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+// import { type IBusinessType } from '../schema'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -19,11 +21,9 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 import { useMerchantBindData } from '../hooks/use-merchant-bind-data'
+import { BindMerchantDialog } from './bind-merchant-dialog'
 import { getColumns } from './merchant-bind-columns'
 import { MerchantBindSearch } from './merchant-bind-search'
-import { BindMerchantDialog } from './bind-merchant-dialog'
-// import { type IBusinessType } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 import { RateConfigDialog } from './rate-config-dialog'
 
 const route = getRouteApi('/_authenticated/business/merchant-bind')
@@ -172,9 +172,7 @@ export function MerchantBindTable() {
         onSuccess={handleSuccess}
       />
       {/* 汇率配置弹窗 */}
-      <RateConfigDialog
-        onSuccess={handleSuccess}
-      />
+      <RateConfigDialog onSuccess={handleSuccess} />
     </div>
   )
 }

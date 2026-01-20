@@ -6,7 +6,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { getTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -18,20 +20,22 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
+import { useReceiveSummaryData } from '../hooks/use-receive-summary-data'
 import { getTasksColumns } from './receive-summary-columns'
 import { ReceiveListsSearch } from './receive-summary-search'
-import { useReceiveSummaryData } from '../hooks/use-receive-summary-data'
-import { useLanguage } from '@/context/language-provider'
-import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
-
 
 export function ReceiveSummaryTable() {
   const { lang } = useLanguage()
   const t = (key: string) => getTranslation(lang, key)
   const columns = useMemo(() => getTasksColumns(lang), [lang])
-  const { orders:data, isLoading,totalRecord, summaryData } = useReceiveSummaryData()
+  const {
+    orders: data,
+    isLoading,
+    totalRecord,
+    summaryData,
+  } = useReceiveSummaryData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -44,10 +48,10 @@ export function ReceiveSummaryTable() {
     })
 
   const pageCount = useMemo(() => {
-      const pageSize = pagination.pageSize ?? 10
-      // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
-      return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
-    }, [totalRecord, pagination.pageSize])
+    const pageSize = pagination.pageSize ?? 10
+    // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
+    return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
+  }, [totalRecord, pagination.pageSize])
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -59,7 +63,7 @@ export function ReceiveSummaryTable() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,  
+    manualPagination: true,
     pageCount,
     onPaginationChange,
   })
@@ -72,15 +76,15 @@ export function ReceiveSummaryTable() {
     <div className='flex flex-1 flex-col gap-4'>
       <ReceiveListsSearch table={table} />
       {isLoading ? (
-          <div className='overflow-hidden rounded-md border'>
-            <div className='space-y-3 p-4'>
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div key={i} className='flex gap-4'>
-                  <Skeleton className='h-12 flex-1' />
-                </div>
-              ))}
-            </div>
+        <div className='overflow-hidden rounded-md border'>
+          <div className='space-y-3 p-4'>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className='flex gap-4'>
+                <Skeleton className='h-12 flex-1' />
+              </div>
+            ))}
           </div>
+        </div>
       ) : (
         <div className='overflow-hidden rounded-md border'>
           <Table>
@@ -136,20 +140,12 @@ export function ReceiveSummaryTable() {
                   {/* 合计行 */}
                   <TableRow className='bg-muted/50 font-semibold'>
                     <TableCell colSpan={3} className='text-right'>
-                        {t('common.total')}
+                      {t('common.total')}
                     </TableCell>
-                    <TableCell>
-                      {summaryData.orderTotal}
-                    </TableCell>
-                    <TableCell>
-                      {summaryData.amountTotal}
-                    </TableCell>
-                    <TableCell>
-                      {summaryData.amountServiceTotal}
-                    </TableCell>
-                    <TableCell>
-                      {summaryData.totalAmountTotal}
-                    </TableCell>
+                    <TableCell>{summaryData.orderTotal}</TableCell>
+                    <TableCell>{summaryData.amountTotal}</TableCell>
+                    <TableCell>{summaryData.amountServiceTotal}</TableCell>
+                    <TableCell>{summaryData.totalAmountTotal}</TableCell>
                   </TableRow>
                 </>
               ) : (

@@ -1,10 +1,10 @@
-import { type Table } from '@tanstack/react-table'
-import { Button } from '@/components/ui/button'
-import { Plus, RefreshCcw } from 'lucide-react'
-import { useRouteStrategy } from './route-strategy-provider'
 import { getRouteApi } from '@tanstack/react-router'
-import { type RouteStrategy } from '../schema'
+import { type Table } from '@tanstack/react-table'
+import { Plus, RefreshCcw } from 'lucide-react'
 import { useLanguage } from '@/context/language-provider'
+import { Button } from '@/components/ui/button'
+import { type RouteStrategy } from '../schema'
+import { useRouteStrategy } from './route-strategy-provider'
 
 const route = getRouteApi('/_authenticated/config/route-strategy')
 
@@ -18,14 +18,14 @@ export function RouteStrategySearch(_props: RouteStrategySearchProps) {
   const { t } = useLanguage()
 
   const handleSearch = () => {
-      navigate({
-        search: (prev) => ({
-          ...prev,
-          pageNum: 1,
-          refresh: Date.now()
-        }),
-      })
-}
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        pageNum: 1,
+        refresh: Date.now(),
+      }),
+    })
+  }
 
   return (
     <div className='flex items-center justify-between gap-2'>
@@ -37,11 +37,7 @@ export function RouteStrategySearch(_props: RouteStrategySearchProps) {
       </div>
 
       <div className='flex items-center gap-2'>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => setOpen('create')}
-        >
+        <Button variant='outline' size='sm' onClick={() => setOpen('create')}>
           <Plus className='mr-2 h-4 w-4' />
           {t('config.routeStrategy.addRouteConfig')}
         </Button>

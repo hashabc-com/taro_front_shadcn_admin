@@ -1,5 +1,6 @@
 import { type Row } from '@tanstack/react-table'
 import { MoreHorizontal, Pencil } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -8,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { type RuleConfig } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 
 interface DataTableRowActionsProps {
   row: Row<RuleConfig>
@@ -16,10 +16,7 @@ interface DataTableRowActionsProps {
   onDelete: (rule: RuleConfig) => void
 }
 
-export function DataTableRowActions({
-  row,
-  onEdit,
-}: DataTableRowActionsProps) {
+export function DataTableRowActions({ row, onEdit }: DataTableRowActionsProps) {
   const rule = row.original
   const { t } = useLanguage()
   return (
@@ -27,7 +24,7 @@ export function DataTableRowActions({
       <DropdownMenuTrigger asChild>
         <Button
           variant='ghost'
-          className='flex h-8 w-8 p-0 data-[state=open]:bg-muted'
+          className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
         >
           <MoreHorizontal className='h-4 w-4' />
           <span className='sr-only'>打开菜单</span>

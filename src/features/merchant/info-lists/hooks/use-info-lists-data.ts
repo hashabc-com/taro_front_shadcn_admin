@@ -14,17 +14,24 @@ export function useMerchantInfoData() {
   const convertAmount = useConvertAmount()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['merchant', 'info-lists', search, selectedCountry?.code, selectedMerchant?.appid],
+    queryKey: [
+      'merchant',
+      'info-lists',
+      search,
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: () => getMerchantInfoList(search),
     enabled: !!selectedCountry,
     placeholderData: (prev) => prev ?? undefined,
   })
 
-  const dataList = data?.result?.listRecord?.map((item: IMerchantInfoType) => ({
-    ...item,
-    amount: convertAmount(item.amount || ''),
-    serviceAmount: convertAmount(item.serviceAmount || ''),
-  })) || []
+  const dataList =
+    data?.result?.listRecord?.map((item: IMerchantInfoType) => ({
+      ...item,
+      amount: convertAmount(item.amount || ''),
+      serviceAmount: convertAmount(item.serviceAmount || ''),
+    })) || []
 
   const totalRecord = data?.result?.totalRecord || 0
 

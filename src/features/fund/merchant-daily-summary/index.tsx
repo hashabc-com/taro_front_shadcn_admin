@@ -1,6 +1,6 @@
+import { useLanguage } from '@/context/language-provider'
 import { Main } from '@/components/layout/main'
 import { MerchantDailySummaryTable } from './components/merchant-daily-summary-table'
-import { useLanguage } from '@/context/language-provider'
 
 export function MerchantDailySummaryPage() {
   const { t } = useLanguage()

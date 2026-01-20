@@ -1,11 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { MerchantBindPage } from '@/features/business/merchant-bind'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
-
+import { MerchantBindPage } from '@/features/business/merchant-bind'
 
 const searchSchema = createBaseSearchSchema({
-  userName: z.string().optional()
+  userName: z.string().optional(),
 })
 
 export type IMerchantBindSearch = z.infer<typeof searchSchema>

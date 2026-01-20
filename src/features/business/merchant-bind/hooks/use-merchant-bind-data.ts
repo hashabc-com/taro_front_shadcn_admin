@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
+import { useCountryStore, useMerchantStore } from '@/stores'
 import { getBusinessBindList } from '@/api/business'
-import { useCountryStore,useMerchantStore } from '@/stores'
 
 const route = getRouteApi('/_authenticated/business/merchant-bind')
 
@@ -10,13 +10,18 @@ export function useMerchantBindData() {
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['business-bind-list', search, selectedCountry?.code, selectedMerchant?.appid],
+    queryKey: [
+      'business-bind-list',
+      search,
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: async () => {
       const response = await getBusinessBindList(search)
       return response?.result || { listRecord: [], totalRecord: 0 }
     },
     enabled: !!selectedCountry,
-    placeholderData:(prev) => prev ?? undefined
+    placeholderData: (prev) => prev ?? undefined,
   })
 
   return {

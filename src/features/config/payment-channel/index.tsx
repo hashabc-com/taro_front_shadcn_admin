@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
+import { getPaymentChannelList } from '@/api/config'
+import { useLanguage } from '@/context/language-provider'
 import { Main } from '@/components/layout/main'
+import { PaymentChannelDialogs } from './components/payment-channel-dialogs'
 import { PaymentChannelProvider } from './components/payment-channel-provider'
 import { PaymentChannelTable } from './components/payment-channel-table'
-import { PaymentChannelDialogs } from './components/payment-channel-dialogs'
 import { SubChannelDrawer } from './components/sub-channel-drawer'
-import { getPaymentChannelList } from '@/api/config'
 import { type PaymentChannel } from './schema'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/config/payment-channel')
 
@@ -17,7 +17,7 @@ export function PaymentChannelConfig() {
   const { data, isLoading } = useQuery({
     queryKey: ['payment-channels', search],
     queryFn: () => getPaymentChannelList(search),
-    placeholderData:(prev) => prev ?? undefined
+    placeholderData: (prev) => prev ?? undefined,
   })
 
   const channels = (data?.result?.listRecord as PaymentChannel[]) || []
@@ -28,10 +28,16 @@ export function PaymentChannelConfig() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>{t('config.paymentChannel.title')}</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>
+              {t('config.paymentChannel.title')}
+            </h2>
           </div>
         </div>
-        <PaymentChannelTable data={channels} totalRecord={totalRecord} isLoading={isLoading} />
+        <PaymentChannelTable
+          data={channels}
+          totalRecord={totalRecord}
+          isLoading={isLoading}
+        />
       </Main>
       <PaymentChannelDialogs />
       <SubChannelDrawer />

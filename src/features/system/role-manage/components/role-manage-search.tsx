@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { zhCN } from 'date-fns/locale'
 import { Search, CalendarIcon, X } from 'lucide-react'
+import { useI18n } from '@/hooks/use-i18n'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -10,7 +11,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { useI18n } from '@/hooks/use-i18n'
 
 type DateRange = {
   from: Date | undefined
@@ -87,7 +87,9 @@ export function RoleManageSearch() {
                     format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                   )
                 ) : (
-                  <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                  <span className='text-muted-foreground'>
+                    {t('common.selectDateRange')}
+                  </span>
                 )}
               </Button>
             </PopoverTrigger>

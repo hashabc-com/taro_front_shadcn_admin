@@ -13,12 +13,18 @@ type ContextType = {
 
 const ReceiveListsContext = React.createContext<ContextType | null>(null)
 
-export function ReceiveListsProvider({ children }: { children: React.ReactNode }) {
+export function ReceiveListsProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const [open, setOpen] = useDialogState<DialogType>(null)
   const [currentRow, setCurrentRow] = useState<Order | null>(null)
 
   return (
-    <ReceiveListsContext.Provider value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <ReceiveListsContext.Provider
+      value={{ open, setOpen, currentRow, setCurrentRow }}
+    >
       {children}
     </ReceiveListsContext.Provider>
   )
@@ -29,7 +35,9 @@ export const useReceiveLists = () => {
   const receiveListsContext = React.useContext(ReceiveListsContext)
 
   if (!receiveListsContext) {
-    throw new Error('useReceiveLists has to be used within <ReceiveListsContext.Provider>')
+    throw new Error(
+      'useReceiveLists has to be used within <ReceiveListsContext.Provider>'
+    )
   }
 
   return receiveListsContext

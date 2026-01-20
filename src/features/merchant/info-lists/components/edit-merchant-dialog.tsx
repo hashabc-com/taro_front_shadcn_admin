@@ -5,7 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCountryStore } from '@/stores'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { addCustomer, updateCustomer} from '@/api/merchant'
+import { addCustomer, updateCustomer } from '@/api/merchant'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -27,7 +28,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { type IMerchantInfoType } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 
 const editMerchantSchema = z.object({
   account: z.string().min(1, '请输入账号'),
@@ -143,9 +143,15 @@ export function EditMerchantDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-[500px]'>
         <DialogHeader>
-          <DialogTitle>{isAdd ? t('common.add') + t('merchant.merchant') : t('common.edit') + t('merchant.merchant')}</DialogTitle>
+          <DialogTitle>
+            {isAdd
+              ? t('common.add') + t('merchant.merchant')
+              : t('common.edit') + t('merchant.merchant')}
+          </DialogTitle>
           <DialogDescription>
-            {isAdd ? t('merchant.info.createDescription') : t('merchant.info.editDescription')}
+            {isAdd
+              ? t('merchant.info.createDescription')
+              : t('merchant.info.editDescription')}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -156,10 +162,16 @@ export function EditMerchantDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t('merchant.info.account')}<span className='text-red-500'>*</span>
+                    {t('merchant.info.account')}
+                    <span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('merchant.info.validation.accountRequired')} {...field} />
+                    <Input
+                      placeholder={t(
+                        'merchant.info.validation.accountRequired'
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -173,12 +185,15 @@ export function EditMerchantDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {t('merchant.info.password')}<span className='text-red-500'>*</span>
+                      {t('merchant.info.password')}
+                      <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         type='password'
-                        placeholder={t('merchant.info.validation.passwordRequired')}
+                        placeholder={t(
+                          'merchant.info.validation.passwordRequired'
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -194,10 +209,16 @@ export function EditMerchantDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t('merchant.info.merchantName')}<span className='text-red-500'>*</span>
+                    {t('merchant.info.merchantName')}
+                    <span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('merchant.info.validation.merchantNameRequired')} {...field} />
+                    <Input
+                      placeholder={t(
+                        'merchant.info.validation.merchantNameRequired'
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -211,7 +232,8 @@ export function EditMerchantDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {t('merchant.info.freezeType')}<span className='text-red-500'>*</span>
+                      {t('merchant.info.freezeType')}
+                      <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
@@ -221,11 +243,15 @@ export function EditMerchantDialog({
                       >
                         <div className='flex items-center space-x-2'>
                           <RadioGroupItem value='0' id='type-t' />
-                          <Label htmlFor='type-t'>{t('merchant.info.transactionDay')}(T)</Label>
+                          <Label htmlFor='type-t'>
+                            {t('merchant.info.transactionDay')}(T)
+                          </Label>
                         </div>
                         <div className='flex items-center space-x-2'>
                           <RadioGroupItem value='1' id='type-d' />
-                          <Label htmlFor='type-d'>{t('merchant.info.naturalDay')}(D)</Label>
+                          <Label htmlFor='type-d'>
+                            {t('merchant.info.naturalDay')}(D)
+                          </Label>
                         </div>
                       </RadioGroup>
                     </FormControl>
@@ -240,7 +266,8 @@ export function EditMerchantDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {t('merchant.info.settlementDays')}<span className='text-red-500'>*</span>
+                      {t('merchant.info.settlementDays')}
+                      <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -266,10 +293,14 @@ export function EditMerchantDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t('common.googleAuthCode')}<span className='text-red-500'>*</span>
+                    {t('common.googleAuthCode')}
+                    <span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('common.enterGoogleAuthCode')} {...field} />
+                    <Input
+                      placeholder={t('common.enterGoogleAuthCode')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

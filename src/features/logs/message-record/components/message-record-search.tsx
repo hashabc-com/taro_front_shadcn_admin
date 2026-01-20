@@ -1,11 +1,11 @@
 // import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
-import { RefreshCcw } from 'lucide-react'
 import { type Table } from '@tanstack/react-table'
+import { RefreshCcw } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 // import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/data-table'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/logs/message-record')
 
@@ -18,16 +18,16 @@ export function MessageRecordSearch<TData>({
 }: MessageRecordSearchProps<TData>) {
   const navigate = route.useNavigate()
   const { t } = useLanguage()
-//   const search = route.useSearch()
+  //   const search = route.useSearch()
 
-//   const [messageId, setMessageId] = useState(search.messageId || '')
-//   const [correlationId, setCorrelationId] = useState(
-//     search.correlationId || ''
-//   )
-//   const [queueName, setQueueName] = useState(search.queueName || '')
-//   const [consumerService, setConsumerService] = useState(
-//     search.consumerService || ''
-//   )
+  //   const [messageId, setMessageId] = useState(search.messageId || '')
+  //   const [correlationId, setCorrelationId] = useState(
+  //     search.correlationId || ''
+  //   )
+  //   const [queueName, setQueueName] = useState(search.queueName || '')
+  //   const [consumerService, setConsumerService] = useState(
+  //     search.consumerService || ''
+  //   )
 
   const handleSearch = () => {
     navigate({
@@ -38,25 +38,25 @@ export function MessageRecordSearch<TData>({
         // queueName: queueName || undefined,
         // consumerService: consumerService || undefined,
         pageNum: 1,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
 
-//   const handleReset = () => {
-//     setMessageId('')
-//     setCorrelationId('')
-//     setQueueName('')
-//     setConsumerService('')
-//     navigate({
-//       search: (prev) => ({
-//         pageNum: 1,
-//         pageSize: prev.pageSize,
-//       }),
-//     })
-//   }
+  //   const handleReset = () => {
+  //     setMessageId('')
+  //     setCorrelationId('')
+  //     setQueueName('')
+  //     setConsumerService('')
+  //     navigate({
+  //       search: (prev) => ({
+  //         pageNum: 1,
+  //         pageSize: prev.pageSize,
+  //       }),
+  //     })
+  //   }
 
-//   const hasFilters = messageId || correlationId || queueName || consumerService
+  //   const hasFilters = messageId || correlationId || queueName || consumerService
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
@@ -96,7 +96,7 @@ export function MessageRecordSearch<TData>({
         />
       </div> */}
 
-      <div className='flex gap-2 mt-0.5'>
+      <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <RefreshCcw className='mr-2 h-4 w-4' />
           {t('common.refresh')}

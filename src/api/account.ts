@@ -50,7 +50,11 @@ export const updateAccount = (data: {
 }) => http.post('/admin/accountmanage/v1/updateAccount', data)
 
 // 修改密码
-export const updatePassword = (data: { id: number; pwd: string; rePwd: string }) =>
+export const updatePassword = (data: {
+  id: number
+  pwd: string
+  rePwd: string
+}) =>
   http.post('/admin/accountmanage/v1/updatepassword', data, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -58,7 +62,10 @@ export const updatePassword = (data: { id: number; pwd: string; rePwd: string })
   })
 
 // 修改启用状态
-export const updateDisabledStatus = (data: { id: number; disableStatus: number }) =>
+export const updateDisabledStatus = (data: {
+  id: number
+  disableStatus: number
+}) =>
   http.post('/admin/accountmanage/v1/updatedisabledstatus', data, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

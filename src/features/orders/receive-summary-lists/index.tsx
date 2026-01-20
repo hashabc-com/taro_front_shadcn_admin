@@ -1,7 +1,6 @@
+import { useLanguage } from '@/context/language-provider'
 import { Main } from '@/components/layout/main'
 import { ReceiveSummaryTable } from './components/receive-summary-table'
-
-import { useLanguage } from '@/context/language-provider'
 
 export function ReceiveSummary() {
   const { t } = useLanguage()

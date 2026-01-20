@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { ReceiveSummary } from '@/features/orders/receive-summary-lists'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { ReceiveSummary } from '@/features/orders/receive-summary-lists'
 
 const receiveSummarySearchSchema = createBaseSearchSchema({
   channel: z.string().optional(),
@@ -11,7 +11,9 @@ const receiveSummarySearchSchema = createBaseSearchSchema({
 
 export type IOrderSummarySearch = z.infer<typeof receiveSummarySearchSchema>
 
-export const Route = createFileRoute('/_authenticated/orders/receive-summary-lists')({
+export const Route = createFileRoute(
+  '/_authenticated/orders/receive-summary-lists'
+)({
   component: ReceiveSummary,
   validateSearch: receiveSummarySearchSchema,
 })

@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
-import { Search, X } from 'lucide-react'
 import { type Table } from '@tanstack/react-table'
+import { Search, X } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -13,7 +14,6 @@ import {
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table'
 import type { IRiskControlType } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/logs/risk-control')
 
@@ -37,7 +37,7 @@ export function RiskControlSearch({ table }: RiskControlSearchProps) {
         ruleName: ruleName || undefined,
         businessType: businessType as 'PAY_PAYIN' | 'PAY_PAYOUT' | undefined,
         pageNum: 1,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
@@ -57,7 +57,7 @@ export function RiskControlSearch({ table }: RiskControlSearchProps) {
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
-      <div className='max-w-[200px] flex-1 min-w-[120px]'>
+      <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           placeholder={t('logs.riskControl.ruleName')}
           value={ruleName}
@@ -72,13 +72,17 @@ export function RiskControlSearch({ table }: RiskControlSearchProps) {
             <SelectValue placeholder={t('logs.riskControl.businessType')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='PAY_PAYIN'>{t('logs.riskControl.payin')}</SelectItem>
-            <SelectItem value='PAY_PAYOUT'>{t('logs.riskControl.payout')}</SelectItem>
+            <SelectItem value='PAY_PAYIN'>
+              {t('logs.riskControl.payin')}
+            </SelectItem>
+            <SelectItem value='PAY_PAYOUT'>
+              {t('logs.riskControl.payout')}
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <div className='flex gap-2 mt-0.5'>
+      <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />
           {t('common.search')}

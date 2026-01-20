@@ -14,17 +14,24 @@ export function usePaymentListsData() {
   const convertAmount = useConvertAmount()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['orders', 'payment-lists', search, selectedCountry?.code, selectedMerchant?.appid],
+    queryKey: [
+      'orders',
+      'payment-lists',
+      search,
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: () => getPaymentLists(search),
     enabled: !!selectedCountry,
-    placeholderData:(prev) => prev ?? undefined
+    placeholderData: (prev) => prev ?? undefined,
   })
 
-  const orders = data?.result?.listRecord?.map((item: IPaymentListsType) => ({
-    ...item,
-    amount: convertAmount(item.amount || 0,false),
-    serviceAmount: convertAmount(item.serviceAmount || 0,false),
-  })) || []
+  const orders =
+    data?.result?.listRecord?.map((item: IPaymentListsType) => ({
+      ...item,
+      amount: convertAmount(item.amount || 0, false),
+      serviceAmount: convertAmount(item.serviceAmount || 0, false),
+    })) || []
 
   const totalRecord = data?.result?.totalRecord || 0
 

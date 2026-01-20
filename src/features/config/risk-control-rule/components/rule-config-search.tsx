@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
+import type { Table } from '@tanstack/react-table'
 import { Search, X } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -10,10 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { sceneCodeMap } from '../schema'
 import { DataTableViewOptions } from '@/components/data-table'
-import type { Table } from '@tanstack/react-table'
-import { useLanguage } from '@/context/language-provider'
+import { sceneCodeMap } from '../schema'
 
 const route = getRouteApi('/_authenticated/config/risk-control-rule')
 
@@ -41,7 +41,7 @@ export function RuleConfigSearch<TData>({
         ruleName: ruleName || undefined,
         sceneCode: sceneCode || undefined,
         status: status,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }

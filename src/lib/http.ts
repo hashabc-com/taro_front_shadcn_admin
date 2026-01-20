@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type InternalAxiosRequestConfig,
+} from 'axios'
+import { useAuthStore } from '@/stores'
 import { toast as message } from 'sonner'
-import {useAuthStore} from '@/stores'
-import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 
 // 定义响应数据的通用结构
 export interface ResponseData<T = any> {
@@ -77,7 +82,7 @@ class Request {
         // 自动添加 country 和 merchantId 参数（排除登录接口）
         const isLoginPage = window.location.pathname.includes('/sign-in')
         const requestConfig = config as RequestConfig
-        
+
         if (!isLoginPage) {
           // 添加 country 参数
           if (requestConfig.autoAddCountry !== false) {
@@ -86,7 +91,11 @@ class Request {
               try {
                 const { state } = JSON.parse(countryStorage)
                 if (state?.selectedCountry?.code) {
-                  this.addParamToConfig(config, 'country', state.selectedCountry.code)
+                  this.addParamToConfig(
+                    config,
+                    'country',
+                    state.selectedCountry.code
+                  )
                 }
               } catch (error) {
                 console.error('解析国家信息失败:', error)
@@ -101,7 +110,11 @@ class Request {
               try {
                 const { state } = JSON.parse(merchantStorage)
                 if (state?.selectedMerchant?.appid) {
-                  this.addParamToConfig(config, 'merchantId', state.selectedMerchant.appid)
+                  this.addParamToConfig(
+                    config,
+                    'merchantId',
+                    state.selectedMerchant.appid
+                  )
                 }
               } catch (error) {
                 console.log('error', error)
@@ -130,13 +143,13 @@ class Request {
         if ((response.config as RequestConfig).showLoading) {
           // console.log('请求结束')
         }
-        if(response.data.code == 201){
+        if (response.data.code == 201) {
           message.error(response.data.message)
         }
-        if(response.data.code == 401){
+        if (response.data.code == 401) {
           useAuthStore.getState().logout()
         }
-        return  response
+        return response
         // return {...response,data:response.data.result}
       },
       (error: any) => {
@@ -178,7 +191,8 @@ class Request {
           msg = '服务器内部错误'
           break
         default:
-          msg = error.response.data?.message || `连接错误${error.response.status}`
+          msg =
+            error.response.data?.message || `连接错误${error.response.status}`
       }
     } else if (error.request) {
       // 请求未收到响应
@@ -191,7 +205,9 @@ class Request {
   }
 
   // 通用请求方法
-  public async request<T = any>(config: RequestConfig): Promise<ResponseData<T>> {
+  public async request<T = any>(
+    config: RequestConfig
+  ): Promise<ResponseData<T>> {
     const response = await this.instance.request<ResponseData<T>>(config)
     return response.data
   }
@@ -212,7 +228,7 @@ class Request {
       })
       return response.data as unknown as ResponseData<T>
     }
-    
+
     return this.request<T>({
       method: 'GET',
       url,
@@ -250,7 +266,10 @@ class Request {
   }
 
   // DELETE 请求
-  public async delete<T = any>(url: string, config?: RequestConfig): Promise<ResponseData<T>> {
+  public async delete<T = any>(
+    url: string,
+    config?: RequestConfig
+  ): Promise<ResponseData<T>> {
     return this.request<T>({
       method: 'DELETE',
       url,

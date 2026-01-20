@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -21,7 +22,6 @@ import { DataTablePagination } from '@/components/data-table'
 import { useMonthlySummaryData } from '../hooks/use-monthly-summary-data'
 import { getMonthlySummaryColumns } from './monthly-summary-columns'
 import { MonthlySummarySearch } from './monthly-summary-search'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/business/monthly-summary')
 

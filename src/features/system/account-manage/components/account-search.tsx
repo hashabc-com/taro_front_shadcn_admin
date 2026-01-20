@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Search, X, Plus } from 'lucide-react'
+import { useI18n } from '@/hooks/use-i18n'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -11,16 +12,13 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useAccount } from './account-provider'
-import { useI18n } from '@/hooks/use-i18n'
 
 const route = getRouteApi('/_authenticated/system/account-manage')
-
 
 type DateRange = {
   from: Date | undefined
   to: Date | undefined
 }
-
 
 export function AccountSearch() {
   const navigate = route.useNavigate()
@@ -29,9 +27,9 @@ export function AccountSearch() {
   const { t } = useI18n()
 
   const [dateRange, setDateRange] = useState<DateRange>({
-      from: search.createTimeBegin ? new Date(search.createTimeBegin) : undefined,
-      to: search.createTimeEnd ? new Date(search.createTimeEnd) : undefined,
-    })
+    from: search.createTimeBegin ? new Date(search.createTimeBegin) : undefined,
+    to: search.createTimeEnd ? new Date(search.createTimeEnd) : undefined,
+  })
 
   const handleSearch = () => {
     navigate({
@@ -39,9 +37,11 @@ export function AccountSearch() {
         ...prev,
         pageNum: 1,
         searchType: null,
-        createTimeBegin: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : null,
+        createTimeBegin: dateRange.from
+          ? format(dateRange.from, 'yyyy-MM-dd')
+          : null,
         createTimeEnd: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : null,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
@@ -57,7 +57,7 @@ export function AccountSearch() {
     })
   }
 
-   const hasFilters = dateRange.from || dateRange.to
+  const hasFilters = dateRange.from || dateRange.to
 
   return (
     <div className='flex flex-wrap items-center gap-2'>
@@ -79,7 +79,9 @@ export function AccountSearch() {
                   format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
                 )
               ) : (
-                <span className='text-muted-foreground'>{t('common.selectDateRange')}</span>
+                <span className='text-muted-foreground'>
+                  {t('common.selectDateRange')}
+                </span>
               )}
             </Button>
           </PopoverTrigger>

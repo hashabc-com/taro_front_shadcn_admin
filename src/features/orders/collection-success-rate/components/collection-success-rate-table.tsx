@@ -6,7 +6,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { getTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -18,19 +20,16 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
+import { useCollectionRateData } from '../hooks/use-collection-rate-data'
 import { getTasksColumns } from './collection-success-rate-columns'
 import { CollectionSuccessRateSearch } from './collection-success-rate-search'
-import { useCollectionRateData } from '../hooks/use-collection-rate-data'
-import { useLanguage } from '@/context/language-provider'
-import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/orders/collection-success-rate')
-
 
 export function ReceiveSummaryTable() {
   const { lang } = useLanguage()
   const t = (key: string) => getTranslation(lang, key)
-  const { data, isLoading,totalRecord, summaryData } = useCollectionRateData()
+  const { data, isLoading, totalRecord, summaryData } = useCollectionRateData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -43,10 +42,10 @@ export function ReceiveSummaryTable() {
     })
 
   const pageCount = useMemo(() => {
-      const pageSize = pagination.pageSize ?? 10
-      // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
-      return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
-    }, [totalRecord, pagination.pageSize])
+    const pageSize = pagination.pageSize ?? 10
+    // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
+    return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
+  }, [totalRecord, pagination.pageSize])
 
   const columns = useMemo(() => getTasksColumns(lang), [lang])
 
@@ -60,7 +59,7 @@ export function ReceiveSummaryTable() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,  
+    manualPagination: true,
     pageCount,
     onPaginationChange,
   })
@@ -73,15 +72,15 @@ export function ReceiveSummaryTable() {
     <div className='flex flex-1 flex-col gap-4'>
       <CollectionSuccessRateSearch table={table} />
       {isLoading ? (
-          <div className='overflow-hidden rounded-md border'>
-            <div className='space-y-3 p-4'>
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div key={i} className='flex gap-4'>
-                  <Skeleton className='h-12 flex-1' />
-                </div>
-              ))}
-            </div>
+        <div className='overflow-hidden rounded-md border'>
+          <div className='space-y-3 p-4'>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className='flex gap-4'>
+                <Skeleton className='h-12 flex-1' />
+              </div>
+            ))}
           </div>
+        </div>
       ) : (
         <div className='overflow-hidden rounded-md border'>
           <Table>
@@ -139,15 +138,9 @@ export function ReceiveSummaryTable() {
                     <TableCell colSpan={4} className='text-right'>
                       {t('common.total')}
                     </TableCell>
-                    <TableCell>
-                      {summaryData.orderTotal}
-                    </TableCell>
-                    <TableCell>
-                      {summaryData.successOrder}
-                    </TableCell>
-                    <TableCell>
-                      {summaryData.successRate}
-                    </TableCell>
+                    <TableCell>{summaryData.orderTotal}</TableCell>
+                    <TableCell>{summaryData.successOrder}</TableCell>
+                    <TableCell>{summaryData.successRate}</TableCell>
                   </TableRow>
                 </>
               ) : (

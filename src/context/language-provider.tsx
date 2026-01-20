@@ -45,13 +45,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const t = useMemo(() => {
     return (key: string, fallback?: string) => {
       const table = translations[lang] || {}
-      const value = key.split('.').reduce((acc: unknown, cur) => {
-        if (acc && typeof acc === 'object' && cur in acc) {
-          return (acc as Record<string, unknown>)[cur];
-        }
-        return undefined;
-      }, table as Record<string, unknown>)
-      return typeof value === 'string' ? value : fallback ?? key
+      const value = key.split('.').reduce(
+        (acc: unknown, cur) => {
+          if (acc && typeof acc === 'object' && cur in acc) {
+            return (acc as Record<string, unknown>)[cur]
+          }
+          return undefined
+        },
+        table as Record<string, unknown>
+      )
+      return typeof value === 'string' ? value : (fallback ?? key)
     }
   }, [lang])
 
@@ -64,6 +67,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
 export function useLanguage() {
   const ctx = useContext(LanguageContext)
-  if (!ctx) throw new Error('useLanguage must be used within a LanguageProvider')
+  if (!ctx)
+    throw new Error('useLanguage must be used within a LanguageProvider')
   return ctx
 }

@@ -1,3 +1,4 @@
+import { useLanguage } from '@/context/language-provider'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,8 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { type IPaymentListsType,statuses } from '../schema'
-import { useLanguage } from '@/context/language-provider'
+import { type IPaymentListsType, statuses } from '../schema'
 
 type MutateDrawerProps = {
   open: boolean
@@ -27,7 +27,7 @@ export function MutateDrawer({
   if (!currentRow) return null
 
   const renderStatus = (value: string) => {
-    const statusesItem = statuses[value as unknown as keyof typeof statuses];
+    const statusesItem = statuses[value as unknown as keyof typeof statuses]
     return (
       <div className={`flex items-center text-${statusesItem.color}-600`}>
         <statusesItem.icon className='mr-1.5 h-4 w-4' />
@@ -41,7 +41,9 @@ export function MutateDrawer({
       <SheetContent className='flex flex-col sm:max-w-[540px]'>
         <SheetHeader className='text-start'>
           <SheetTitle>{t('orders.paymentOrders.orderDetails')}</SheetTitle>
-          <SheetDescription>{t('orders.paymentOrders.viewPaymentOrderDetails')}</SheetDescription>
+          <SheetDescription>
+            {t('orders.paymentOrders.viewPaymentOrderDetails')}
+          </SheetDescription>
         </SheetHeader>
 
         <div className='flex-1 space-y-6 overflow-y-auto px-4'>
@@ -93,7 +95,7 @@ export function MutateDrawer({
             {/* 产品 */}
             <div className='space-y-2'>
               <label className='text-muted-foreground block text-sm font-medium'>
-                 {t('orders.paymentOrders.product')}
+                {t('orders.paymentOrders.product')}
               </label>
               <Badge variant='outline' className='w-fit'>
                 {currentRow.pickupCenter}
@@ -107,15 +109,13 @@ export function MutateDrawer({
                 {currentRow.accountNumber}
               </div>
             </div>
-            
+
             {/* 金额 */}
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
                 {t('orders.paymentOrders.amount')}
               </label>
-              <div className='flex flex-col gap-1'>
-                {currentRow.amount}
-              </div>
+              <div className='flex flex-col gap-1'>{currentRow.amount}</div>
             </div>
 
             {/* 手续费 */}
@@ -147,7 +147,9 @@ export function MutateDrawer({
             </div>
             {/* 交易状态 */}
             <div className='flex flex-col gap-2'>
-              <label className='text-muted-foreground text-sm font-medium'>{t('orders.receiveOrders.status')}</label>
+              <label className='text-muted-foreground text-sm font-medium'>
+                {t('orders.receiveOrders.status')}
+              </label>
               <div className='flex items-center gap-2'>
                 {renderStatus(currentRow.status || '')}
               </div>

@@ -1,5 +1,10 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
+import { Edit, Power, PowerOff } from 'lucide-react'
+import { toast } from 'sonner'
+import { updateRouteStrategyStatus } from '@/api/config'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -9,24 +14,22 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { routeStrategySchema } from '../schema'
 import { useRouteStrategy } from './route-strategy-provider'
-import { Edit, Power, PowerOff } from 'lucide-react'
-import { useLanguage } from '@/context/language-provider'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { updateRouteStrategyStatus } from '@/api/config'
-import { toast } from 'sonner'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
 }
 
-export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
+export function DataTableRowActions<TData>({
+  row,
+}: DataTableRowActionsProps<TData>) {
   const strategy = routeStrategySchema.parse(row.original)
   const { setOpen, setCurrentRow } = useRouteStrategy()
   const { t } = useLanguage()
   const queryClient = useQueryClient()
 
   const statusMutation = useMutation({
-    mutationFn: (status: string) => updateRouteStrategyStatus({ id: strategy.id, status }),
+    mutationFn: (status: string) =>
+      updateRouteStrategyStatus({ id: strategy.id, status }),
     onSuccess: (res) => {
       if (res.code == 200) {
         queryClient.invalidateQueries({ queryKey: ['route-strategies'] })
@@ -48,7 +51,10 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' className='data-[state=open]:bg-muted flex h-8 w-8 p-0'>
+        <Button
+          variant='ghost'
+          className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
+        >
           <DotsHorizontalIcon className='h-4 w-4' />
           <span className='sr-only'>Open menu</span>
         </Button>
@@ -63,7 +69,10 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           {t('common.edit')}
           <Edit className='ml-auto h-4 w-4' />
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleStatusToggle} disabled={statusMutation.isPending}>
+        <DropdownMenuItem
+          onClick={handleStatusToggle}
+          disabled={statusMutation.isPending}
+        >
           {strategy.status === '0' ? (
             <>
               {t('common.disable')}

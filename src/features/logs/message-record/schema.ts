@@ -1,6 +1,5 @@
 import { z } from 'zod'
 
-
 export const messageRecordSchema = z.object({
   id: z.number(),
   messageId: z.string(),

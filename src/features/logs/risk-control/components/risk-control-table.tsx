@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -19,10 +20,9 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 import { useRiskControlData } from '../hooks/use-risk-control-data'
+import { ParamsDetailDialog } from './params-detail-dialog'
 import { getColumns } from './risk-control-columns'
 import { RiskControlSearch } from './risk-control-search'
-import { ParamsDetailDialog } from './params-detail-dialog'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/logs/risk-control')
 
@@ -49,7 +49,7 @@ export function RiskControlTable() {
     setDetailOpen(true)
   }
 
-  const columns = useMemo(() => getColumns(handleViewDetail,lang), [lang])
+  const columns = useMemo(() => getColumns(handleViewDetail, lang), [lang])
 
   const table = useReactTable({
     data,

@@ -1,12 +1,15 @@
+import { format } from 'date-fns'
 import { type ColumnDef } from '@tanstack/react-table'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Download } from 'lucide-react'
 import { type IExportRecord } from '@/api/export'
 import { getTranslation, type Language } from '@/lib/i18n'
-import {format} from 'date-fns'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
-const getExportTypeName = (exportType: IExportRecord['exportType'], language: Language) => {
+const getExportTypeName = (
+  exportType: IExportRecord['exportType'],
+  language: Language
+) => {
   const typeMap = {
     PAYMENT: getTranslation(language, 'export.type.payment'),
     LENDING: getTranslation(language, 'export.type.lending'),
@@ -30,7 +33,7 @@ const getStatusVariant = (status: IExportRecord['status']) => {
     1: 'success' as const,
     2: 'destructive' as const,
   }
-  return variantMap[status] || 'outline' as const
+  return variantMap[status] || ('outline' as const)
 }
 
 export const getExportColumns = (
@@ -49,7 +52,10 @@ export const getExportColumns = (
       accessorKey: 'fileName',
       header: t('export.fileName'),
       cell: ({ row }) => (
-        <div className='max-w-[300px] truncate' title={row.getValue('fileName')}>
+        <div
+          className='max-w-[300px] truncate'
+          title={row.getValue('fileName')}
+        >
           {row.getValue('fileName')}
         </div>
       ),
@@ -57,7 +63,8 @@ export const getExportColumns = (
     {
       accessorKey: 'exportType',
       header: t('export.exportType'),
-      cell: ({ row }) => getExportTypeName(row.getValue('exportType'), language),
+      cell: ({ row }) =>
+        getExportTypeName(row.getValue('exportType'), language),
     },
     {
       accessorKey: 'status',

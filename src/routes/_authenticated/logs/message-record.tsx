@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { MessageRecordPage } from '@/features/logs/message-record'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { MessageRecordPage } from '@/features/logs/message-record'
 
 const messageRecordSearchSchema = createBaseSearchSchema({
   messageId: z.string().optional(),

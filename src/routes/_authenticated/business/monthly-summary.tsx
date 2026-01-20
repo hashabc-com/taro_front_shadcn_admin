@@ -1,15 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { MonthlySummaryPage } from '@/features/business/monthly-summary'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
-
+import { MonthlySummaryPage } from '@/features/business/monthly-summary'
 
 const searchSchema = createBaseSearchSchema({
-   businessName: z.string().optional(),
+  businessName: z.string().optional(),
   startMonth: z.string().optional(),
   endMonth: z.string().optional(),
 })
-
 
 export type IMonthlySummarySearch = z.infer<typeof searchSchema>
 

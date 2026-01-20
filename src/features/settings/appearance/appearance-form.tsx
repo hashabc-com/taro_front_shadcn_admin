@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { fonts } from '@/config/fonts'
+import { toast } from 'sonner'
 // import { showSubmittedData } from '@/lib/show-submitted-data'
 import { cn } from '@/lib/utils'
 import { useFont } from '@/context/font-provider'
-import { useTheme } from '@/context/theme-provider'
 import { useLanguage } from '@/context/language-provider'
+import { useTheme } from '@/context/theme-provider'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Form,
@@ -19,7 +20,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { toast } from 'sonner'
 
 const appearanceFormSchema = z.object({
   theme: z.enum(['light', 'dark']),
@@ -158,7 +158,9 @@ export function AppearanceForm() {
           )}
         />
 
-        <Button type='submit'>{t('settings.appearance.updatePreferences')}</Button>
+        <Button type='submit'>
+          {t('settings.appearance.updatePreferences')}
+        </Button>
       </form>
     </Form>
   )

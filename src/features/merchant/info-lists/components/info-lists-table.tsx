@@ -7,7 +7,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { toast } from 'sonner'
+import { updateCustomer } from '@/api/merchant'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -20,20 +22,23 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 import { useMerchantInfoData } from '../hooks/use-info-lists-data'
+import { type IMerchantInfoType } from '../schema'
+import { ChangePasswordDialog } from './change-password-dialog'
+import { EditMerchantDialog } from './edit-merchant-dialog'
 import { getColumns } from './info-lists-columns'
 import { MerchantInfoSearch } from './info-lists-search'
-import { EditMerchantDialog } from './edit-merchant-dialog'
-import { ChangePasswordDialog } from './change-password-dialog'
-import { UnbindKeyDialog, AddIpDialog, BindTgGroupDialog, AutoLoginDialog } from './merchant-dialogs'
+import {
+  UnbindKeyDialog,
+  AddIpDialog,
+  BindTgGroupDialog,
+  AutoLoginDialog,
+} from './merchant-dialogs'
 import { RateConfigDialog } from './rate-config-dialog'
-import { updateCustomer } from '@/api/merchant'
-import { type IMerchantInfoType } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/merchant/info-lists')
 
 export function MerchantInfoTable() {
-  const { lang,t } = useLanguage()
+  const { lang, t } = useLanguage()
   const { data, isLoading, totalRecord, refetch } = useMerchantInfoData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -123,16 +128,19 @@ export function MerchantInfoTable() {
 
   const columns = useMemo(
     () =>
-      getColumns({
-        onEdit: handleEdit,
-        onChangePassword: handleChangePassword,
-        onToggleStatus: handleToggleStatus,
-        onUnbindKey: handleUnbindKey,
-        onBindIp: handleBindIp,
-        onBindTgGroup: handleBindTgGroup,
-        onRateConfig: handleRateConfig,
-        onAutoLogin: handleAutoLogin,
-      }, lang),
+      getColumns(
+        {
+          onEdit: handleEdit,
+          onChangePassword: handleChangePassword,
+          onToggleStatus: handleToggleStatus,
+          onUnbindKey: handleUnbindKey,
+          onBindIp: handleBindIp,
+          onBindTgGroup: handleBindTgGroup,
+          onRateConfig: handleRateConfig,
+          onAutoLogin: handleAutoLogin,
+        },
+        lang
+      ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [lang]
   )

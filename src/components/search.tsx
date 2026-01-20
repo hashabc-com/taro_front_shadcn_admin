@@ -1,8 +1,8 @@
 import { SearchIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useSearch } from '@/context/search-provider'
 import { Button } from './ui/button'
-import { useLanguage } from '@/context/language-provider'
 
 type SearchProps = {
   className?: string

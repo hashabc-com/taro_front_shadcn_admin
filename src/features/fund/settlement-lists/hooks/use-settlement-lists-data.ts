@@ -14,17 +14,24 @@ export function useSettlementListData() {
   const convertAmount = useConvertAmount()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['fund', 'settlement-lists', search, selectedCountry?.code, selectedMerchant?.appid],
+    queryKey: [
+      'fund',
+      'settlement-lists',
+      search,
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: () => getSettlementList(search),
     enabled: !!selectedCountry,
-    placeholderData:(prev) => prev ?? undefined
+    placeholderData: (prev) => prev ?? undefined,
   })
 
-  const dataList = data?.result?.listRecord?.map((item: ISettlementListType) => ({
-    ...item,
-    rechargeAmount: convertAmount(item.rechargeAmount,false),
-    finalAmount: convertAmount(item.finalAmount,false)
-  })) || []
+  const dataList =
+    data?.result?.listRecord?.map((item: ISettlementListType) => ({
+      ...item,
+      rechargeAmount: convertAmount(item.rechargeAmount, false),
+      finalAmount: convertAmount(item.finalAmount, false),
+    })) || []
 
   const totalRecord = data?.result?.totalRecord || 0
 

@@ -1,10 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import {
-  ChevronsUpDown,
-  HelpCircle,
-  LogOut,
-  Palette
-} from 'lucide-react'
+import { ChevronsUpDown, HelpCircle, LogOut, Palette } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -23,7 +19,6 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { SignOutDialog } from '@/components/sign-out-dialog'
-import { useLanguage } from '@/context/language-provider'
 
 type NavUserProps = {
   user: {
@@ -38,16 +33,16 @@ export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar()
   const [open, setOpen] = useDialogState()
 
-  const userInfo = JSON.parse(localStorage.getItem('_userInfo') || '{}');
-  
-//   adventurer - 冒险者风格
-// avataaars-neutral - 中性卡通风格
-// bottts - 机器人风格
-// fun-emoji - 趣味表情风格
-// lorelei - 简约女性风格
-// micah - 手绘风格
-// miniavs - 迷你头像风格
-// pixel-art - 像素风格
+  const userInfo = JSON.parse(localStorage.getItem('_userInfo') || '{}')
+
+  //   adventurer - 冒险者风格
+  // avataaars-neutral - 中性卡通风格
+  // bottts - 机器人风格
+  // fun-emoji - 趣味表情风格
+  // lorelei - 简约女性风格
+  // micah - 手绘风格
+  // miniavs - 迷你头像风格
+  // pixel-art - 像素风格
   // 生成随机头像URL - 使用thumbs风格
   const avatarUrl = `https://api.dicebear.com/7.x/thumbs/svg?seed=${encodeURIComponent(userInfo.name || user.name)}`
 
@@ -62,11 +57,18 @@ export function NavUser({ user }: NavUserProps) {
                 className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
               >
                 <Avatar className='h-8 w-8 rounded-lg'>
-                  <AvatarImage src={avatarUrl} alt={userInfo.name || user.name} />
-                  <AvatarFallback className='rounded-lg'>{userInfo.name}</AvatarFallback>
+                  <AvatarImage
+                    src={avatarUrl}
+                    alt={userInfo.name || user.name}
+                  />
+                  <AvatarFallback className='rounded-lg'>
+                    {userInfo.name}
+                  </AvatarFallback>
                 </Avatar>
                 <div className='grid flex-1 text-start text-sm leading-tight'>
-                  <span className='truncate font-semibold'>{userInfo.name}</span>
+                  <span className='truncate font-semibold'>
+                    {userInfo.name}
+                  </span>
                 </div>
                 <ChevronsUpDown className='ms-auto size-4' />
               </SidebarMenuButton>
@@ -80,21 +82,32 @@ export function NavUser({ user }: NavUserProps) {
               <DropdownMenuLabel className='p-0 font-normal'>
                 <div className='flex items-center gap-2 px-1 py-1.5 text-start text-sm'>
                   <Avatar className='h-8 w-8 rounded-lg'>
-                    <AvatarImage src={avatarUrl} alt={userInfo.name || user.name} />
-                    <AvatarFallback className='rounded-lg'>{userInfo.name?.slice(0, 2).toUpperCase() || 'SN'}</AvatarFallback>
+                    <AvatarImage
+                      src={avatarUrl}
+                      alt={userInfo.name || user.name}
+                    />
+                    <AvatarFallback className='rounded-lg'>
+                      {userInfo.name?.slice(0, 2).toUpperCase() || 'SN'}
+                    </AvatarFallback>
                   </Avatar>
                   <div className='grid flex-1 text-start text-sm leading-tight'>
-                    <span className='truncate font-semibold'>{userInfo.name}</span>
+                    <span className='truncate font-semibold'>
+                      {userInfo.name}
+                    </span>
                   </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
-                    <a href="https://docs.taropay.com/" target="_blank" rel="noopener noreferrer">
-                      <HelpCircle />
+                  <a
+                    href='https://docs.taropay.com/'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    <HelpCircle />
                     {t('sidebar.apiDocs')}
-                    </a>
+                  </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to='/settings/appearance'>

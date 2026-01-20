@@ -6,7 +6,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { getTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -18,19 +20,16 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
+import { useSettlementListData } from '../hooks/use-settlement-lists-data'
 import { getTasksColumns } from './settlement-lists-columns'
 import { SettlementListsSearch } from './settlement-lists-search'
-import { useSettlementListData } from '../hooks/use-settlement-lists-data'
-import { useLanguage } from '@/context/language-provider'
-import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/fund/settlement-lists')
-
 
 export function SettlementListTable() {
   const { lang } = useLanguage()
   const t = (key: string) => getTranslation(lang, key)
-  const { data, isLoading,totalRecord } = useSettlementListData()
+  const { data, isLoading, totalRecord } = useSettlementListData()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -41,7 +40,7 @@ export function SettlementListTable() {
       navigate: route.useNavigate(),
       pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
     })
-  
+
   const columns = useMemo(() => getTasksColumns(lang), [lang])
 
   const pageCount = useMemo(() => {
@@ -59,7 +58,7 @@ export function SettlementListTable() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,  
+    manualPagination: true,
     pageCount,
     onPaginationChange,
   })
@@ -72,15 +71,15 @@ export function SettlementListTable() {
     <div className='flex flex-1 flex-col gap-4'>
       <SettlementListsSearch table={table} />
       {isLoading ? (
-          <div className='overflow-hidden rounded-md border'>
-            <div className='space-y-3 p-4'>
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div key={i} className='flex gap-4'>
-                  <Skeleton className='h-12 flex-1' />
-                </div>
-              ))}
-            </div>
+        <div className='overflow-hidden rounded-md border'>
+          <div className='space-y-3 p-4'>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className='flex gap-4'>
+                <Skeleton className='h-12 flex-1' />
+              </div>
+            ))}
           </div>
+        </div>
       ) : (
         <div className='overflow-hidden rounded-md border'>
           <Table>

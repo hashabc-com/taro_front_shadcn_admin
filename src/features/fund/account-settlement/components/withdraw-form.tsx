@@ -3,12 +3,12 @@ import { toast } from 'sonner'
 import { addWithdraw } from '@/api/fund'
 import { useCountryStore } from '@/stores/country-store'
 import { useMerchantStore } from '@/stores/merchant-store'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { useLanguage } from '@/context/language-provider'
 
 interface WithdrawFormProps {
   onSuccess?: () => void
@@ -137,7 +137,9 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
           onClick={handleSubmit}
           disabled={isSubmitting}
         >
-          {isSubmitting ? t('fund.accountSettlement.withdrawing') : t('fund.accountSettlement.withdraw')}
+          {isSubmitting
+            ? t('fund.accountSettlement.withdrawing')
+            : t('fund.accountSettlement.withdraw')}
         </Button>
       </CardContent>
     </Card>

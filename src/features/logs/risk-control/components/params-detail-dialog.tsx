@@ -28,11 +28,11 @@ export function ParamsDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-[800px] max-h-[80vh]'>
+      <DialogContent className='max-h-[80vh] max-w-[800px]'>
         <DialogHeader>
           <DialogTitle>请求参数详情</DialogTitle>
         </DialogHeader>
-        <pre className='bg-muted p-4 rounded-md overflow-auto max-h-[600px] text-xs leading-6'>
+        <pre className='bg-muted max-h-[600px] overflow-auto rounded-md p-4 text-xs leading-6'>
           {formatJson(content)}
         </pre>
       </DialogContent>

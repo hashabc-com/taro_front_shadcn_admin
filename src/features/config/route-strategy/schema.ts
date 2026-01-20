@@ -15,11 +15,15 @@ export const routeStrategySchema = z.object({
   priority: z.number().optional(),
   createTime: z.string().optional(),
   updateTime: z.string().optional(),
-  paymentRouteChannelWeightList: z.array(z.object({
-    paymentPlatform: z.string(),
-    weight: z.number().optional(),
-    id:z.number().optional(),
-  })).optional(), // 渠道权重列表
+  paymentRouteChannelWeightList: z
+    .array(
+      z.object({
+        paymentPlatform: z.string(),
+        weight: z.number().optional(),
+        id: z.number().optional(),
+      })
+    )
+    .optional(), // 渠道权重列表
 })
 
 export type RouteStrategy = z.infer<typeof routeStrategySchema>
@@ -55,4 +59,6 @@ export const routeStrategyListResponseSchema = z.object({
   listRecord: z.array(routeStrategySchema).optional(),
 })
 
-export type RouteStrategyListResponse = z.infer<typeof routeStrategyListResponseSchema>
+export type RouteStrategyListResponse = z.infer<
+  typeof routeStrategyListResponseSchema
+>

@@ -1,6 +1,6 @@
+import { useLanguage } from '@/context/language-provider'
 import { Main } from '@/components/layout/main'
 import { PaymentSummaryTable } from './components/payment-summary-table'
-import { useLanguage } from '@/context/language-provider'
 
 export function PaymentSummary() {
   const { t } = useLanguage()

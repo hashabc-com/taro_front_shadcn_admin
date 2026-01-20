@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/stores'
-import { getAccountPermissions } from '@/api/account'
 import { Loader2 } from 'lucide-react'
+import { getAccountPermissions } from '@/api/account'
 
 interface PermissionInitializerProps {
   children: React.ReactNode
@@ -11,7 +11,9 @@ interface PermissionInitializerProps {
  * 权限初始化组件
  * 在用户登录后自动获取并设置权限信息
  */
-export function PermissionInitializer({ children }: PermissionInitializerProps) {
+export function PermissionInitializer({
+  children,
+}: PermissionInitializerProps) {
   const { permissions, setPermissions, isAuthenticated } = useAuthStore()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -29,17 +31,17 @@ export function PermissionInitializer({ children }: PermissionInitializerProps) 
           setPermissions(res.result)
         } else {
           // 如果获取失败，设置默认权限（只有系统设置）
-          setPermissions({ 
-            menu: [{ name: '外观设置', url: '/settings/appearance' }], 
-            user: { roleId: 0, account: 'default' } 
+          setPermissions({
+            menu: [{ name: '外观设置', url: '/settings/appearance' }],
+            user: { roleId: 0, account: 'default' },
           })
         }
       } catch (error) {
         console.error('Failed to fetch permissions:', error)
         // 设置默认权限
-        setPermissions({ 
-          menu: [{ name: '外观设置', url: '/settings/appearance' }], 
-          user: { roleId: 0, account: 'default' } 
+        setPermissions({
+          menu: [{ name: '外观设置', url: '/settings/appearance' }],
+          user: { roleId: 0, account: 'default' },
         })
       } finally {
         setIsLoading(false)
@@ -51,10 +53,10 @@ export function PermissionInitializer({ children }: PermissionInitializerProps) 
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">加载权限信息...</p>
+      <div className='flex h-screen w-full items-center justify-center'>
+        <div className='flex flex-col items-center gap-2'>
+          <Loader2 className='text-primary h-8 w-8 animate-spin' />
+          <p className='text-muted-foreground text-sm'>加载权限信息...</p>
         </div>
       </div>
     )

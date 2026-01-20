@@ -1,8 +1,12 @@
 import { useEffect } from 'react'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { createRuleConfig, updateRuleConfig } from '@/api/ruleConfig'
+import { useLanguage } from '@/context/language-provider'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -19,8 +23,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
   SelectContent,
@@ -28,24 +32,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Label } from '@/components/ui/label'
-import { toast } from 'sonner'
+import { Textarea } from '@/components/ui/textarea'
 import { type RuleConfig, sceneCodeMap, actionCodeMap } from '../schema'
-import { createRuleConfig, updateRuleConfig } from '@/api/ruleConfig'
-import { useLanguage } from '@/context/language-provider'
 
 // 表单验证Schema - 使用工厂函数支持国际化
-const createRuleFormSchema = (t: (key: string) => string) => z.object({
-  ruleName: z.string().min(1, t('config.riskControlRule.validation.ruleNameRequired')),
-  ruleDesc: z.string().optional(),
-  sceneCode: z.string().min(1, t('config.riskControlRule.validation.sceneCodeRequired')),
-  conditionExpr: z.string().min(1, t('config.riskControlRule.validation.conditionExprRequired')),
-  actionCode: z.string().min(1, t('config.riskControlRule.validation.actionCodeRequired')),
-  priority: z.number().min(1, t('config.riskControlRule.validation.priorityMin')).max(10, t('config.riskControlRule.validation.priorityMax')),
-  status: z.number(),
-  actionParams: z.string().optional(),
-})
+const createRuleFormSchema = (t: (key: string) => string) =>
+  z.object({
+    ruleName: z
+      .string()
+      .min(1, t('config.riskControlRule.validation.ruleNameRequired')),
+    ruleDesc: z.string().optional(),
+    sceneCode: z
+      .string()
+      .min(1, t('config.riskControlRule.validation.sceneCodeRequired')),
+    conditionExpr: z
+      .string()
+      .min(1, t('config.riskControlRule.validation.conditionExprRequired')),
+    actionCode: z
+      .string()
+      .min(1, t('config.riskControlRule.validation.actionCodeRequired')),
+    priority: z
+      .number()
+      .min(1, t('config.riskControlRule.validation.priorityMin'))
+      .max(10, t('config.riskControlRule.validation.priorityMax')),
+    status: z.number(),
+    actionParams: z.string().optional(),
+  })
 
 type RuleFormValues = z.infer<ReturnType<typeof createRuleFormSchema>>
 
@@ -64,7 +76,7 @@ export function RuleEditDialog({
 }: RuleEditDialogProps) {
   const queryClient = useQueryClient()
   const { t } = useLanguage()
-  
+
   const ruleFormSchema = createRuleFormSchema(t)
 
   const form = useForm<RuleFormValues>({
@@ -129,10 +141,12 @@ export function RuleEditDialog({
         : updateRuleConfig(payload as never)
     },
     onSuccess: (res) => {
-      if(res.code == 200){
+      if (res.code == 200) {
         queryClient.invalidateQueries({ queryKey: ['ruleConfigs'] })
-        toast.success(isAdd ? t('common.addSuccess') : t('common.updateSuccess'))
-      }else{
+        toast.success(
+          isAdd ? t('common.addSuccess') : t('common.updateSuccess')
+        )
+      } else {
         toast.error(res.message || t('common.operationFailed'))
       }
       handleClose()
@@ -155,7 +169,11 @@ export function RuleEditDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[700px]'>
         <DialogHeader>
-          <DialogTitle>{isAdd ? t('config.riskControlRule.addRule') : t('config.riskControlRule.editRule')}</DialogTitle>
+          <DialogTitle>
+            {isAdd
+              ? t('config.riskControlRule.addRule')
+              : t('config.riskControlRule.editRule')}
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -179,7 +197,9 @@ export function RuleEditDialog({
               name='ruleDesc'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('config.riskControlRule.ruleDescription')}</FormLabel>
+                  <FormLabel>
+                    {t('config.riskControlRule.ruleDescription')}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder={t('common.enterRuleDescription')}
@@ -198,13 +218,12 @@ export function RuleEditDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('config.riskControlRule.ruleScene')}</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder={t('common.selectRuleScene')} />
+                        <SelectValue
+                          placeholder={t('common.selectRuleScene')}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -225,10 +244,14 @@ export function RuleEditDialog({
               name='conditionExpr'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('config.riskControlRule.conditionExpression')}</FormLabel>
+                  <FormLabel>
+                    {t('config.riskControlRule.conditionExpression')}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder={t('config.riskControlRule.conditionExprExample')}
+                      placeholder={t(
+                        'config.riskControlRule.conditionExprExample'
+                      )}
                       rows={2}
                       {...field}
                     />
@@ -243,14 +266,15 @@ export function RuleEditDialog({
               name='actionCode'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('config.riskControlRule.actionCode')}</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <FormLabel>
+                    {t('config.riskControlRule.actionCode')}
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder={t('common.selectActionCode')} />
+                        <SelectValue
+                          placeholder={t('common.selectActionCode')}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -277,7 +301,9 @@ export function RuleEditDialog({
                       type='number'
                       min={1}
                       max={10}
-                      placeholder={t('config.riskControlRule.priorityPlaceholder')}
+                      placeholder={t(
+                        'config.riskControlRule.priorityPlaceholder'
+                      )}
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
@@ -301,11 +327,15 @@ export function RuleEditDialog({
                     >
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='1' id='status-enabled' />
-                        <Label htmlFor='status-enabled'>{t('common.enabled')}</Label>
+                        <Label htmlFor='status-enabled'>
+                          {t('common.enabled')}
+                        </Label>
                       </div>
                       <div className='flex items-center space-x-2'>
                         <RadioGroupItem value='0' id='status-disabled' />
-                        <Label htmlFor='status-disabled'>{t('common.disabled')}</Label>
+                        <Label htmlFor='status-disabled'>
+                          {t('common.disabled')}
+                        </Label>
                       </div>
                     </RadioGroup>
                   </FormControl>
@@ -319,10 +349,14 @@ export function RuleEditDialog({
               name='actionParams'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('config.riskControlRule.actionParams')}</FormLabel>
+                  <FormLabel>
+                    {t('config.riskControlRule.actionParams')}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder={t('config.riskControlRule.actionParamsPlaceholder')}
+                      placeholder={t(
+                        'config.riskControlRule.actionParamsPlaceholder'
+                      )}
                       rows={3}
                       {...field}
                     />
@@ -337,7 +371,9 @@ export function RuleEditDialog({
                 {t('common.cancel')}
               </Button>
               <Button type='submit' disabled={mutation.isPending}>
-                {mutation.isPending ? t('common.submitting') : t('common.confirm')}
+                {mutation.isPending
+                  ? t('common.submitting')
+                  : t('common.confirm')}
               </Button>
             </DialogFooter>
           </form>

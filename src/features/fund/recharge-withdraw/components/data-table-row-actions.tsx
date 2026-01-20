@@ -119,7 +119,9 @@ export function DataTableRowActions<TData>({
         const rate = parseFloat(value.exchangeRate || '0')
         const amount = +data.rechargeAmount.replace(/,/g, '')
         if (!isNaN(rate) && !isNaN(amount)) {
-          setCalculatedAmount( data.type == '充值' ? String(amount * rate) : String(amount / rate))
+          setCalculatedAmount(
+            data.type == '充值' ? String(amount * rate) : String(amount / rate)
+          )
         } else {
           setCalculatedAmount('')
         }

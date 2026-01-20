@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -18,10 +19,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
+import { useRoleManageData } from '../hooks/use-role-manage-data'
 import { getRoleColumns } from './role-manage-columns'
 import { RoleManageSearch } from './role-manage-search'
-import { useRoleManageData } from '../hooks/use-role-manage-data'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/system/role-manage')
 
@@ -32,11 +32,11 @@ export function RoleManageTable() {
   const columns = useMemo(() => getRoleColumns(lang), [lang])
 
   const { pagination, onPaginationChange, ensurePageInRange } =
-      useTableUrlState({
-        search: route.useSearch(),
-        navigate: route.useNavigate(),
-        pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
-      })
+    useTableUrlState({
+      search: route.useSearch(),
+      navigate: route.useNavigate(),
+      pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
+    })
 
   const pageCount = useMemo(() => {
     const pageSize = pagination.pageSize ?? 10
@@ -92,7 +92,10 @@ export function RoleManageTable() {
                       >
                         {header.isPlaceholder
                           ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </TableHead>
                     )
                   })}
@@ -102,7 +105,10 @@ export function RoleManageTable() {
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
@@ -111,14 +117,20 @@ export function RoleManageTable() {
                           cell.column.columnDef.meta?.tdClassName
                         )}
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={table.getAllColumns().length} className='h-24 text-center'>
+                  <TableCell
+                    colSpan={table.getAllColumns().length}
+                    className='h-24 text-center'
+                  >
                     暂无数据
                   </TableCell>
                 </TableRow>

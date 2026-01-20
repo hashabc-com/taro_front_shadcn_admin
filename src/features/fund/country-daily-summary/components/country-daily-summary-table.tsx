@@ -6,7 +6,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { getTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -18,11 +20,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
+import { useCountryDailySummaryData } from '../hooks/use-country-daily-summary-data'
 import { getCountryDailySummaryColumns } from './country-daily-summary-columns'
 import { CountryDailySummarySearch } from './country-daily-summary-search'
-import { useCountryDailySummaryData } from '../hooks/use-country-daily-summary-data'
-import { useLanguage } from '@/context/language-provider'
-import { getTranslation } from '@/lib/i18n'
 
 const route = getRouteApi('/_authenticated/fund/country-daily-summary')
 
@@ -39,7 +39,7 @@ export function CountryDailySummaryTable() {
       navigate: route.useNavigate(),
       pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
     })
-  
+
   const columns = useMemo(() => getCountryDailySummaryColumns(lang), [lang])
 
   const pageCount = useMemo(() => {
@@ -56,7 +56,7 @@ export function CountryDailySummaryTable() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,  
+    manualPagination: true,
     pageCount,
     onPaginationChange,
   })

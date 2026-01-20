@@ -21,7 +21,7 @@ export function useDailySummaryData() {
     ],
     queryFn: async () => getBusinessDaySummary(search),
     enabled: !!selectedCountry,
-    placeholderData:(prev) => prev ?? undefined
+    placeholderData: (prev) => prev ?? undefined,
   })
 
   const datas =

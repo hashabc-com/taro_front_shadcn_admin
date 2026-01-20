@@ -12,7 +12,9 @@ export const getDailySummaryColumns = (
       header: t('business.dailySummary.businessAccount'),
       enableHiding: false,
       cell: ({ row }) => (
-        <div className='max-w-[150px] truncate'>{row.getValue('businessName')}</div>
+        <div className='max-w-[150px] truncate'>
+          {row.getValue('businessName')}
+        </div>
       ),
     },
     {
@@ -22,35 +24,35 @@ export const getDailySummaryColumns = (
     },
     {
       accessorKey: 'inBills',
-      header: t('business.dailySummary.collectionCount')
+      header: t('business.dailySummary.collectionCount'),
     },
     {
       accessorKey: 'inAmount',
-      header: t('business.dailySummary.collectionAmount')
+      header: t('business.dailySummary.collectionAmount'),
     },
     {
       accessorKey: 'inAmountService',
-      header: t('business.dailySummary.collectionFee')
+      header: t('business.dailySummary.collectionFee'),
     },
     {
       accessorKey: 'inAmountProfit',
-      header: t('business.dailySummary.inAmountProfit')
+      header: t('business.dailySummary.inAmountProfit'),
     },
     {
       accessorKey: 'outBills',
-      header: t('business.dailySummary.payoutCount')
+      header: t('business.dailySummary.payoutCount'),
     },
     {
       accessorKey: 'outAmount',
-      header: t('business.dailySummary.paymentAmount')
+      header: t('business.dailySummary.paymentAmount'),
     },
     {
       accessorKey: 'outAmountService',
-      header: t('business.dailySummary.payoutFee')
+      header: t('business.dailySummary.payoutFee'),
     },
     {
       accessorKey: 'outAmountProfit',
-      header: t('business.dailySummary.outAmountProfit')
+      header: t('business.dailySummary.outAmountProfit'),
     },
   ]
 }

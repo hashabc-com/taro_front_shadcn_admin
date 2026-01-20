@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { updatePass } from '@/api/merchant'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -24,19 +25,21 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { type IMerchantInfoType } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 
-const createChangePasswordSchema = (t: (key: string) => string) => z
-  .object({
-    pwd: z.string().min(6, t('merchant.info.validation.passwordMinLength')),
-    rePwd: z.string().min(6, t('merchant.info.validation.passwordMinLength')),
-  })
-  .refine((data) => data.pwd === data.rePwd, {
-    message: t('merchant.info.validation.passwordMismatch'),
-    path: ['rePwd'],
-  })
+const createChangePasswordSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      pwd: z.string().min(6, t('merchant.info.validation.passwordMinLength')),
+      rePwd: z.string().min(6, t('merchant.info.validation.passwordMinLength')),
+    })
+    .refine((data) => data.pwd === data.rePwd, {
+      message: t('merchant.info.validation.passwordMismatch'),
+      path: ['rePwd'],
+    })
 
-type ChangePasswordFormValues = z.infer<ReturnType<typeof createChangePasswordSchema>>
+type ChangePasswordFormValues = z.infer<
+  ReturnType<typeof createChangePasswordSchema>
+>
 
 type ChangePasswordDialogProps = {
   open: boolean
@@ -67,7 +70,7 @@ export function ChangePasswordDialog({
     setIsSubmitting(true)
     const formData = new FormData()
     formData.append('id', merchant.id.toString())
-    formData.append('pwd', values.pwd) 
+    formData.append('pwd', values.pwd)
     formData.append('rePwd', values.rePwd)
     const res = await updatePass(formData)
 

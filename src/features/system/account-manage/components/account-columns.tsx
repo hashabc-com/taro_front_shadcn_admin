@@ -8,7 +8,7 @@ export const getAccountColumns = (
   language: Language = 'zh'
 ): ColumnDef<IAccountType>[] => {
   const t = (key: string) => getTranslation(language, key)
-  
+
   return [
     {
       accessorKey: 'userName',

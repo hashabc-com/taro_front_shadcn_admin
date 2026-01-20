@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { type z } from 'zod'
-import { CustomerConsultPage } from '@/features/business/customer-consult'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { CustomerConsultPage } from '@/features/business/customer-consult'
 
 const searchSchema = createBaseSearchSchema({})
 

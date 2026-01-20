@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { createFileRoute } from '@tanstack/react-router'
-import { DailySummaryPage } from '@/features/business/daily-summary'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { DailySummaryPage } from '@/features/business/daily-summary'
 
 const searchSchema = createBaseSearchSchema({
   // 你的其他搜索参数
@@ -9,7 +9,7 @@ const searchSchema = createBaseSearchSchema({
   channel: z.string().optional(),
   businessName: z.string().optional(),
   startTime: z.string().optional(),
-  endTime: z.string().optional()
+  endTime: z.string().optional(),
 })
 
 // const searchSchema = z.object({
@@ -22,7 +22,7 @@ const searchSchema = createBaseSearchSchema({
 //       const allowedSizes = [10, 20, 30, 40, 50]
 //       return allowedSizes.includes(value ?? 10) ? value : 10
 //     }),
-  
+
 // })
 
 export type IDailySummarySearch = z.infer<typeof searchSchema>

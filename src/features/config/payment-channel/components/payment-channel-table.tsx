@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -21,7 +22,6 @@ import { DataTablePagination } from '@/components/data-table'
 import { type PaymentChannel } from '../schema'
 import { getPaymentChannelColumns } from './payment-channel-columns'
 import { PaymentChannelSearch } from './payment-channel-search'
-import { useLanguage } from '@/context/language-provider'
 
 type DataTableProps = {
   data: PaymentChannel[]
@@ -29,18 +29,23 @@ type DataTableProps = {
   isLoading: boolean
 }
 
-export function PaymentChannelTable({ data, isLoading, totalRecord }: DataTableProps) {
+export function PaymentChannelTable({
+  data,
+  isLoading,
+  totalRecord,
+}: DataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const router = useRouter()
   const navigate = useNavigate()
   const { lang } = useLanguage()
   const columns = useMemo(() => getPaymentChannelColumns(lang), [lang])
 
-  const { pagination, onPaginationChange, ensurePageInRange } = useTableUrlState({
-    search: router.latestLocation.search as never,
-    navigate: navigate as never,
-    pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
-  })
+  const { pagination, onPaginationChange, ensurePageInRange } =
+    useTableUrlState({
+      search: router.latestLocation.search as never,
+      navigate: navigate as never,
+      pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
+    })
 
   const pageCount = useMemo(() => {
     const pageSize = pagination.pageSize ?? 10
@@ -96,7 +101,10 @@ export function PaymentChannelTable({ data, isLoading, totalRecord }: DataTableP
                       >
                         {header.isPlaceholder
                           ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </TableHead>
                     )
                   })}
@@ -106,7 +114,10 @@ export function PaymentChannelTable({ data, isLoading, totalRecord }: DataTableP
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
@@ -115,18 +126,24 @@ export function PaymentChannelTable({ data, isLoading, totalRecord }: DataTableP
                           cell.column.columnDef.meta?.tdClassName
                         )}
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={table.getAllColumns().length} className='h-24 text-center'>
+                  <TableCell
+                    colSpan={table.getAllColumns().length}
+                    className='h-24 text-center'
+                  >
                     暂无数据
                   </TableCell>
                 </TableRow>
-              )}  
+              )}
             </TableBody>
           </Table>
         </div>

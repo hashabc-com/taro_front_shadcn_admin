@@ -11,7 +11,7 @@ export interface Country {
 
 // 支持的货币列表
 export const SUPPORTED_CURRENCIES = ['CNY', 'EUR', 'GBP', 'HKD', 'USD'] as const
-export type ISupportedCurrencyType = typeof SUPPORTED_CURRENCIES[number]
+export type ISupportedCurrencyType = (typeof SUPPORTED_CURRENCIES)[number]
 
 interface CountryState {
   selectedCountry: Country | null
@@ -23,7 +23,6 @@ interface CountryState {
   clearSelectedCountry: () => void
 }
 
-
 export const useCountryStore = create<CountryState>()(
   persist(
     (set) => ({
@@ -33,11 +32,14 @@ export const useCountryStore = create<CountryState>()(
       setDisplayCurrency: (currency: ISupportedCurrencyType) => {
         set({ displayCurrency: currency })
       },
-      setRates: (rates: Record<string, number>) => {      
+      setRates: (rates: Record<string, number>) => {
         set({ rates })
       },
       setSelectedCountry: (country) => {
-        set({ selectedCountry: country,displayCurrency: country?.currency as ISupportedCurrencyType})
+        set({
+          selectedCountry: country,
+          displayCurrency: country?.currency as ISupportedCurrencyType,
+        })
       },
       clearSelectedCountry: () => set({ selectedCountry: null }),
     }),

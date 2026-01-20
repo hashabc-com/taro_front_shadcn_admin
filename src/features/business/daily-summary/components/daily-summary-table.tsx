@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -21,7 +22,6 @@ import { DataTablePagination } from '@/components/data-table'
 import { useDailySummaryData } from '../hooks/use-daily-summary-data'
 import { getDailySummaryColumns } from './daily-summary-columns'
 import { DailySummarySearch } from './daily-summary-search'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/business/daily-summary')
 

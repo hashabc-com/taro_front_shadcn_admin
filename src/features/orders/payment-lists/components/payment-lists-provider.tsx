@@ -13,12 +13,18 @@ type ContextType = {
 
 const PaymentListsContext = React.createContext<ContextType | null>(null)
 
-export function PaymentListsProvider({ children }: { children: React.ReactNode }) {
+export function PaymentListsProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const [open, setOpen] = useDialogState<DialogType>(null)
   const [currentRow, setCurrentRow] = useState<IPaymentListsType | null>(null)
 
   return (
-    <PaymentListsContext.Provider value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <PaymentListsContext.Provider
+      value={{ open, setOpen, currentRow, setCurrentRow }}
+    >
       {children}
     </PaymentListsContext.Provider>
   )
@@ -28,7 +34,9 @@ export function PaymentListsProvider({ children }: { children: React.ReactNode }
 export const usePaymentLists = () => {
   const paymentListsContext = React.useContext(PaymentListsContext)
   if (!paymentListsContext) {
-    throw new Error('usePaymentLists has to be used within <PaymentListsContext.Provider>')
+    throw new Error(
+      'usePaymentLists has to be used within <PaymentListsContext.Provider>'
+    )
   }
 
   return paymentListsContext

@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
+import { type Table } from '@tanstack/react-table'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Search, X } from 'lucide-react'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
-import { type Table } from '@tanstack/react-table'
 import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
 import {
@@ -45,9 +45,7 @@ export function DailySummarySearch<TData>({
         startTime: dateRange.from
           ? format(dateRange.from, 'yyyy-MM-dd')
           : undefined,
-        endTime: dateRange.to
-          ? format(dateRange.to, 'yyyy-MM-dd')
-          : undefined,
+        endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
         pageNum: 1,
         refresh: Date.now(),
       }),

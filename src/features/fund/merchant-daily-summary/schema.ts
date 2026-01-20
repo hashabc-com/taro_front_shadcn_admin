@@ -13,4 +13,6 @@ export const merchantDailySummarySchema = z.object({
   availableAmount: z.string().or(z.number()),
 })
 
-export type IMerchantDailySummaryType = z.infer<typeof merchantDailySummarySchema>
+export type IMerchantDailySummaryType = z.infer<
+  typeof merchantDailySummarySchema
+>

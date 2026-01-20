@@ -4,7 +4,7 @@ import { AppearanceForm } from './appearance-form'
 
 export function SettingsAppearance() {
   const { t } = useLanguage()
-  
+
   return (
     <ContentSection
       title={t('settings.appearance.title')}

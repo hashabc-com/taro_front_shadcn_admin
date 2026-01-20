@@ -27,11 +27,23 @@ export const getPaymentChannelColumns = (
       cell: ({ row }) => {
         const type = row.getValue('fundType') as number
         const typeMap = {
-          1: { label: t('config.paymentChannel.collection'), variant: 'default' as const },
-          2: { label: t('config.paymentChannel.payout'), variant: 'secondary' as const },
-          3: { label: t('config.paymentChannel.both'), variant: 'outline' as const },
+          1: {
+            label: t('config.paymentChannel.collection'),
+            variant: 'default' as const,
+          },
+          2: {
+            label: t('config.paymentChannel.payout'),
+            variant: 'secondary' as const,
+          },
+          3: {
+            label: t('config.paymentChannel.both'),
+            variant: 'outline' as const,
+          },
         }
-        const config = typeMap[type as keyof typeof typeMap] || { label: '-', variant: 'outline' as const }
+        const config = typeMap[type as keyof typeof typeMap] || {
+          label: '-',
+          variant: 'outline' as const,
+        }
         return <Badge variant={config.variant}>{config.label}</Badge>
       },
     },
@@ -71,11 +83,23 @@ export const getPaymentChannelColumns = (
       cell: ({ row }) => {
         const status = row.getValue('channelStatus') as number
         const statusMap = {
-          1: { label: t('config.paymentChannel.statusNormal'), variant: 'default' as const },
-          2: { label: t('config.paymentChannel.statusMaintenance'), variant: 'secondary' as const },
-          3: { label: t('config.paymentChannel.statusPaused'), variant: 'destructive' as const },
+          1: {
+            label: t('config.paymentChannel.statusNormal'),
+            variant: 'default' as const,
+          },
+          2: {
+            label: t('config.paymentChannel.statusMaintenance'),
+            variant: 'secondary' as const,
+          },
+          3: {
+            label: t('config.paymentChannel.statusPaused'),
+            variant: 'destructive' as const,
+          },
         }
-        const config = statusMap[status as keyof typeof statusMap] || { label: '-', variant: 'outline' as const }
+        const config = statusMap[status as keyof typeof statusMap] || {
+          label: '-',
+          variant: 'outline' as const,
+        }
         return <Badge variant={config.variant}>{config.label}</Badge>
       },
     },

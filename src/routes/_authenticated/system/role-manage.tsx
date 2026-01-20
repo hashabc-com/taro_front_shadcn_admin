@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { RoleManagePage } from '@/features/system/role-manage'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { RoleManagePage } from '@/features/system/role-manage'
 
 const roleManageSearchSchema = createBaseSearchSchema({
   role: z.string().optional(),

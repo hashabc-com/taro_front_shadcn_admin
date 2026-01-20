@@ -31,7 +31,9 @@ export const paymentChannelListResponseSchema = z.object({
   listRecord: z.array(paymentChannelSchema).optional(),
 })
 
-export type PaymentChannelListResponse = z.infer<typeof paymentChannelListResponseSchema>
+export type PaymentChannelListResponse = z.infer<
+  typeof paymentChannelListResponseSchema
+>
 
 // 子渠道配置数据结构 - 对应 payment_sub_channel 表
 export const paymentSubChannelSchema = z.object({
@@ -57,4 +59,6 @@ export const paymentSubChannelFormSchema = z.object({
   country: z.string().optional(),
 })
 
-export type PaymentSubChannelFormData = z.infer<typeof paymentSubChannelFormSchema>
+export type PaymentSubChannelFormData = z.infer<
+  typeof paymentSubChannelFormSchema
+>

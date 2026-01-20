@@ -14,23 +14,30 @@ export function useMerchantDailySummaryData() {
   const convertAmount = useConvertAmount()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['fund', 'merchant-daily-summary', search, selectedCountry?.code, selectedMerchant?.appid],
+    queryKey: [
+      'fund',
+      'merchant-daily-summary',
+      search,
+      selectedCountry?.code,
+      selectedMerchant?.appid,
+    ],
     queryFn: () => getMerchantDailySummary(search),
     enabled: !!selectedCountry,
-    placeholderData:(prev) => prev ?? undefined
+    placeholderData: (prev) => prev ?? undefined,
   })
 
-  const dataList = data?.result?.listRecord?.map((item: IMerchantDailySummaryType) => ({
-    ...item,
-    inAmount: convertAmount(item.inAmount, false),
-    inAmountService: convertAmount(item.inAmountService, false),
-    outAmount: convertAmount(item.outAmount, false),
-    outAmountService: convertAmount(item.outAmountService, false),
-    rechargeAmoubt: convertAmount(item.rechargeAmoubt, false),
-    withdrawAmount: convertAmount(item.withdrawAmount, false),
-    settlementAmount: convertAmount(item.settlementAmount, false),
-    availableAmount: convertAmount(item.availableAmount, false),
-  })) || []
+  const dataList =
+    data?.result?.listRecord?.map((item: IMerchantDailySummaryType) => ({
+      ...item,
+      inAmount: convertAmount(item.inAmount, false),
+      inAmountService: convertAmount(item.inAmountService, false),
+      outAmount: convertAmount(item.outAmount, false),
+      outAmountService: convertAmount(item.outAmountService, false),
+      rechargeAmoubt: convertAmount(item.rechargeAmoubt, false),
+      withdrawAmount: convertAmount(item.withdrawAmount, false),
+      settlementAmount: convertAmount(item.settlementAmount, false),
+      availableAmount: convertAmount(item.availableAmount, false),
+    })) || []
 
   const totalRecord = data?.result?.totalRecord || 0
 

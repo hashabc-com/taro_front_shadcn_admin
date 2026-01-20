@@ -1,5 +1,9 @@
 import { useState } from 'react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
+// import { Skeleton } from '@/components/ui/skeleton'
+import { type DayChartData } from '@/api/dashboard'
+import { useLanguage } from '@/context/language-provider'
+import { useConvertAmount } from '@/hooks/use-convert-amount'
 import {
   Card,
   CardContent,
@@ -14,10 +18,6 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-// import { Skeleton } from '@/components/ui/skeleton'
-import { type DayChartData } from '@/api/dashboard'
-import { useConvertAmount } from '@/hooks/use-convert-amount'
-import { useLanguage } from '@/context/language-provider'
 
 // const chartData = [
 //   { month: 'January', desktop: 186, mobile: 80 },
@@ -39,7 +39,11 @@ import { useLanguage } from '@/context/language-provider'
 //   },
 // } satisfies ChartConfig
 
-export default function ChartLineMultiple({chartData}: {chartData?: DayChartData[]}) {
+export default function ChartLineMultiple({
+  chartData,
+}: {
+  chartData?: DayChartData[]
+}) {
   const convertAmount = useConvertAmount()
   const { t } = useLanguage()
   const [metric, setMetric] = useState<'amount' | 'count' | 'service'>('amount')
@@ -75,17 +79,21 @@ export default function ChartLineMultiple({chartData}: {chartData?: DayChartData
         color: 'var(--muted-foreground)',
       },
     },
-  };
+  }
 
   // 转换数据，确保数值类型正确
-  const processedData = (chartData || []).map(item => ({
+  const processedData = (chartData || []).map((item) => ({
     ...item,
-    collectAmount: Number(convertAmount(item.collectAmount,false,false)),
-    payoutAmount: Number(convertAmount(item.payoutAmount,false,false)),
-    collectCount: Number(convertAmount(item.collectCount,false,false)),
-    payoutCount: Number(convertAmount(item.payoutCount,false,false)),
-    collectServiceAmount: Number(convertAmount(item.collectServiceAmount,false,false)),
-    payoutServiceAmount: Number(convertAmount(item.payoutServiceAmount,false,false)),
+    collectAmount: Number(convertAmount(item.collectAmount, false, false)),
+    payoutAmount: Number(convertAmount(item.payoutAmount, false, false)),
+    collectCount: Number(convertAmount(item.collectCount, false, false)),
+    payoutCount: Number(convertAmount(item.payoutCount, false, false)),
+    collectServiceAmount: Number(
+      convertAmount(item.collectServiceAmount, false, false)
+    ),
+    payoutServiceAmount: Number(
+      convertAmount(item.payoutServiceAmount, false, false)
+    ),
   }))
 
   // 如果没有数据，不渲染图表，避免从空数组到有数据的动画问题
@@ -96,7 +104,9 @@ export default function ChartLineMultiple({chartData}: {chartData?: DayChartData
       <CardHeader>
         <div className='flex items-center justify-between'>
           <div>
-            <CardTitle className='text-xl'>{t('dashboard.collectionPaymentStats')}</CardTitle>
+            <CardTitle className='text-xl'>
+              {t('dashboard.collectionPaymentStats')}
+            </CardTitle>
             <CardDescription className='text-xs'>
               {t('dashboard.recentDaysComparison')}
             </CardDescription>
@@ -123,45 +133,50 @@ export default function ChartLineMultiple({chartData}: {chartData?: DayChartData
         </div>
       </CardHeader>
       <CardContent>
-      
-      <ChartContainer config={chartConfigs[metric]} className='h-[200px] w-full'>
-        <LineChart
-          accessibilityLayer
-          data={processedData}
-          margin={{
-            top: 12,
-            left: 12,
-            right: 12,
-          }}
+        <ChartContainer
+          config={chartConfigs[metric]}
+          className='h-[200px] w-full'
         >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey='date'
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            tickFormatter={(value) => value.slice(5)}
-            padding={{ left: 10, right: 10 }}
-          />
-          <YAxis
-            hide
-            scale={metric === 'count' ? 'auto' : 'sqrt'}
-            domain={['auto', 'auto']}
-          />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          {
-            hasData ? chartConfigs[metric] && Object.keys(chartConfigs[metric]).map((key) => (
-              <Line
-              key={key}
-              dataKey={key}
-              type='monotone'
-              stroke={`var(--color-${key})`}
-              strokeWidth={2}
-              dot={false}
+          <LineChart
+            accessibilityLayer
+            data={processedData}
+            margin={{
+              top: 12,
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey='date'
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(5)}
+              padding={{ left: 10, right: 10 }}
             />
-            )) : <></>
-          }
-          {/* {
+            <YAxis
+              hide
+              scale={metric === 'count' ? 'auto' : 'sqrt'}
+              domain={['auto', 'auto']}
+            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            {hasData ? (
+              chartConfigs[metric] &&
+              Object.keys(chartConfigs[metric]).map((key) => (
+                <Line
+                  key={key}
+                  dataKey={key}
+                  type='monotone'
+                  stroke={`var(--color-${key})`}
+                  strokeWidth={2}
+                  dot={false}
+                />
+              ))
+            ) : (
+              <></>
+            )}
+            {/* {
             chartConfigs[metric] && Object.keys(chartConfigs[metric]).map((key) => (
               <Line
               key={key}
@@ -173,8 +188,8 @@ export default function ChartLineMultiple({chartData}: {chartData?: DayChartData
             />
             ))
           } */}
-        </LineChart>
-      </ChartContainer>
+          </LineChart>
+        </ChartContainer>
       </CardContent>
     </Card>
   )

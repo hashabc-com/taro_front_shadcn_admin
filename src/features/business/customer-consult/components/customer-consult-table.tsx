@@ -6,8 +6,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
@@ -22,26 +25,32 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { DataTablePagination } from '@/components/data-table'
-import { useLanguage } from '@/context/language-provider'
-import { getCustomerConsultColumns } from './customer-consult-columns'
+import {
+  DataTablePagination,
+  DataTableViewOptions,
+} from '@/components/data-table'
 import { useCustomerConsultData } from '../hooks/use-customer-consult-data'
-import { FollowUpDialog } from './follow-up-dialog'
 import { type ICustomerConsult } from '../schema'
+import { AddCustomerDialog } from './add-customer-dialog'
+import { getCustomerConsultColumns } from './customer-consult-columns'
+import { FollowUpSheet } from './follow-up-sheet'
 
 const route = getRouteApi('/_authenticated/business/customer-consult')
 
 export function CustomerConsultTable() {
   const { data, isLoading, totalRecord } = useCustomerConsultData()
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [selectedCustomer, setSelectedCustomer] = useState<ICustomerConsult | null>(null)
+  const [selectedCustomer, setSelectedCustomer] =
+    useState<ICustomerConsult | null>(null)
+  const [showAddDialog, setShowAddDialog] = useState(false)
   const { t } = useLanguage()
-  
-  const { pagination, onPaginationChange, ensurePageInRange } = useTableUrlState({
-    search: route.useSearch(),
-    navigate: route.useNavigate(),
-    pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
-  })
+
+  const { pagination, onPaginationChange, ensurePageInRange } =
+    useTableUrlState({
+      search: route.useSearch(),
+      navigate: route.useNavigate(),
+      pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
+    })
 
   const pageCount = useMemo(() => {
     const pageSize = pagination.pageSize ?? 10
@@ -73,6 +82,15 @@ export function CustomerConsultTable() {
 
   return (
     <div className='flex flex-1 flex-col gap-4'>
+      {/* Action Bar */}
+      <div className='flex justify-end'>
+        <Button onClick={() => setShowAddDialog(true)}>
+          <Plus className='mr-2 h-4 w-4' />
+          {t('business.customerConsult.addCustomer')}
+        </Button>
+        <DataTableViewOptions table={table} />
+      </div>
+
       {isLoading ? (
         <div className='overflow-hidden rounded-md border'>
           <div className='space-y-3 p-4'>
@@ -119,12 +137,13 @@ export function CustomerConsultTable() {
                     data-state={row.getIsSelected() && 'selected'}
                   >
                     {row.getVisibleCells().map((cell) => {
-                      const enableTooltip = cell.column.columnDef.meta?.enableTooltip
+                      const enableTooltip =
+                        cell.column.columnDef.meta?.enableTooltip
                       const cellContent = flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )
-                      
+
                       return (
                         <TableCell
                           key={cell.id}
@@ -136,11 +155,14 @@ export function CustomerConsultTable() {
                           {enableTooltip ? (
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <div className='block truncate cursor-default'>
+                                <div className='block cursor-default truncate'>
                                   {cellContent}
                                 </div>
                               </TooltipTrigger>
-                              <TooltipContent side='top' className='max-w-sm break-words'>
+                              <TooltipContent
+                                side='top'
+                                className='max-w-sm break-words'
+                              >
                                 {cellContent}
                               </TooltipContent>
                             </Tooltip>
@@ -166,13 +188,15 @@ export function CustomerConsultTable() {
           </Table>
         </div>
       )}
-      <DataTablePagination table={table} />
-      
-      <FollowUpDialog
+      <DataTablePagination table={table} className='mt-auto' />
+
+      <FollowUpSheet
         customer={selectedCustomer}
         open={!!selectedCustomer}
-        onOpenChange={(open) => !open && setSelectedCustomer(null)}
+        onOpenChange={(open: boolean) => !open && setSelectedCustomer(null)}
       />
+
+      <AddCustomerDialog open={showAddDialog} onOpenChange={setShowAddDialog} />
     </div>
   )
 }

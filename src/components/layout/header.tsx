@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
-// import { ConfigDrawer } from '@/components/config-drawer'
-import { ProfileDropdown } from '@/components/profile-dropdown'
 import { CountryMerchantSelector } from '@/components/country-merchant-selector'
 import { LanguageSwitch } from '@/components/language-switch'
+// import { ConfigDrawer } from '@/components/config-drawer'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
 
 type HeaderProps = React.HTMLAttributes<HTMLElement> & {
   fixed?: boolean
@@ -47,12 +47,15 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
             'after:bg-background/20 after:absolute after:inset-0 after:-z-10 after:backdrop-blur-lg'
         )}
       >
-        <SidebarTrigger variant='outline' className='max-md:scale-125 shrink-0' />
+        <SidebarTrigger
+          variant='outline'
+          className='shrink-0 max-md:scale-125'
+        />
         <Separator orientation='vertical' className='h-6 max-md:hidden' />
         <Search className='max-md:hidden' />
         <Separator orientation='vertical' className='h-6 max-md:hidden' />
         <CountryMerchantSelector />
-        <div className='ms-auto flex items-center gap-2 sm:gap-2 shrink-0'>
+        <div className='ms-auto flex shrink-0 items-center gap-2 sm:gap-2'>
           <LanguageSwitch />
           <Separator orientation='vertical' className='h-6 max-md:hidden' />
           <ThemeSwitch />

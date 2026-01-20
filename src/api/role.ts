@@ -24,7 +24,10 @@ export const getRoleList = (params: {
 export const getAllRoles = () => http.get('/admin/rolemanage/v1/selectroles')
 
 // 获取资源列表(权限列表)
-export const getResourceList = () => http.get<{resourceList: IRouteType[]}>('/admin/rolemanage/v1/selectresourcelist')
+export const getResourceList = () =>
+  http.get<{ resourceList: IRouteType[] }>(
+    '/admin/rolemanage/v1/selectresourcelist'
+  )
 
 // 新增角色
 export const createRole = (data: {

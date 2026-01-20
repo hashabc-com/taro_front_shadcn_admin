@@ -1,5 +1,6 @@
-import http from '@/lib/http'
 import type { IRiskControlSearch } from '@/routes/_authenticated/logs/risk-control'
+import http from '@/lib/http'
+
 // import type { ResponseData, PageParams, PageResult } from '@/types/api'
 
 // export type RiskControlRecord = {
@@ -25,8 +26,6 @@ import type { IRiskControlSearch } from '@/routes/_authenticated/logs/risk-contr
 /**
  * 获取风控规则记录列表
  */
-export const getRiskControlRecordList = (
-  params: IRiskControlSearch
-) => {
-  return http.get('/admin/ruleLog/list',params)
+export const getRiskControlRecordList = (params: IRiskControlSearch) => {
+  return http.get('/admin/ruleLog/list', params)
 }

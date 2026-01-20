@@ -12,7 +12,9 @@ export const getMonthlySummaryColumns = (
       header: t('business.monthlySummary.businessAccount'),
       enableHiding: false,
       cell: ({ row }) => (
-        <div className='max-w-[150px] truncate'>{row.getValue('businessName')}</div>
+        <div className='max-w-[150px] truncate'>
+          {row.getValue('businessName')}
+        </div>
       ),
     },
     {
@@ -22,35 +24,35 @@ export const getMonthlySummaryColumns = (
     },
     {
       accessorKey: 'inBills',
-      header: t('business.monthlySummary.collectionCount')
+      header: t('business.monthlySummary.collectionCount'),
     },
     {
       accessorKey: 'inAmount',
-      header: t('business.monthlySummary.collectionAmount')
+      header: t('business.monthlySummary.collectionAmount'),
     },
     {
       accessorKey: 'inAmountService',
-      header: t('business.monthlySummary.collectionFee')
+      header: t('business.monthlySummary.collectionFee'),
     },
     {
       accessorKey: 'inAmountProfit',
-      header: t('business.dailySummary.inAmountProfit')
+      header: t('business.dailySummary.inAmountProfit'),
     },
     {
       accessorKey: 'outBills',
-      header: t('business.monthlySummary.payoutCount')
+      header: t('business.monthlySummary.payoutCount'),
     },
     {
       accessorKey: 'outAmount',
-      header: t('business.monthlySummary.paymentAmount')
+      header: t('business.monthlySummary.paymentAmount'),
     },
     {
       accessorKey: 'outAmountService',
-      header: t('business.monthlySummary.payoutFee')
+      header: t('business.monthlySummary.payoutFee'),
     },
     {
       accessorKey: 'outAmountProfit',
-      header: t('business.dailySummary.outAmountProfit')
+      header: t('business.dailySummary.outAmountProfit'),
     },
   ]
 }

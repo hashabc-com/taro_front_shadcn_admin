@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -19,11 +20,10 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 import { useMessageRecordData } from '../hooks/use-message-record-data'
+import type { IMessageRecordType } from '../schema'
+import { MessageDetailDialog } from './message-detail-dialog'
 import { getColumns } from './message-record-columns'
 import { MessageRecordSearch } from './message-record-search'
-import { MessageDetailDialog } from './message-detail-dialog'
-import type { IMessageRecordType } from '../schema'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/logs/message-record')
 
@@ -51,7 +51,7 @@ export function MessageRecordTable() {
     setDetailOpen(true)
   }
 
-  const columns = useMemo(() => getColumns(handleViewDetail,lang),[lang])
+  const columns = useMemo(() => getColumns(handleViewDetail, lang), [lang])
 
   const table = useReactTable({
     data,

@@ -15,7 +15,7 @@ import { DataTableRowActions } from './data-table-row-actions'
 function ImagePreview({
   mediaId,
   localUrl,
-  t
+  t,
 }: {
   mediaId?: string
   localUrl?: string
@@ -40,7 +40,9 @@ function ImagePreview({
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
         <DialogContent className='max-w-3xl'>
           <DialogHeader>
-            <DialogTitle>{t('fund.rechargeWithdraw.voucherPreview')}</DialogTitle>
+            <DialogTitle>
+              {t('fund.rechargeWithdraw.voucherPreview')}
+            </DialogTitle>
           </DialogHeader>
           <img src={localUrl} alt='凭证' className='h-auto w-full' />
         </DialogContent>

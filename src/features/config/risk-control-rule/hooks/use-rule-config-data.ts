@@ -22,7 +22,7 @@ export function useRuleConfigData() {
       return response.result
     },
     enabled: !!selectedCountry,
-    placeholderData:(prev) => prev ?? undefined
+    placeholderData: (prev) => prev ?? undefined,
   })
   return {
     data: data?.listRecord ?? [],

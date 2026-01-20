@@ -1,5 +1,5 @@
-import http from '@/lib/http'
 import { type IExportManagementSearch } from '@/routes/_authenticated/export-management'
+import http from '@/lib/http'
 
 export interface IExportRecord {
   id: number
@@ -24,7 +24,11 @@ export const getExportList = (params: IExportManagementSearch) =>
   http.get('/admin/exportRecord/list', { params })
 
 export const downloadExportFile = (fileId: string) =>
-  http.get(`/admin/collection/downloadExportData?fileId=${fileId}`,{},{
-    autoAddCountry: false,
-    responseType: 'blob',
-  })
+  http.get(
+    `/admin/collection/downloadExportData?fileId=${fileId}`,
+    {},
+    {
+      autoAddCountry: false,
+      responseType: 'blob',
+    }
+  )

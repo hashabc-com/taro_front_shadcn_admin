@@ -43,14 +43,16 @@ export interface ILoginResponse {
 }
 
 // 登录
-export const login = (data: ILoginForm) => 
-  http.post('/admin/login/form', data)
+export const login = (data: ILoginForm) => http.post('/admin/login/form', data)
 
 // 获取图片验证码
-export const getVerifyCode = () => http.post('/admin/googleVerify/v1/getPictureVerificationCode', {})
+export const getVerifyCode = () =>
+  http.post('/admin/googleVerify/v1/getPictureVerificationCode', {})
 
 // 获取谷歌验证密钥
-export const getKey = (data: Partial<IUserInfo>) => http.post('/admin/googleVerify/v1/getKey', data)
+export const getKey = (data: Partial<IUserInfo>) =>
+  http.post('/admin/googleVerify/v1/getKey', data)
 
 // 绑定谷歌验证密钥
-export const bindKey = (data: Partial<IUserInfo>) => http.post('/admin/googleVerify/v1/bindKey', data)
+export const bindKey = (data: Partial<IUserInfo>) =>
+  http.post('/admin/googleVerify/v1/bindKey', data)

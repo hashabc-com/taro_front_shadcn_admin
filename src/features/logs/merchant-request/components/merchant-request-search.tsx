@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
-import { RefreshCcw } from 'lucide-react'
 import { type Table } from '@tanstack/react-table'
+import { RefreshCcw } from 'lucide-react'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/data-table'
-import { useLanguage } from '@/context/language-provider'
 
 const route = getRouteApi('/_authenticated/logs/merchant-request')
 
@@ -28,7 +28,7 @@ export function MerchantRequestSearch<TData>({
         ...prev,
         transactionId: transactionId || undefined,
         pageNum: 1,
-        refresh: Date.now()
+        refresh: Date.now(),
       }),
     })
   }
@@ -56,7 +56,7 @@ export function MerchantRequestSearch<TData>({
         />
       </div>
 
-      <div className='flex gap-2 mt-0.5'>
+      <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <RefreshCcw className='mr-2 h-4 w-4' />
           {t('common.search')}

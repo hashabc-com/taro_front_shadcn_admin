@@ -18,7 +18,9 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
   const [currentRow, setCurrentRow] = useState<IAccountType | null>(null)
 
   return (
-    <AccountContext.Provider value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <AccountContext.Provider
+      value={{ open, setOpen, currentRow, setCurrentRow }}
+    >
       {children}
     </AccountContext.Provider>
   )
@@ -28,7 +30,9 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
 export const useAccount = () => {
   const accountContext = React.useContext(AccountContext)
   if (!accountContext) {
-    throw new Error('useAccount has to be used within <AccountContext.Provider>')
+    throw new Error(
+      'useAccount has to be used within <AccountContext.Provider>'
+    )
   }
 
   return accountContext

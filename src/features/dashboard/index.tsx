@@ -13,12 +13,12 @@ import { Analytics } from './components/analytics'
 
 export function Dashboard() {
   return (
-      <Main>
-        <div className='mb-10 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-        </div>
-        <Analytics />
-        {/* <Tabs
+    <Main>
+      <div className='mb-10 flex items-center justify-between space-y-2'>
+        <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
+      </div>
+      <Analytics />
+      {/* <Tabs
           orientation='vertical'
           defaultValue='overview'
           className='space-y-4'
@@ -165,7 +165,7 @@ export function Dashboard() {
             <Analytics />
           </TabsContent>
         </Tabs> */}
-      </Main>
+    </Main>
   )
 }
 

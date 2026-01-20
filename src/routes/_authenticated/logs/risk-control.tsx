@@ -1,14 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { RiskControlPage } from '@/features/logs/risk-control'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { RiskControlPage } from '@/features/logs/risk-control'
 
 const riskControlSearchSchema = createBaseSearchSchema({
   ruleName: z.string().optional(),
-  businessType: z
-    .enum(['PAY_PAYIN', 'PAY_PAYOUT'])
-    .optional()
-    .catch(undefined),
+  businessType: z.enum(['PAY_PAYIN', 'PAY_PAYOUT']).optional().catch(undefined),
 })
 
 export type IRiskControlSearch = z.infer<typeof riskControlSearchSchema>

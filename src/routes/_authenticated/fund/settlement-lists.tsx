@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { SettlementPage } from '@/features/fund/settlement-lists'
+import { createFileRoute } from '@tanstack/react-router'
 import { createBaseSearchSchema } from '@/lib/table-schemas'
+import { SettlementPage } from '@/features/fund/settlement-lists'
 
 const settlementListsSearchSchema = createBaseSearchSchema({
   status: z.string().optional(),
