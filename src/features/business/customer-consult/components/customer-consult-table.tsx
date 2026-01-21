@@ -33,6 +33,7 @@ import { useCustomerConsultData } from '../hooks/use-customer-consult-data'
 import { type ICustomerConsult } from '../schema'
 import { AddCustomerDialog } from './add-customer-dialog'
 import { getCustomerConsultColumns } from './customer-consult-columns'
+import { CustomerConsultSearch } from './customer-consult-search'
 import { FollowUpSheet } from './follow-up-sheet'
 
 const route = getRouteApi('/_authenticated/business/customer-consult')
@@ -82,13 +83,16 @@ export function CustomerConsultTable() {
 
   return (
     <div className='flex flex-1 flex-col gap-4'>
-      {/* Action Bar */}
-      <div className='flex justify-end'>
-        <Button onClick={() => setShowAddDialog(true)}>
-          <Plus className='mr-2 h-4 w-4' />
-          {t('business.customerConsult.addCustomer')}
+      {/* Search Bar with Actions */}
+      <div className='flex flex-wrap items-center gap-2'>
+        <CustomerConsultSearch />
+        <Button onClick={() => setShowAddDialog(true)} size='sm'>
+            <Plus className='mr-2 h-4 w-4' />
+            {t('business.customerConsult.addCustomer')}
         </Button>
-        <DataTableViewOptions table={table} />
+        <div className='ml-auto'>
+          <DataTableViewOptions table={table} />
+        </div>
       </div>
 
       {isLoading ? (

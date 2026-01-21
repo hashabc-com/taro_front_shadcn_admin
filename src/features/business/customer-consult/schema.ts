@@ -67,6 +67,10 @@ export interface ICustomerConsultSearch {
   pageNum: number
   pageSize: number
   country?: string
+  contactPerson?: string
+  phone?: string
+  email?: string
+  company?: string
 }
 
 // 新增客户表单类型（schema 在组件内动态创建以支持国际化）

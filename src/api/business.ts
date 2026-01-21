@@ -51,6 +51,10 @@ export const getCustomerConsultList = (params: {
   pageNum: number
   pageSize: number
   country?: string
+  contactPerson?: string
+  phone?: string
+  email?: string
+  company?: string
 }) => http.get('/admin/customerInfoFollowUp/getList', params)
 
 // 新增客户咨询
