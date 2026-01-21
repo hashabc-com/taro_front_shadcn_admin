@@ -127,7 +127,7 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
       </CardHeader>
       <CardContent className='space-y-4'>
         <div className='space-y-2'>
-          <Label>{t('fund.accountSettlement.rechargeAmount')}</Label>
+          <Label>{t('fund.accountSettlement.topUpAmount')}</Label>
           <div className='flex gap-2'>
             <Input
               type='number'
