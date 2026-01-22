@@ -55,7 +55,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     Sentry.setUser({ id: userInfo.id, username: userInfo.name })
   },
   logout: () => {
-    const redirect = `${router.history.location.href}`
+    // 只保存路径部分，不保存查询参数
+    const redirect = router.history.location.pathname
     if (redirect.startsWith('/sign-in')) return
     // 清除当前 store 状态
     localStorage.removeItem('_token')

@@ -219,6 +219,7 @@ export function UserAuthForm({
 
         setShowGoogleAuthModal(false)
 
+        // 直接跳转到目标路径（已经不包含查询参数）
         const targetPath = redirectTo || '/'
         navigate({ to: targetPath, replace: true })
       } else {
