@@ -47,6 +47,8 @@ export const paymentChannelOptionSchema = z.object({
   country: z.string(),
   createTime: z.string().optional(),
   updateTime: z.string().optional(),
+  weightId: z.number().nullable().optional(), // 权重记录ID，null表示未选中
+  weight: z.number().optional(), // 权重值（权重轮询时使用）
 })
 
 export type PaymentChannelOption = z.infer<typeof paymentChannelOptionSchema>

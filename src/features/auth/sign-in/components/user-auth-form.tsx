@@ -147,7 +147,7 @@ export function UserAuthForm({
         toast.error(keyRes.message || 'Failed to get secret key')
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('Failed to get secret key:', error)
       toast.error('Failed to get secret key')
     }
@@ -180,7 +180,7 @@ export function UserAuthForm({
         toast.error(bindRes.message || 'Binding failed')
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('Binding failed:', error)
       toast.error('Binding failed')
     }
@@ -229,7 +229,7 @@ export function UserAuthForm({
     } catch (error) {
       setShowGoogleAuthModal(false)
       fetchVerifyCode()
-      // eslint-disable-next-line no-console
+       
       console.error('Login failed:', error)
       toast.error('Login failed')
     }
@@ -250,7 +250,7 @@ export function UserAuthForm({
         await handleFinalLogin(data.googleCode)
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('Form validation failed:', error)
     } finally {
       googleForm.reset()
@@ -288,7 +288,7 @@ export function UserAuthForm({
         fetchVerifyCode()
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('Login failed:', error)
       toast.error('Login failed')
       fetchVerifyCode()

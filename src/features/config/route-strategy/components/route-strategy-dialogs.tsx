@@ -10,7 +10,6 @@ import {
   addRouteStrategy,
   getPaymentMethods,
   getPaymentChannelsByMethod,
-  getRouteStrategyWeightDetail,
 } from '@/api/config'
 import { useMerchantStore, type Merchant } from '@/stores/merchant-store'
 import { getTranslation } from '@/lib/i18n'
@@ -118,57 +117,40 @@ export function RouteStrategyMutateDialog() {
   })
   const paymentMethods = (paymentMethodsData?.result || []) as string[]
 
-  // 3. 获取支付渠道列表（仅新增模式）
+  // 3. 获取支付渠道列表（新增和编辑都使用 selectByChannelCode 接口）
   const { data: channelsData } = useQuery({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       'payment-channels-by-method',
       selectedCountry?.code,
       paymentType,
       productCode,
+      isEdit ? currentRow?.id : null,
     ],
     queryFn: () =>
       getPaymentChannelsByMethod({
         country: selectedCountry!.code,
         type: paymentType,
         subchannelcode: productCode,
+        ...(isEdit && currentRow?.id ? { id: currentRow.id } : {}),
       }),
-    enabled:
-      !!selectedCountry && !!paymentType && !!productCode && isOpen && !isEdit,
+    enabled: !!selectedCountry && !!paymentType && !!productCode && isOpen,
   })
 
-  // 4. 获取权重轮询渠道列表（编辑模式下两种策略都使用）
-  const { data: weightDetailData } = useQuery({
-    queryKey: [
-      'route-strategy-weight-detail',
-      selectedCountry?.code,
-      currentRow?.appid,
-      productCode,
-      paymentType,
-    ],
-    queryFn: () =>
-      getRouteStrategyWeightDetail({
-        country: selectedCountry!.code,
-        appid: currentRow?.appid || '',
-        productCode: productCode,
-        paymentType: paymentType,
-      }),
-    enabled: isEdit && !!selectedCountry && !!productCode && isOpen,
-  })
-
-  // 获取当前显示的渠道列表
-  const availableChannels: Array<{ id: number; channelCode: string }> = isEdit
-    ? (weightDetailData?.result?.paymentRouteChannelWeightList || []).map(
-        (item: {
-          paymentPlatform: string
-          weight: number
-          id?: number
-          channelCode?: string
-        }) => ({
-          id: item.id || 0,
-          channelCode: item.paymentPlatform,
-        })
-      )
-    : ((channelsData?.result || []) as PaymentChannelOption[])
+  // 获取当前显示的渠道列表（统一使用 channelsData）
+  const availableChannels: Array<{
+    id: number
+    channelCode: string
+    weightId?: number | null
+    weight?: number
+  }> = (channelsData?.result || []).map(
+    (item: PaymentChannelOption & { weightId?: number; weight?: number }) => ({
+      id: item.id,
+      channelCode: item.channelCode,
+      weightId: item.weightId,
+      weight: item.weight,
+    })
+  )
 
   // 初始化表单（只在对话框打开时执行一次）
   useEffect(() => {
@@ -183,52 +165,41 @@ export function RouteStrategyMutateDialog() {
         channels: [],
       })
     } else if (open === 'edit' && currentRow) {
-      // 编辑模式：回显数据
-      const channelList =
-        currentRow.paymentRouteChannelWeightList?.map((item) => ({
-          paymentPlatform: item.paymentPlatform,
-          weight: item.weight,
-          id: item.id,
-        })) || []
-
+      // 编辑模式：回显基础信息，渠道列表由 channelsData 自动回显
       form.reset({
         appid: currentRow.appid || '',
         paymentType: currentRow.paymentType,
         productCode: currentRow.productCode,
         routeStrategy: currentRow.routeStrategy,
-        channels: channelList as RouteStrategyFormValues['channels'],
+        channels: [],
       })
     }
   }, [open, currentRow, isOpen, form])
 
-  // 当类型或支付方式变化时，清空已选渠道（仅新增模式）
+  // 当类型或支付方式变化时，清空已选渠道
   useEffect(() => {
-    if (open === 'create') {
-      form.setValue('channels', [])
-    }
-  }, [paymentType, productCode, open, form])
+    form.setValue('channels', [])
+  }, [paymentType, productCode, form])
 
-  // 当路由策略变化时，清空已选渠道（编辑模式）- 使两种策略的选择状态独立
-  // useEffect(() => {
-  //   if (isEdit && productCode) {
-  //     form.setValue('channels', [])
-  //   }
-  // }, [routeStrategy, isEdit, form, productCode])
-
-  // 当权重详情数据返回时，更新表单的渠道选择和权重
+  // 当渠道数据返回时，自动回显已选渠道（根据 weightId 判断）
   useEffect(() => {
-    if (isEdit && weightDetailData?.result?.paymentRouteChannelWeightList) {
-      const channelList =
-        weightDetailData.result.paymentRouteChannelWeightList.map(
-          (item: { paymentPlatform: string; weight: number; id?: number }) => ({
-            paymentPlatform: item.paymentPlatform,
-            weight: item.weight,
-            id: item.id,
-          })
-        )
-      form.setValue('channels', channelList)
+    if (channelsData?.result && isOpen) {
+      const selectedChannels = (channelsData.result as Array<{
+        channelCode: string
+        weightId?: number | null
+        weight?: number
+        id?: number
+      }>)
+        .filter((item) => item.weightId != null) // weightId 有值表示已选中
+        .map((item) => ({
+          paymentPlatform: item.channelCode,
+          weight: routeStrategy === '1' ? (item.weight || 0) : undefined,
+          id: item.weightId as number, // 过滤后 weightId 确定不为 null
+        }))
+
+      form.setValue('channels', selectedChannels)
     }
-  }, [weightDetailData, isEdit, form])
+  }, [channelsData, isOpen, routeStrategy, form])
 
   const mutation = useMutation({
     mutationFn: (data: RouteStrategyFormValues) => {
@@ -273,7 +244,7 @@ export function RouteStrategyMutateDialog() {
   const handleChannelToggle = (
     channelCode: string,
     checked: boolean,
-    channelId?: number
+    weightId?: number | null
   ) => {
     const currentChannels = channels || []
     if (checked) {
@@ -285,9 +256,9 @@ export function RouteStrategyMutateDialog() {
         paymentPlatform: channelCode,
         weight: routeStrategy === '1' ? 0 : undefined,
       }
-      // 只在编辑模式且有id时才添加id字段
-      if (isEdit && channelId !== undefined) {
-        newChannel.id = channelId
+      // 如果有 weightId，则添加 id 字段
+      if (weightId != null) {
+        newChannel.id = weightId
       }
       form.setValue('channels', [...currentChannels, newChannel])
     } else {
@@ -507,7 +478,7 @@ export function RouteStrategyMutateDialog() {
                                 handleChannelToggle(
                                   channel.channelCode,
                                   !!checked,
-                                  isEdit ? channel.id : undefined
+                                  channel.weightId ?? undefined
                                 )
                               }
                               id={`channel-${channel.id}`}

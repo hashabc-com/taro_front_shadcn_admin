@@ -178,6 +178,7 @@ export const getPaymentChannelsByMethod = (params: {
   country: string
   type: string
   subchannelcode: string
+  id?: number // 编辑时传递路由策略配置的id
 }) =>
   http.get('/admin/paymentRouteConfig/selectByChannelCode', params, {
     autoAddCountry: false,
