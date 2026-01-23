@@ -58,13 +58,12 @@ export function RateConfigDialog({ onSuccess }: RateConfigDialogProps) {
     try {
       // 获取渠道列表
       const channelRes = await getChannelTypeList(
-        selectedCountry?.country || ''
+        selectedCountry?.code || '',
       )
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const channelData = (channelRes as any)?.result || channelRes
       const payinChannel = channelData?.payinChannel || []
       const payoutChannel = channelData?.payoutChannel || []
-
       // 初始化代收渠道
       const collectionItems: RateItem[] = payinChannel.map(
         (channel: string) => ({
@@ -89,7 +88,7 @@ export function RateConfigDialog({ onSuccess }: RateConfigDialogProps) {
       const rateRes = await getBusinessRate(business.id)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rateData = (rateRes as any)?.result || rateRes
-
+      console.log('rateData========', rateData)
       if (Array.isArray(rateData)) {
         rateData.forEach((rateItem) => {
           const { payCode, rate, feeAmount, type, id } = rateItem
