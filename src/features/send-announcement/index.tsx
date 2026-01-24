@@ -5,11 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import { Loader2, Send } from 'lucide-react'
 import { toast } from 'sonner'
-import {
-  getCountryList,
-  getMerchantListBySend,
-  sendAnnouncement,
-} from '@/api/common'
+import { getMerchantListBySend, sendAnnouncement } from '@/api/common'
+import { useCountries } from '@/hooks/use-Countries'
 import type { Country } from '@/stores/country-store'
 import type { Merchant } from '@/stores/merchant-store'
 import { useLanguage } from '@/context/language-provider'
@@ -53,10 +50,7 @@ export default function SendAnnouncement() {
     },
   })
 
-  const { data: countriesData } = useQuery({
-    queryKey: ['countries'],
-    queryFn: getCountryList,
-  })
+  const { data: countriesData } = useCountries()
 
   const countries = (countriesData?.result || []) as Country[]
 

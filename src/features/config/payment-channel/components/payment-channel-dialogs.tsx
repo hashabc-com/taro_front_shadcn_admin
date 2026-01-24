@@ -2,13 +2,13 @@ import { useEffect, useMemo } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { getCountryList } from '@/api/common'
 import { addPaymentChannel, updatePaymentChannel } from '@/api/config'
 import { type Country } from '@/stores/country-store'
 import { getTranslation } from '@/lib/i18n'
 import { useLanguage } from '@/context/language-provider'
+import { useCountries } from '@/hooks/use-Countries'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -66,10 +66,7 @@ export function ChannelMutateDialog() {
   const queryClient = useQueryClient()
   const isEdit = open === 'edit'
 
-  const { data: countriesData } = useQuery({
-    queryKey: ['countries'],
-    queryFn: getCountryList,
-  })
+  const { data: countriesData } = useCountries()
   const countries = useMemo<Country[]>(
     () => (countriesData?.result || countriesData?.data || []) as Country[],
     [countriesData]

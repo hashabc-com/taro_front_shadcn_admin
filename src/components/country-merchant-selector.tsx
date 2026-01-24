@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { getCountryList, getMerchantList } from '@/api/common'
+import { getMerchantList } from '@/api/common'
 import { useCountryStore, type Country } from '@/stores/country-store'
 import { useMerchantStore, type Merchant } from '@/stores/merchant-store'
 import { useLanguage } from '@/context/language-provider'
@@ -14,16 +14,20 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { CurrencySelector } from './currency-selector'
+import { useCountries } from '@/hooks/use-Countries'
 
 export function CountryMerchantSelector() {
   const { selectedCountry, setSelectedCountry, setRates } = useCountryStore()
   const { selectedMerchant, setSelectedMerchant } = useMerchantStore()
   const { t } = useLanguage()
+
+  const { data: countriesData } = useCountries()
+
   // 获取国家列表
-  const { data: countriesData } = useQuery({
-    queryKey: ['countries'],
-    queryFn: getCountryList,
-  })
+  // const { data: countriesData } = useQuery({
+  //   queryKey: ['countries'],
+  //   queryFn: getCountryList,
+  // })
 
   const countries = useMemo<Country[]>(
     () => (countriesData?.result || countriesData?.data || []) as Country[],
