@@ -162,7 +162,7 @@ export function EditMerchantDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[500px]'>
+      <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>
             {isAdd
@@ -260,7 +260,7 @@ export function EditMerchantDialog({
                     value={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger clearable={false} className='w-[180px]'>
+                      <SelectTrigger clearable={false} className='w-[180px] md:w-[220px]'>
                         <SelectValue placeholder={t('merchant.info.validation.callbackQueueRequired')} />
                       </SelectTrigger>
                     </FormControl>
