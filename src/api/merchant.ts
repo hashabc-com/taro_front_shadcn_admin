@@ -81,3 +81,5 @@ export const getAutoLoginToken = (merchantId: string, googleCode: string) =>
     {},
     { autoAddMerchantId: false, autoAddCountry: false }
   )
+
+export const getQueueGroup = () => http.get('/admin/user/v1/callbackQueueGroup')

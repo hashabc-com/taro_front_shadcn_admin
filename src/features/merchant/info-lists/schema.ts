@@ -28,6 +28,7 @@ export const merchantInfoSchema = z.object({
   email: z.string().nullable().optional(),
   mobile: z.string().nullable().optional(),
   bankServiceFree: z.number().nullable().optional(),
+  callbackQueue: z.string().optional(),
 })
 
 export type IMerchantInfoType = z.infer<typeof merchantInfoSchema>

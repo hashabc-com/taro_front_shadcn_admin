@@ -98,6 +98,23 @@ const { t, lang } = useLanguage() // From context
 
 **Pattern**: Group translations by feature/domain (e.g., `config.paymentChannel.*`, `common.*`)
 
+**⚠️ CRITICAL RULE**: All user-facing text MUST be internationalized
+- ✅ Always use `t()` function for any text displayed to users
+- ✅ Add both `zh` and `en` translations to `src/lib/i18n.ts` when adding new features
+- ❌ Never hardcode Chinese or English text directly in components
+- ❌ Never use static strings in labels, buttons, messages, placeholders, validation errors, etc.
+
+**Example**:
+```tsx
+// ❌ BAD - Hardcoded text
+<Button>提交</Button>
+<FormLabel>商户名称</FormLabel>
+
+// ✅ GOOD - Internationalized
+<Button>{t('common.submit')}</Button>
+<FormLabel>{t('merchant.info.merchantName')}</FormLabel>
+```
+
 ### 6. State Management
 
 **Zustand Stores** in `src/stores/`:
@@ -139,7 +156,32 @@ z.coerce.number().min(0).optional()
 <Button type='button' onClick={handleAction}>Action</Button>
 ```
 
-**Critical**: Prevent form submission on non-submit buttons using `type='button'` and `e.preventDefault()`
+**Critical Rules**:
+1. Prevent form submission on non-submit buttons using `type='button'` and `e.preventDefault()`
+2. **Internationalization in Zod schemas**: Define schema INSIDE component using `useMemo` to access `t()` function:
+   ```tsx
+   export function MyDialog() {
+     const { t } = useLanguage()
+     
+     const schema = useMemo(() => z.object({
+       name: z.string().min(1, t('validation.nameRequired')),
+       // ❌ NOT: z.string().min(1, 'validation.nameRequired') - won't translate
+     }), [t])
+     
+     const form = useForm({ resolver: zodResolver(schema) })
+   }
+   ```
+3. **Required number fields**: Use `z.preprocess()` to handle empty strings and ensure validation:
+   ```tsx
+   // For required number fields that can't be empty
+   z.preprocess((val) => {
+     if (val === '' || val === null || val === undefined) return 0
+     return Number(val)
+   }, z.number().min(0, t('validation.minZero')))
+   
+   // Set defaultValue to 0 instead of null
+   defaultValues: { amount: 0 } // NOT: { amount: null }
+   ```
 
 ### 9. Data Tables
 
@@ -217,8 +259,9 @@ pnpm lint --fix       # Auto-fix ESLint issues
 1. Create feature directory: `src/features/<domain>/<feature-name>/`
 2. Add route file: `src/routes/_authenticated/<domain>/<feature-name>.tsx`
 3. Create API functions in `src/api/<domain>.ts`
-4. Add i18n keys to `src/lib/i18n.ts` (both `zh` and `en`)
+4. **⚠️ Add i18n keys to `src/lib/i18n.ts` (BOTH `zh` AND `en`)** - This is MANDATORY for all user-facing text
 5. Define schema types in `schema.ts` (use Zod for validation)
+6. Verify all text uses `t()` function - no hardcoded Chinese/English strings
 
 ### API Integration
 
@@ -243,11 +286,13 @@ VITE_PROXY_TARGET=http://localhost:8080
 ## Common Pitfalls
 
 1. **Form Buttons**: Always add `type='button'` to non-submit buttons in forms to prevent accidental submission
-2. **Number Inputs**: Use `z.coerce.number()` for inputs that return strings but need number validation
-3. **DropdownMenu**: Avoid `modal={false}` prop - causes "async response" errors
-4. **Permissions**: Backend returns parent paths (e.g., `/order`) that may not have UI routes - use `getFirstAuthorizedRoute()` to find actual child routes
-5. **Query Keys**: Always include search params in query keys: `queryKey: ['list', search]`
-6. **Table Pagination**: Use `pageKey: 'pageNum'` for API compatibility (not `page`)
+2. **Number Inputs**: Use `z.preprocess()` or `z.coerce.number()` for inputs that return strings but need number validation. For required fields, use `z.preprocess()` to convert empty values to 0 and avoid null default values
+3. **Zod Schema Internationalization**: NEVER define Zod schemas outside components with hardcoded i18n keys like `'validation.required'`. Always define schemas inside component body using `useMemo(() => z.object({...}), [t])` so error messages call `t()` function and get translated properly
+4. **Missing Internationalization**: All user-facing text must use `t()` function. Check labels, buttons, placeholders, error messages, toasts, and dialog titles. Always add both `zh` and `en` translations when creating/modifying features
+5. **DropdownMenu**: Avoid `modal={false}` prop - causes "async response" errors
+6. **Permissions**: Backend returns parent paths (e.g., `/order`) that may not have UI routes - use `getFirstAuthorizedRoute()` to find actual child routes
+7. **Query Keys**: Always include search params in query keys: `queryKey: ['list', search]`
+8. **Table Pagination**: Use `pageKey: 'pageNum'` for API compatibility (not `page`)
 
 ## Code Conventions
 

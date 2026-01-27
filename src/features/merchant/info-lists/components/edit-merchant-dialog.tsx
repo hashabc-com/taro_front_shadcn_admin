@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCountryStore } from '@/stores'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { addCustomer, updateCustomer } from '@/api/merchant'
+import { addCustomer, getQueueGroup, updateCustomer } from '@/api/merchant'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
@@ -27,20 +27,15 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { type IMerchantInfoType } from '../schema'
-
-const editMerchantSchema = z.object({
-  account: z.string().min(1, '请输入账号'),
-  password: z.string().optional(),
-  companyName: z.string().min(1, '请输入商户名称'),
-  freezeType: z.number(),
-  accountFreezeDay: z.number().min(0, '不能为负数').nullable(),
-  provice: z.string(),
-  zipcode: z.string().nullable().optional(),
-  gauthKey: z.string().min(1, '请输入谷歌验证码'),
-})
-
-type EditMerchantFormValues = z.infer<typeof editMerchantSchema>
+import { useQuery } from '@tanstack/react-query'
 
 type EditMerchantDialogProps = {
   open: boolean
@@ -61,14 +56,37 @@ export function EditMerchantDialog({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { selectedCountry } = useCountryStore()
 
-  const form = useForm<EditMerchantFormValues>({
+  const { data } = useQuery({
+    queryKey: ['queueGroup'],
+    queryFn: () => getQueueGroup()
+  })
+
+  const editMerchantSchema = useMemo(() => z.object({
+    account: z.string().min(1, t('merchant.info.validation.accountRequired')),
+    password: z.string().optional(),
+    companyName: z.string().min(1, t('merchant.info.validation.merchantNameRequired')),
+    callbackQueue: z.string().min(1, t('merchant.info.validation.callbackQueueRequired')),
+    freezeType: z.number(),
+    accountFreezeDay: z.preprocess((val) => {
+      if (val === '' || val === null || val === undefined) return 0
+      return Number(val)
+    }, z.number().min(0, t('merchant.info.validation.daysMinZero'))),
+    provice: z.string(),
+    zipcode: z.string().nullable().optional(),
+    gauthKey: z.string().min(1, t('common.googleAuthCodeRequired')),
+  }), [t])
+
+  type EditMerchantFormValues = z.infer<typeof editMerchantSchema>
+
+  const form = useForm({
     resolver: zodResolver(editMerchantSchema),
     defaultValues: {
       account: '',
       password: '',
       companyName: '',
+      callbackQueue: '',
       freezeType: 0,
-      accountFreezeDay: null,
+      accountFreezeDay: 0,
       provice: '0',
       zipcode: null,
       gauthKey: '',
@@ -80,8 +98,9 @@ export function EditMerchantDialog({
       form.reset({
         account: merchant.account || '',
         companyName: merchant.companyName || '',
+        callbackQueue: merchant.callbackQueue || '',
         freezeType: merchant.freezeType || 0,
-        accountFreezeDay: merchant.accountFreezeDay || null,
+        accountFreezeDay: merchant.accountFreezeDay ?? 0,
         provice: merchant.provice || '0',
         zipcode: merchant.zipcode ? String(merchant.zipcode) : null,
         gauthKey: '',
@@ -91,8 +110,9 @@ export function EditMerchantDialog({
         account: '',
         password: '',
         companyName: '',
+        callbackQueue: '',
         freezeType: 0,
-        accountFreezeDay: null,
+        accountFreezeDay: 0,
         provice: '0',
         zipcode: null,
         gauthKey: '',
@@ -111,6 +131,7 @@ export function EditMerchantDialog({
     const params: any = {
       account: values.account,
       companyName: values.companyName,
+      callbackQueue: values.callbackQueue,
       freezeType: values.freezeType,
       accountFreezeDay: values.accountFreezeDay,
       provice: values.provice,
@@ -225,6 +246,37 @@ export function EditMerchantDialog({
               )}
             />
 
+            <FormField
+              control={form.control}
+              name='callbackQueue'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('merchant.info.callbackQueue')}
+                    <span className='text-red-500'>*</span>
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger clearable={false} className='w-[180px]'>
+                        <SelectValue placeholder={t('merchant.info.validation.callbackQueueRequired')} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {data?.result?.map((queue: string) => (
+                        <SelectItem key={queue} value={queue}>
+                          {queue}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div className='space-y-4'>
               <FormField
                 control={form.control}
@@ -274,10 +326,10 @@ export function EditMerchantDialog({
                         type='number'
                         placeholder={t('merchant.info.validation.daysRequired')}
                         {...field}
-                        value={field.value ?? ''}
+                        value={field.value != null ? String(field.value) : ''}
                         onChange={(e) => {
                           const value = e.target.value
-                          field.onChange(value ? Number(value) : null)
+                          field.onChange(value ? Number(value) : 0)
                         }}
                       />
                     </FormControl>
