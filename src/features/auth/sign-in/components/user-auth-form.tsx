@@ -18,6 +18,7 @@ import {
   type IUserInfo,
 } from '@/api/login'
 import { cn } from '@/lib/utils'
+import { queryClient } from '@/main'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -199,6 +200,9 @@ export function UserAuthForm({
 
       const res = await login(finalParams)
       if (res.code === '200' && res.result) {
+        // 清除所有查询缓存，确保获取最新数据
+        queryClient.clear()
+        
         toast.success('登录成功')
         authLogin(res.result.TOKEN, res.result.userInfo)
 
