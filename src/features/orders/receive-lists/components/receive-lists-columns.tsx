@@ -16,7 +16,7 @@ export const getTasksColumns = (
       header: t('orders.receiveOrders.merchant'),
     },
     {
-      accessorKey: 'createTime',
+      accessorKey: 'localTime',
       header: t('orders.receiveOrders.createTime'),
     },
     {

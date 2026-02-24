@@ -177,7 +177,7 @@ export function MutateDrawer({
               <label className='text-muted-foreground text-sm font-medium'>
                 {t('orders.receiveOrders.collectionTime')}
               </label>
-              <div className='text-base'>{currentRow.paymentDate}</div>
+              <div className='text-base'>{currentRow.localPaymentDate}</div>
             </div>
 
             {/* 交易状态 */}

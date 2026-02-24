@@ -5,6 +5,8 @@ import { CheckCircle, Clock, XCircle } from 'lucide-react'
 export const paymentListsSchema = z.object({
   id: z.number().optional(),
   createTime: z.string().optional(),
+  localSuccessTime: z.string().optional().nullable(),
+  localTime: z.string().optional(),
   companyName: z.string().optional(),
   paymentCompany: z.string().optional(),
   dealTime: z.string().optional(),

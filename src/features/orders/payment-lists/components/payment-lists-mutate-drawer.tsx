@@ -131,13 +131,13 @@ export function MutateDrawer({
               <label className='text-muted-foreground text-sm font-medium'>
                 {t('orders.paymentOrders.createTime')}
               </label>
-              <div className='flex flex-col gap-1'>{currentRow.createTime}</div>
+              <div className='flex flex-col gap-1'>{currentRow.localTime}</div>
             </div>
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
                 {t('orders.paymentOrders.paymentTime')}
               </label>
-              <div className='flex flex-col gap-1'>{currentRow.updateTime}</div>
+              <div className='flex flex-col gap-1'>{currentRow.localSuccessTime}</div>
             </div>
             <div className='space-y-2'>
               <label className='text-muted-foreground text-sm font-medium'>
