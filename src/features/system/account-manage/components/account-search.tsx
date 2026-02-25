@@ -61,7 +61,7 @@ export function AccountSearch() {
 
   return (
     <div className='flex flex-wrap items-center gap-2'>
-      <div className='max-w-[230px]'>
+      <div>
         <Popover>
           <PopoverTrigger asChild>
             <Button

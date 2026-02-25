@@ -107,7 +107,7 @@ export function PaymentSummarySearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期范围 */}
-      <div className='max-w-[230px]'>
+      <div>
         <Popover>
           <PopoverTrigger asChild>
             <Button

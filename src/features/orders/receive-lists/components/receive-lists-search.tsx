@@ -161,7 +161,7 @@ export function ReceiveListsSearch<TData>({
         </Select>
       </div>
       {/* 日期范围 */}
-      <div className='max-w-[230px]'>
+      <div>
         <Popover>
           <PopoverTrigger asChild>
             <Button

@@ -77,7 +77,7 @@ export function DailySummarySearch<TData>({
         />
       </div>
 
-      <div className='max-w-[230px]'>
+      <div>
         <Popover>
           <PopoverTrigger asChild>
             <Button

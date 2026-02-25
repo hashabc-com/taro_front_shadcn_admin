@@ -69,7 +69,7 @@ export function RoleManageSearch() {
   return (
     <>
       <div className='flex flex-wrap items-end gap-2'>
-        <div className='max-w-[230px]'>
+        <div>
           <Popover>
             <PopoverTrigger asChild>
               <Button
