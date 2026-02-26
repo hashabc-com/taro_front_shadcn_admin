@@ -139,6 +139,7 @@ class Request {
     // 响应拦截器
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
+        // console.log('response=========', response)
         // 隐藏加载提示
         if ((response.config as RequestConfig).showLoading) {
           // console.log('请求结束')
@@ -148,6 +149,9 @@ class Request {
         }
         if (response.data.code == 401) {
           useAuthStore.getState().logout()
+        }
+        if(response.status == 403) {
+          window.location.reload()
         }
         return response
         // return {...response,data:response.data.result}

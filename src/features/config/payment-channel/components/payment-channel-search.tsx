@@ -18,7 +18,7 @@ import { type Country } from '@/stores/country-store'
 // import {type ResponseData } from '@/lib/http'
 import { Input } from '@/components/ui/input'
 // import { useQueryClient } from '@tanstack/react-query'
-import { useCountries } from '@/hooks/use-Countries'
+import { useCountries } from '@/hooks/use-countries'
 
 const route = getRouteApi('/_authenticated/config/payment-channel')
 

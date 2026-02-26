@@ -8,7 +8,7 @@ import { addPaymentChannel, updatePaymentChannel } from '@/api/config'
 import { type Country } from '@/stores/country-store'
 import { getTranslation } from '@/lib/i18n'
 import { useLanguage } from '@/context/language-provider'
-import { useCountries } from '@/hooks/use-Countries'
+import { useCountries } from '@/hooks/use-countries'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,

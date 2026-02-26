@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { CurrencySelector } from './currency-selector'
-import { useCountries } from '@/hooks/use-Countries'
+import { useCountries } from '@/hooks/use-countries'
 
 export function CountryMerchantSelector() {
   const { selectedCountry, setSelectedCountry, setRates } = useCountryStore()
