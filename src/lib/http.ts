@@ -139,7 +139,7 @@ class Request {
     // 响应拦截器
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
-        console.log('response=========', response)
+        // console.log('response=========', response)
         // 隐藏加载提示
         if ((response.config as RequestConfig).showLoading) {
           // console.log('请求结束')
