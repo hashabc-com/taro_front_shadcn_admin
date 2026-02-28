@@ -5,6 +5,7 @@ export const merchantRequestSchema = z.object({
   transactionType: z.string().optional(), // P=还款, L=放款
   requestParam: z.string().optional(),
   responseParam: z.string().optional(),
+  notifyParam: z.string().optional().nullable(),
   request: z.string().optional(),
   url: z.string().optional(),
   response: z.string().optional(),

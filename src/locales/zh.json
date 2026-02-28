@@ -1005,7 +1005,8 @@
       "paymentInfo": "支付信息",
       "timeInfo": "时间信息",
       "localTime": "本地时间",
-      "requestResponseParams": "请求/响应参数"
+      "requestResponseParams": "请求/响应参数",
+      "notifyParams": "第三方回调参数"
     },
     "messageRecord": {
       "title": "消息记录表",

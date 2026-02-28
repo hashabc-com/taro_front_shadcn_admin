@@ -997,7 +997,8 @@
       "paymentInfo": "Payment Info",
       "timeInfo": "Time Info",
       "localTime": "Local Time",
-      "requestResponseParams": "Request/Response Params"
+      "requestResponseParams": "Request/Response Params",
+      "notifyParams": "Callback Params"
     },
     "messageRecord": {
       "title": "Message Record",

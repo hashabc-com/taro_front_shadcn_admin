@@ -242,6 +242,17 @@ export function MerchantRequestDetailDialog({
               </pre>
             </div>
           )}
+
+          { record.notifyParam && (
+            <div className='space-y-2'>
+              <div className='text-sm font-medium'>
+                {t('logs.merchantRequest.notifyParams')}:
+              </div>
+              <pre className='bg-muted max-h-[250px] overflow-auto rounded-md p-3 text-xs'>
+                {formatJson(record.notifyParam)}
+              </pre>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
