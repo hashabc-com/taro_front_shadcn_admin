@@ -80,6 +80,11 @@ export const payOutNotify = (data: { transId: string; status: number }) =>
 export const payInNotify = (data: { transId: string; status: number }) =>
   http.get<ResponseData>('/admin/disbursement/payOutNotify', data)
 
+// 更新状态 - 补单
+export const updateStatus = (referenceno: string, transId: string) =>
+  http.get<ResponseData>(`/admin/collection/payInStatusQuery?referenceno=${referenceno}&transId=${transId}`)
+
+
 // 下载图片
 export const downloadImg = async (
   params: { mediaId: string; type: boolean },

@@ -1,8 +1,8 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { CheckCircle, Info, XCircle } from 'lucide-react'
+import { CheckCircle, Info, XCircle,RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
-import { payOutNotify } from '@/api/common'
+import { payOutNotify,updateStatus } from '@/api/common'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
@@ -42,6 +42,15 @@ export function DataTableRowActions<TData>({
     }
   }
 
+  const updateStatusHandle = async (record: Order) => {
+    const res = await updateStatus(record.referenceno, record.transId)
+    if(res.code == 200) {
+      toast.success(`状态更新成功`)
+    } else {
+      toast.error(res.message || `状态更新失败`)
+    }
+  }
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -54,6 +63,14 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-auto'>
+        <DropdownMenuItem
+            onClick={() => {
+              updateStatusHandle(task)
+            }}
+        >
+          {t('orders.paymentOrders.updateStatus')}
+          <RefreshCw className='ml-auto h-4 w-4' />
+        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             handleNotify(task, 0)

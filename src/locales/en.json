@@ -364,7 +364,8 @@
       "paymentTime": "Payment Time",
       "transactionSummary": "Transaction Summary",
       "product": "Product",
-      "paymentCompany": "Payment Company"
+      "paymentCompany": "Payment Company",
+      "updateStatus": "Update Status"
     },
     "receiveSummary": {
       "title": "Receive Summary",
