@@ -17,11 +17,33 @@ export const getTasksColumns = (
     },
     {
       accessorKey: 'localTime',
-      header: t('orders.receiveOrders.createTime'),
+      header: `${t('common.create')}/${t('orders.receiveOrders.collectionTime')}`,
+      cell: ({ row }) => {
+        const localTime = row.original.localTime
+        const localPaymentDate = row.original.localPaymentDate
+        return (
+          <div className='text-muted-foreground flex flex-col gap-0.5 text-xs'>
+            <div>{localTime || '-'}</div>
+            <div>{localPaymentDate || '-'}</div>
+          </div>
+        )
+      },
     },
     {
       accessorKey: 'referenceno',
-      header: t('orders.receiveOrders.merchantOrderNo'),
+      header: `${t('common.thirdParty')}/${t('common.platform')}/${t('orders.receiveOrders.merchantOrderNo')}`,
+      cell: ({ row }) => {
+        const referenceno = row.original.referenceno
+        const transId = row.original.transId
+        const tripartiteOrder = row.original.tripartiteOrder
+        return (
+          <div className='text-muted-foreground flex flex-col gap-0.5 font-mono text-xs'>
+            <div>{tripartiteOrder || '-'}</div>
+            <div>{transId}</div>
+            <div>{referenceno}</div>
+          </div>
+        )
+      },
     },
     {
       accessorKey: 'pickupCenter',
@@ -33,11 +55,6 @@ export const getTasksColumns = (
     {
       accessorKey: 'paymentCompany',
       header: t('common.channel'),
-    },
-    {
-      accessorKey: 'transId',
-      header: t('orders.receiveOrders.platformOrderNo'),
-      enableHiding: false,
     },
     {
       accessorKey: 'amount',
@@ -101,12 +118,6 @@ export const getTasksColumns = (
         return <span>{value}</span>
       },
     },
-    // {
-    //   accessorKey: 'paymentDate',
-    //   header: '收款时间',
-    //   enableHiding: false,
-    //   cell: ({ row }) => row.getValue('paymentDate'),
-    // },
     {
       id: 'actions',
       header: t('orders.receiveOrders.action'),

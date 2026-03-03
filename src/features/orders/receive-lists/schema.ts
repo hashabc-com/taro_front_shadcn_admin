@@ -30,6 +30,7 @@ export const orderSchema = z.object({
   amountUSD: z.number().optional(),
   serviceAmountUSD: z.number().optional(),
   localTime: z.string().optional().nullable(),
+  message: z.string().optional().nullable(),
 })
 
 export type Order = z.infer<typeof orderSchema>

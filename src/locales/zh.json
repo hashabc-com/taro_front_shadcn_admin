@@ -1,5 +1,6 @@
 {
   "common": {
+    "time": "时间",
     "language": "语言",
     "chinese": "中文",
     "english": "英文",
@@ -165,6 +166,9 @@
     "refresh": "刷新",
     "settings": "设置",
     "pleaseEnterRemark": "请输入备注",
+    "platform": "平台",
+    "thirdParty": "三方",
+    "create": "创建",
     "countrys": {
       "ID": "印尼",
       "BR": "巴西",
@@ -316,7 +320,24 @@
     "collectionFee": "收款服务费",
     "paymentFee": "付款服务费",
     "collectionCount": "收款订单数",
-    "paymentCount": "付款订单数"
+    "paymentCount": "付款订单数",
+    "channelStats": {
+      "title": "通道统计",
+      "description": "各通道状态、成功率及交易量概览",
+      "today": "今天",
+      "lastWeek": "最近一周",
+      "lastMonth": "最近一月",
+      "channel": "通道",
+      "successRate": "成功率",
+      "transactionVolume": "交易量",
+      "totalOrders": "总订单",
+      "successOrders": "成功订单",
+      "failOrders": "失败订单",
+      "totalAmount": "交易金额",
+      "statusNormal": "正常",
+      "statusMaintenance": "维护中",
+      "statusPaused": "已暂停"
+    }
   },
   "orders": {
     "receiveOrders": {
@@ -339,7 +360,8 @@
       "merchant": "商户",
       "createTime": "创建时间",
       "thirdPartyOrderNo": "三方订单号",
-      "collectionTime": "收款时间"
+      "collectionTime": "收款时间",
+      "failReason":"失败原因"
     },
     "paymentOrders": {
       "title": "付款订单明细",

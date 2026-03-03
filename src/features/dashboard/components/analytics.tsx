@@ -11,6 +11,7 @@ import { getAmountInformation, getChartDataOfDay } from '@/api/dashboard'
 import { useLanguage } from '@/context/language-provider'
 import { useConvertAmount } from '@/hooks/use-convert-amount'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+// import ChannelStatsCard from './channel-stats'
 import ChartLineMultiple from './chart-line'
 
 export function Analytics() {
@@ -148,6 +149,9 @@ export function Analytics() {
           </CardContent>
         </Card>
       </div>
+
+      {/* 通道统计 */}
+      {/* <ChannelStatsCard /> */}
     </div>
   )
 }

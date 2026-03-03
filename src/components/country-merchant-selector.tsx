@@ -92,7 +92,7 @@ export function CountryMerchantSelector() {
         value={selectedCountry?.id.toString()}
         onValueChange={handleCountryChange}
       >
-        <SelectTrigger className='h-9 w-full sm:w-[140px]' clearable={false}>
+        <SelectTrigger clearable={false}>
           <SelectValue placeholder='选择国家'>
             {selectedCountry && (
               <div className='flex items-center gap-2'>

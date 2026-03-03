@@ -189,6 +189,15 @@ export function MutateDrawer({
                 {renderStatus(currentRow.status)}
               </div>
             </div>
+            {/* 失败原因 */}
+            {currentRow.status == '2' && (
+              <div className='flex flex-col gap-2'>
+                <label className='text-muted-foreground text-sm font-medium'>
+                  {t('orders.receiveOrders.failReason')}
+                </label>
+                <div className='text-base text-red-600'>{currentRow.message}</div>
+              </div>
+            )}
           </div>
         </div>
 

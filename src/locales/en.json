@@ -1,5 +1,6 @@
 {
   "common": {
+    "time": "Time",
     "language": "Language",
     "chinese": "Chinese",
     "english": "English",
@@ -165,6 +166,9 @@
     "refresh": "Refresh",
     "settings": "Settings",
     "pleaseEnterRemark": "Please enter remark",
+    "platform": "Platform",
+    "thirdParty": "Third Party",
+    "create": "Create",
     "countrys": {
       "ID": "Indonesia",
       "BR": "Brazil",
@@ -316,7 +320,24 @@
     "collectionFee": "Collection Service Fee",
     "paymentFee": "Payment Service Fee",
     "collectionCount": "Collection Order Count",
-    "paymentCount": "Payment Order Count"
+    "paymentCount": "Payment Order Count",
+    "channelStats": {
+      "title": "Channel Statistics",
+      "description": "Overview of channel status, success rate, and transaction volume",
+      "today": "Today",
+      "lastWeek": "Last 7 days",
+      "lastMonth": "Last 30 days",
+      "channel": "Channel",
+      "successRate": "Success Rate",
+      "transactionVolume": "Volume",
+      "totalOrders": "Total Orders",
+      "successOrders": "Success",
+      "failOrders": "Failed",
+      "totalAmount": "Amount",
+      "statusNormal": "Normal",
+      "statusMaintenance": "Maintenance",
+      "statusPaused": "Paused"
+    }
   },
   "orders": {
     "receiveOrders": {
@@ -339,7 +360,8 @@
       "merchant": "Merchant",
       "createTime": "Create Time",
       "thirdPartyOrderNo": "Third Party Order No",
-      "collectionTime": "Collection Time"
+      "collectionTime": "Collection Time",
+      "failReason": "Fail Reason"
     },
     "paymentOrders": {
       "title": "Payment Order Details",
