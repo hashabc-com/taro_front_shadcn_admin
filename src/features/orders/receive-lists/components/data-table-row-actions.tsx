@@ -78,7 +78,7 @@ export function DataTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-auto'>
-          {task.status == '2' && (
+          {task.status == '1' && (
             <DropdownMenuItem
               onClick={() => {
                 updateStatusHandle(task)
