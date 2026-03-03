@@ -1,11 +1,11 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
 import { CheckCircle, Info, XCircle, RefreshCw } from 'lucide-react'
-import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { payOutNotify, updateStatus } from '@/api/common'
-import { useGoogleAuthDialog } from '@/hooks/use-google-auth-dialog'
 import { useLanguage } from '@/context/language-provider'
+import { useGoogleAuthDialog } from '@/hooks/use-google-auth-dialog'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -66,54 +66,56 @@ export function DataTableRowActions<TData>({
 
   return (
     <>
-    {googleAuthDialog}
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant='ghost'
-          className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
-        >
-          <DotsHorizontalIcon className='h-4 w-4' />
-          <span className='sr-only'>Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-auto'>
-        <DropdownMenuItem
-          onClick={() => {
-            updateStatusHandle(task)
-          }}
-        >
-          {t('orders.paymentOrders.updateStatus')}
-          <RefreshCw className='ml-auto h-4 w-4' />
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            handleNotify(task, 0)
-          }}
-        >
-          {t('orders.paymentOrders.successNotification')}
-          <CheckCircle className='ml-auto h-4 w-4 text-green-500' />
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            handleNotify(task, 2)
-          }}
-        >
-          {t('orders.paymentOrders.failureNotification')}
-          <XCircle className='ml-auto h-4 w-4 text-red-500' />
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            setCurrentRow(task)
-            setOpen('info')
-          }}
-        >
-          {t('orders.paymentOrders.viewMore')}
-          <Info className='ml-auto h-4 w-4' />
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      {googleAuthDialog}
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant='ghost'
+            className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
+          >
+            <DotsHorizontalIcon className='h-4 w-4' />
+            <span className='sr-only'>Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align='end' className='w-auto'>
+          {task.status == '2' && (
+            <DropdownMenuItem
+              onClick={() => {
+                updateStatusHandle(task)
+              }}
+            >
+              {t('orders.paymentOrders.updateStatus')}
+              <RefreshCw className='ml-auto h-4 w-4' />
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem
+            onClick={() => {
+              handleNotify(task, 0)
+            }}
+          >
+            {t('orders.paymentOrders.successNotification')}
+            <CheckCircle className='ml-auto h-4 w-4 text-green-500' />
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              handleNotify(task, 2)
+            }}
+          >
+            {t('orders.paymentOrders.failureNotification')}
+            <XCircle className='ml-auto h-4 w-4 text-red-500' />
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setCurrentRow(task)
+              setOpen('info')
+            }}
+          >
+            {t('orders.paymentOrders.viewMore')}
+            <Info className='ml-auto h-4 w-4' />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </>
   )
 }
