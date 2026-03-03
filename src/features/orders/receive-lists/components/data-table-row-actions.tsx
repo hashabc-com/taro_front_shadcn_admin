@@ -1,8 +1,10 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { CheckCircle, Info, XCircle,RefreshCw } from 'lucide-react'
+import { CheckCircle, Info, XCircle, RefreshCw } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { payOutNotify,updateStatus } from '@/api/common'
+import { payOutNotify, updateStatus } from '@/api/common'
+import { useGoogleAuthDialog } from '@/hooks/use-google-auth-dialog'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
@@ -25,6 +27,9 @@ export function DataTableRowActions<TData>({
   const task = orderSchema.parse(row.original)
   const { t } = useLanguage()
   const { setOpen, setCurrentRow } = useReceiveLists()
+  const { dialog: googleAuthDialog, withGoogleAuth } = useGoogleAuthDialog()
+  const queryClient = useQueryClient()
+
   const handleNotify = async (record: Order, status: number) => {
     try {
       const res = await payOutNotify({
@@ -33,25 +38,35 @@ export function DataTableRowActions<TData>({
       })
       console.log('notify res', res)
       if (res.code == 200) {
-        toast.success(`通知发送成功`)
+        toast.success(t('common.operationSuccess'))
       } else {
-        toast.error(res.message || `通知发送失败`)
+        toast.error(res.message || t('common.operationFailed'))
       }
     } catch {
-      toast.error(`通知发送失败`)
+      toast.error(t('common.operationFailed'))
     }
   }
 
-  const updateStatusHandle = async (record: Order) => {
-    const res = await updateStatus(record.referenceno, record.transId)
-    if(res.code == 200) {
-      toast.success(`状态更新成功`)
-    } else {
-      toast.error(res.message || `状态更新失败`)
-    }
+  const updateStatusHandle = (record: Order) => {
+    withGoogleAuth(async (gauthKey) => {
+      const data = new FormData()
+      data.append('referenceno', record.referenceno)
+      data.append('transId', record.transId)
+      data.append('gauthKey', gauthKey)
+
+      const res = await updateStatus(data)
+      if (res.code == 200) {
+        toast.success(t('common.statusUpdateSuccess'))
+        queryClient.invalidateQueries({ queryKey: ['orders', 'receive-lists'] })
+      } else {
+        toast.error(res.message || t('common.statusUpdateFailed'))
+      }
+    })
   }
 
   return (
+    <>
+    {googleAuthDialog}
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
@@ -64,9 +79,9 @@ export function DataTableRowActions<TData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-auto'>
         <DropdownMenuItem
-            onClick={() => {
-              updateStatusHandle(task)
-            }}
+          onClick={() => {
+            updateStatusHandle(task)
+          }}
         >
           {t('orders.paymentOrders.updateStatus')}
           <RefreshCw className='ml-auto h-4 w-4' />
@@ -99,5 +114,6 @@ export function DataTableRowActions<TData>({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+    </>
   )
 }

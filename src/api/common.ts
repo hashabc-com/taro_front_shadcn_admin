@@ -81,8 +81,8 @@ export const payInNotify = (data: { transId: string; status: number }) =>
   http.get<ResponseData>('/admin/disbursement/payOutNotify', data)
 
 // 更新状态 - 补单
-export const updateStatus = (referenceno: string, transId: string) =>
-  http.get<ResponseData>(`/admin/collection/payInStatusQuery?referenceno=${referenceno}&transId=${transId}`)
+export const updateStatus = (data: FormData) =>
+  http.post<ResponseData>(`/admin/collection/payInStatusQuery`,data)
 
 
 // 下载图片
