@@ -1021,7 +1021,9 @@
       "timeInfo": "Time Info",
       "localTime": "Local Time",
       "requestResponseParams": "Request/Response Params",
-      "notifyParams": "Callback Params"
+      "notifyParams": "Callback Params",
+      "callbackRequest": "Merchant callback parameters",
+      "callbackResponse": "Merchant callback response"
     },
     "messageRecord": {
       "title": "Message Record",

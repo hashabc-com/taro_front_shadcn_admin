@@ -181,7 +181,7 @@ export function MerchantRequestDetailDialog({
           />
           <InfoRow
             label={t('logs.merchantRequest.notificationUrl')}
-            value={record.notificationUrl || '-'}
+            value={record.callbackUrl || '-'}
           />
 
           <div className='border-b-2 pt-4 pb-2 text-base font-semibold'>
@@ -250,6 +250,27 @@ export function MerchantRequestDetailDialog({
               </div>
               <pre className='bg-muted max-h-[250px] overflow-auto rounded-md p-3 text-xs'>
                 {formatJson(record.notifyParam)}
+              </pre>
+            </div>
+          )}
+
+          { record.callbackRequest && (
+            <div className='space-y-2'>
+              <div className='text-sm font-medium'>
+                {t('logs.merchantRequest.callbackRequest')}:
+              </div>
+              <pre className='bg-muted max-h-[250px] overflow-auto rounded-md p-3 text-xs'>
+                {formatJson(record.callbackRequest)}
+              </pre>
+            </div>
+          )}
+          { record.callbackResponse && (
+            <div className='space-y-2'>
+              <div className='text-sm font-medium'>
+                {t('logs.merchantRequest.callbackResponse')}:
+              </div>
+              <pre className='bg-muted max-h-[250px] overflow-auto rounded-md p-3 text-xs'>
+                {formatJson(record.callbackResponse)}
               </pre>
             </div>
           )}

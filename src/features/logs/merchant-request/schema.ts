@@ -21,6 +21,9 @@ export const merchantRequestSchema = z.object({
   status: z.number().optional(), // 0=成功, 1=处理中, 2=失败, 3=已过期
   statusQuery: z.number().optional(),
   notificationUrl: z.string().optional(),
+  callbackUrl: z.string().optional(),
+  callbackRequest: z.string().optional(),
+  callbackResponse: z.string().optional(),
   callBackStatus: z.string().optional(),
   currentAvailableAmount: z.number().optional(),
   createTime: z.string().optional(),

@@ -1029,7 +1029,9 @@
       "timeInfo": "时间信息",
       "localTime": "本地时间",
       "requestResponseParams": "请求/响应参数",
-      "notifyParams": "第三方回调参数"
+      "notifyParams": "第三方回调参数",
+      "callbackRequest": "商户回调参数",
+      "callbackResponse": "商户回调响应"
     },
     "messageRecord": {
       "title": "消息记录表",
