@@ -360,7 +360,7 @@
       "merchant": "商户",
       "createTime": "创建时间",
       "thirdPartyOrderNo": "三方订单号",
-      "collectionTime": "收款时间",
+      "finishTime": "完成时间",
       "failReason":"失败原因"
     },
     "paymentOrders": {

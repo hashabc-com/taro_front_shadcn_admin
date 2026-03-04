@@ -175,7 +175,7 @@ export function MutateDrawer({
             {/* 收款时间 */}
             <div className='flex flex-col gap-2'>
               <label className='text-muted-foreground text-sm font-medium'>
-                {t('orders.receiveOrders.collectionTime')}
+                {t('orders.receiveOrders.finishTime')}
               </label>
               <div className='text-base'>{currentRow.localPaymentDate}</div>
             </div>

@@ -360,7 +360,7 @@
       "merchant": "Merchant",
       "createTime": "Create Time",
       "thirdPartyOrderNo": "Third Party Order No",
-      "collectionTime": "Collection Time",
+      "finishTime": "Finish Time",
       "failReason": "Fail Reason"
     },
     "paymentOrders": {

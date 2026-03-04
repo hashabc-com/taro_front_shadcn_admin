@@ -10,6 +10,13 @@ export const getTasksColumns = (
 ): ColumnDef<Order>[] => {
   const t = (key: string) => getTranslation(language, key)
 
+  // const renderTime = (row: { original: Order }) => {
+  //   if(row.original.status == '2') {
+  //     return <div>{row.original.updateTime || '-'}</div>
+  //   }else{
+  //     return <div>{row.original.localPaymentDate || '-'}</div>
+  //   }
+  // }
   return [
     {
       accessorKey: 'companyName',
@@ -17,14 +24,16 @@ export const getTasksColumns = (
     },
     {
       accessorKey: 'localTime',
-      header: `${t('common.create')}/${t('orders.receiveOrders.collectionTime')}`,
+      header: `${t('common.create')}/${t('orders.receiveOrders.finishTime')}`,
       cell: ({ row }) => {
         const localTime = row.original.localTime
         const localPaymentDate = row.original.localPaymentDate
+        const updateTime = row.original.updateTime
+        const status = row.original.status
         return (
           <div className='text-muted-foreground flex flex-col gap-0.5 text-xs'>
             <div>{localTime || '-'}</div>
-            <div>{localPaymentDate || '-'}</div>
+            <div>{ status == '2' ? updateTime || '-' : localPaymentDate || '-'}</div>
           </div>
         )
       },
