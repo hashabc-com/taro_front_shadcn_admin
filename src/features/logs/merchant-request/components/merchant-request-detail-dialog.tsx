@@ -267,10 +267,30 @@ export function MerchantRequestDetailDialog({
           { record.callbackResponse && (
             <div className='space-y-2'>
               <div className='text-sm font-medium'>
-                {t('logs.merchantRequest.callbackResponse')}: {record.callbackResponseStatus}({record.callbackResponseTime + 'ms'})
+                {t('logs.merchantRequest.callbackResponse')}:
               </div>
               <pre className='bg-muted max-h-[250px] overflow-auto rounded-md p-3 text-xs'>
                 {formatJson(record.callbackResponse)}
+              </pre>
+            </div>
+          )}
+          { record.callbackResponseStatus && (
+            <div className='space-y-2'>
+              <div className='text-sm font-medium'>
+                {t('logs.merchantRequest.callbackResponseStatus')}:
+              </div>
+              <pre className='bg-muted max-h-[250px] overflow-auto rounded-md p-3 text-xs'>
+                {record.callbackResponseStatus}
+              </pre>
+            </div>
+          )}
+          { record.callbackResponseTime && (
+            <div className='space-y-2'>
+              <div className='text-sm font-medium'>
+                {t('logs.merchantRequest.callbackResponseTime')}:
+              </div>
+              <pre className='bg-muted max-h-[250px] overflow-auto rounded-md p-3 text-xs'>
+                {record.callbackResponseTime + 'ms'}
               </pre>
             </div>
           )}

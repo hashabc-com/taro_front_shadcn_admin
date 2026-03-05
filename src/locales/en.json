@@ -1023,7 +1023,9 @@
       "requestResponseParams": "Request/Response Params",
       "notifyParams": "Callback Params",
       "callbackRequest": "Merchant callback parameters",
-      "callbackResponse": "Merchant callback response"
+      "callbackResponse": "Merchant callback response",
+      "callbackResponseStatus": "Merchant callback response status",
+      "callbackResponseTime": "Merchant callback response time"
     },
     "messageRecord": {
       "title": "Message Record",
