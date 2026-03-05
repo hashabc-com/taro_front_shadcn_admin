@@ -25,6 +25,7 @@ export const merchantRequestSchema = z.object({
   callbackRequest: z.string().optional(),
   callbackResponse: z.string().optional(),
   callbackResponseTime: z.string().optional(),
+  callbackResponseStatus: z.string().optional(),
   callBackStatus: z.string().optional(),
   currentAvailableAmount: z.number().optional(),
   createTime: z.string().optional(),

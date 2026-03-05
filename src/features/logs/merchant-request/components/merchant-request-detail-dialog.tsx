@@ -76,12 +76,12 @@ export function MerchantRequestDetailDialog({
   const getCallbackStatusLabel = (status: string | undefined) => {
     if (!status) return '-'
     switch (status) {
-      case '1':
-        return t('logs.merchantRequest.callbackSuccess')
       case '0':
-        return t('logs.merchantRequest.callbackFailed')
-      default:
+        return t('logs.merchantRequest.callbackSuccess')
+      case '1':
         return t('logs.merchantRequest.callbackPending')
+      case '2':
+        return t('logs.merchantRequest.callbackFailed')
     }
   }
 
@@ -267,7 +267,7 @@ export function MerchantRequestDetailDialog({
           { record.callbackResponse && (
             <div className='space-y-2'>
               <div className='text-sm font-medium'>
-                {t('logs.merchantRequest.callbackResponse')}:({record.callbackResponseTime + 'ms'})
+                {t('logs.merchantRequest.callbackResponse')}: {record.callbackResponseStatus}({record.callbackResponseTime + 'ms'})
               </div>
               <pre className='bg-muted max-h-[250px] overflow-auto rounded-md p-3 text-xs'>
                 {formatJson(record.callbackResponse)}
