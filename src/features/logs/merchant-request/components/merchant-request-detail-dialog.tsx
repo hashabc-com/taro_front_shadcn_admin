@@ -267,7 +267,7 @@ export function MerchantRequestDetailDialog({
           { record.callbackResponse && (
             <div className='space-y-2'>
               <div className='text-sm font-medium'>
-                {t('logs.merchantRequest.callbackResponse')}:
+                {t('logs.merchantRequest.callbackResponse')}:({record.callbackResponseTime + 'ms'})
               </div>
               <pre className='bg-muted max-h-[250px] overflow-auto rounded-md p-3 text-xs'>
                 {formatJson(record.callbackResponse)}
