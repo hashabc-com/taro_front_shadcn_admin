@@ -361,7 +361,8 @@
       "createTime": "Create Time",
       "thirdPartyOrderNo": "Third Party Order No",
       "finishTime": "Finish Time",
-      "failReason": "Fail Reason"
+      "failReason": "Fail Reason",
+      "mobile": "Mobile"
     },
     "paymentOrders": {
       "title": "Payment Order Details",

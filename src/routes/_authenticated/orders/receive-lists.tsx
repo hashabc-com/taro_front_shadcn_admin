@@ -8,6 +8,7 @@ const receiveListsSearchSchema = createBaseSearchSchema({
   tripartiteOrder: z.string().optional(),
   pickupCenter: z.string().optional(),
   transId: z.string().optional(),
+  mobile: z.string().optional(),
   status: z.string().optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional(),

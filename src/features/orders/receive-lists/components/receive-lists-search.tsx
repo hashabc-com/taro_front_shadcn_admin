@@ -49,6 +49,7 @@ export function ReceiveListsSearch<TData>({
 
   const [referenceno, setMerchantOrderNo] = useState(search.referenceno || '')
   const [transId, setTransId] = useState(search.transId || '')
+  const [mobile, setMobile] = useState(search.mobile || '')
   const [status, setStatus] = useState(search.status || '')
   const [pickupCenter, setPickupCenter] = useState(search.pickupCenter || '')
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -73,6 +74,7 @@ export function ReceiveListsSearch<TData>({
         pageNum: 1, // 重置到第一页
         referenceno: referenceno || undefined,
         transId: transId || undefined,
+        mobile: mobile || undefined,
         status: status || undefined,
         pickupCenter: pickupCenter || undefined,
         startTime: dateRange.from
@@ -102,6 +104,7 @@ export function ReceiveListsSearch<TData>({
   const hasFilters =
     pickupCenter ||
     referenceno ||
+    mobile ||
     transId ||
     status ||
     dateRange.from ||
@@ -125,6 +128,15 @@ export function ReceiveListsSearch<TData>({
           placeholder={t('orders.receiveOrders.platformOrderNo')}
           value={transId}
           onChange={(e) => setTransId(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+        />
+      </div>
+      <div className='max-w-[200px] min-w-[120px] flex-1'>
+        <Input
+          id='mobile'
+          placeholder={t('orders.receiveOrders.mobile')}
+          value={mobile}
+          onChange={(e) => setMobile(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>

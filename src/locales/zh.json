@@ -361,7 +361,8 @@
       "createTime": "创建时间",
       "thirdPartyOrderNo": "三方订单号",
       "finishTime": "完成时间",
-      "failReason":"失败原因"
+      "failReason":"失败原因",
+      "mobile": "手机号"
     },
     "paymentOrders": {
       "title": "付款订单明细",
