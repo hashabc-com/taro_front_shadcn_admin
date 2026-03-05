@@ -89,6 +89,7 @@ export function ReceiveListsSearch<TData>({
   const handleReset = () => {
     setMerchantOrderNo('')
     setTransId('')
+    setMobile('')
     setStatus('')
     setPickupCenter('')
     setDateRange({ from: undefined, to: undefined })
