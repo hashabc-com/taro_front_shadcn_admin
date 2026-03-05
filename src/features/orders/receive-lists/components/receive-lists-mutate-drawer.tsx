@@ -93,6 +93,16 @@ export function MutateDrawer({
                 </div>
               </div>
             </div>
+            <div className='flex flex-col gap-2'>
+              <label className='text-muted-foreground text-sm font-medium'>
+                {t('orders.receiveOrders.mobile')}
+              </label>
+              <div className='flex flex-col gap-1'>
+                <div className='text-base font-medium'>
+                  {currentRow.mobile}
+                </div>
+              </div>
+            </div>
 
             {/* 创建时间 */}
             <div className='flex flex-col gap-2'>
