@@ -184,7 +184,7 @@ export function RateConfigDialog({ onSuccess }: RateConfigDialogProps) {
             feeAmount: Number(item.feeAmount),
             type: '2', // 代收
             country: selectedCountry?.code || '',
-            // configType:1
+            configType:1
           })
         }
       })
@@ -211,7 +211,7 @@ export function RateConfigDialog({ onSuccess }: RateConfigDialogProps) {
             feeAmount: Number(item.feeAmount),
             type: '1', // 代付
             country: selectedCountry?.code || '',
-            // configType: 1
+            configType: 1
           })
         }
       })
