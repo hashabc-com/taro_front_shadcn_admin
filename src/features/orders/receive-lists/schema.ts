@@ -5,7 +5,7 @@ import { CheckCircle, Clock, XCircle } from 'lucide-react'
 export const orderSchema = z.object({
   id: z.number(),
   merchantId: z.string(),
-  paymentCompany: z.string(),
+  paymentCompany: z.string().optional().nullable(),
   referenceno: z.string(),
   amount: z.number().or(z.string()),
   realAmount: z.number().or(z.string()).optional(),
