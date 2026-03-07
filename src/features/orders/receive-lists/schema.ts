@@ -21,7 +21,7 @@ export const orderSchema = z.object({
   updateTime: z.string(),
   companyName: z.string(),
   taxRateAmount: z.string(),
-  pickupCenter: z.string(),
+  pickupCenter: z.string().optional().nullable(),
   amountTwo: z.string(),
   serviceAmountTwo: z.string(),
   notificationURL: z.string().nullable(),
