@@ -6,6 +6,8 @@ import { MerchantRequestPage } from '@/features/logs/merchant-request'
 const merchantRequestSearchSchema = createBaseSearchSchema({
   transactionId: z.string().optional(),
   country: z.string().optional(),
+  transactionType: z.string().optional(),
+  status: z.coerce.number().optional(),
 })
 
 export type IMerchantRequestSearch = z.infer<typeof merchantRequestSearchSchema>
