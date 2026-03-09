@@ -1,15 +1,14 @@
-import { useEffect, useMemo, useState } from 'react'
-import { getRouteApi } from '@tanstack/react-router'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import {
+  type ColumnDef,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { getTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/context/language-provider'
-import { useTableUrlState } from '@/hooks/use-table-url-state'
+import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
@@ -20,46 +19,77 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import {
-  OrderStatsCards,
-  type OrderStats,
-} from '@/features/orders/components/order-stats-cards'
-import { type Order } from '../schema'
-import { getTasksColumns } from './receive-lists-columns'
-import { ReceiveListsSearch } from './receive-lists-search'
 
-const route = getRouteApi('/_authenticated/orders/receive-lists')
-
-type DataTableProps = {
-  data: Order[]
-  totalRecord?: number
+type FeatureDataTableProps<TData> = {
+  /** Column definitions */
+  columns: ColumnDef<TData, unknown>[]
+  /** Table data */
+  data: TData[]
+  /** Total number of records for pagination */
+  totalRecord: number
+  /** Whether the data is loading */
   isLoading: boolean
-  stats?: OrderStats
+  /** Route search params (from `route.useSearch()`) */
+  search: Record<string, unknown>
+  /** Route navigate function (from `route.useNavigate()`) */
+  navigate: NavigateFn
+  /**
+   * Render the search/filter toolbar.
+   * Receives the table instance so toolbar can use it for column visibility, etc.
+   */
+  renderToolbar?: (table: ReturnType<typeof useReactTable<TData>>) => ReactNode
+  /** Extra content rendered after the table (e.g. dialogs) */
+  children?: ReactNode
+  /** Number of skeleton rows to show while loading (default: 10) */
+  skeletonRows?: number
+  /** Default column visibility state */
+  defaultColumnVisibility?: VisibilityState
 }
 
-export function ReceiveListsTable({
+/**
+ * Generic data table component for feature pages.
+ *
+ * Encapsulates useReactTable setup, URL-synced pagination, loading skeleton,
+ * table rendering, and pagination controls.
+ *
+ * @example
+ * ```tsx
+ * <FeatureDataTable
+ *   columns={columns}
+ *   data={data}
+ *   totalRecord={totalRecord}
+ *   isLoading={isLoading}
+ *   search={route.useSearch()}
+ *   navigate={route.useNavigate()}
+ *   renderToolbar={(table) => <MySearch table={table} />}
+ * />
+ * ```
+ */
+export function FeatureDataTable<TData>({
+  columns,
   data,
-  isLoading,
   totalRecord,
-  stats,
-}: DataTableProps) {
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const { lang } = useLanguage()
-  const t = (key: string) => getTranslation(lang, key)
+  isLoading,
+  search,
+  navigate,
+  renderToolbar,
+  children,
+  skeletonRows = 10,
+  defaultColumnVisibility = {},
+}: FeatureDataTableProps<TData>) {
+  const { t } = useLanguage()
+  const [columnVisibility, setColumnVisibility] =
+    useState<VisibilityState>(defaultColumnVisibility)
 
-  const columns = useMemo(() => getTasksColumns(lang), [lang])
-
-  // Synced with URL states (updated to match route search schema defaults)
   const { pagination, onPaginationChange, ensurePageInRange } =
     useTableUrlState({
-      search: route.useSearch(),
-      navigate: route.useNavigate(),
+      search,
+      navigate,
       pagination: { defaultPage: 1, defaultPageSize: 10, pageKey: 'pageNum' },
     })
 
   const pageCount = useMemo(() => {
     const pageSize = pagination.pageSize ?? 10
-    // 如果 total 为空或为 0，至少为 1 页以避免 UI 显示 0 页
     return Math.max(1, Math.ceil((totalRecord ?? 0) / pageSize))
   }, [totalRecord, pagination.pageSize])
 
@@ -84,15 +114,12 @@ export function ReceiveListsTable({
 
   return (
     <div className='flex flex-1 flex-col gap-4'>
-      <ReceiveListsSearch table={table} />
-      <OrderStatsCards
-        stats={stats ?? { totalOrders: 0, successOrders: 0, successRate: '0' }}
-        isLoading={isLoading}
-      />
+      {renderToolbar?.(table)}
+
       {isLoading ? (
         <div className='overflow-hidden rounded-md border'>
           <div className='space-y-3 p-4'>
-            {Array.from({ length: 10 }).map((_, i) => (
+            {Array.from({ length: skeletonRows }).map((_, i) => (
               <div key={i} className='flex gap-4'>
                 <Skeleton className='h-12 flex-1' />
               </div>
@@ -105,25 +132,28 @@ export function ReceiveListsTable({
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead
-                        key={header.id}
-                        colSpan={header.colSpan}
-                        className={cn(
-                          header.column.columnDef.meta?.className,
-                          header.column.columnDef.meta?.thClassName
-                        )}
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    )
-                  })}
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className={cn(
+                        header.column.columnDef.meta?.className,
+                        header.column.columnDef.meta?.thClassName
+                      )}
+                      style={{
+                        width: header.getSize(),
+                        minWidth: header.column.columnDef.minSize,
+                        maxWidth: header.column.columnDef.maxSize,
+                      }}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  ))}
                 </TableRow>
               ))}
             </TableHeader>
@@ -141,6 +171,11 @@ export function ReceiveListsTable({
                           cell.column.columnDef.meta?.className,
                           cell.column.columnDef.meta?.tdClassName
                         )}
+                        style={{
+                          width: cell.column.getSize(),
+                          minWidth: cell.column.columnDef.minSize,
+                          maxWidth: cell.column.columnDef.maxSize,
+                        }}
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
@@ -166,6 +201,8 @@ export function ReceiveListsTable({
       )}
 
       <DataTablePagination table={table} className='mt-auto' />
+
+      {children}
     </div>
   )
 }

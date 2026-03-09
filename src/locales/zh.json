@@ -29,6 +29,9 @@
     "and": "和",
     "product": "产品",
     "selectDateRange": "选择日期范围",
+    "selectDateTimeRange": "选择时间范围",
+    "startTime": "开始时间",
+    "endTime": "结束时间",
     "selectCurrency": "选择货币",
     "exportTaskCreated": "导出任务已创建",
     "exportFailed": "导出失败",
@@ -340,6 +343,11 @@
     }
   },
   "orders": {
+    "stats": {
+      "totalOrders": "总订单数",
+      "successOrders": "成功订单数",
+      "successRate": "成功率"
+    },
     "receiveOrders": {
       "title": "收款订单明细",
       "merchantOrderNo": "商户订单号",

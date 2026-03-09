@@ -1,21 +1,14 @@
 import { useState } from 'react'
-import { format } from 'date-fns'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { useCountryStore, useMerchantStore } from '@/stores'
-import { zhCN } from 'date-fns/locale'
-import { CalendarIcon, Search, X } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { getProductDict } from '@/api/common'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
+import { DateRangePicker } from '@/components/date-range-picker'
 import { Input } from '@/components/ui/input'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -30,11 +23,6 @@ const route = getRouteApi('/_authenticated/orders/receive-lists')
 
 type ReceiveListsSearchProps<TData> = {
   table: Table<TData>
-}
-
-type DateRange = {
-  from: Date | undefined
-  to: Date | undefined
 }
 
 export function ReceiveListsSearch<TData>({
@@ -52,10 +40,8 @@ export function ReceiveListsSearch<TData>({
   const [mobile, setMobile] = useState(search.mobile || '')
   const [status, setStatus] = useState(search.status || '')
   const [pickupCenter, setPickupCenter] = useState(search.pickupCenter || '')
-  const [dateRange, setDateRange] = useState<DateRange>({
-    from: search.startTime ? new Date(search.startTime) : undefined,
-    to: search.endTime ? new Date(search.endTime) : undefined,
-  })
+  const [startTime, setStartTime] = useState(search.startTime || '')
+  const [endTime, setEndTime] = useState(search.endTime || '')
 
   const { data } = useQuery({
     queryKey: ['product-dict', selectedCountry?.code, selectedMerchant?.appid],
@@ -71,16 +57,14 @@ export function ReceiveListsSearch<TData>({
     navigate({
       search: (prev) => ({
         ...prev,
-        pageNum: 1, // 重置到第一页
+        pageNum: 1,
         referenceno: referenceno || undefined,
         transId: transId || undefined,
         mobile: mobile || undefined,
         status: status || undefined,
         pickupCenter: pickupCenter || undefined,
-        startTime: dateRange.from
-          ? format(dateRange.from, 'yyyy-MM-dd')
-          : undefined,
-        endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+        startTime: startTime || undefined,
+        endTime: endTime || undefined,
         refresh: Date.now(),
       }),
     })
@@ -92,7 +76,8 @@ export function ReceiveListsSearch<TData>({
     setMobile('')
     setStatus('')
     setPickupCenter('')
-    setDateRange({ from: undefined, to: undefined })
+    setStartTime('')
+    setEndTime('')
 
     navigate({
       search: (prev) => ({
@@ -108,8 +93,8 @@ export function ReceiveListsSearch<TData>({
     mobile ||
     transId ||
     status ||
-    dateRange.from ||
-    dateRange.to
+    startTime ||
+    endTime
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
@@ -173,48 +158,13 @@ export function ReceiveListsSearch<TData>({
           </SelectContent>
         </Select>
       </div>
-      {/* 日期范围 */}
-      <div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant='outline'
-              className='w-full justify-start text-left font-normal'
-            >
-              <CalendarIcon className='text-muted-foreground mr-2 h-4 w-4' />
-              {dateRange.from ? (
-                dateRange.to ? (
-                  <>
-                    {format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })} -{' '}
-                    {format(dateRange.to, 'yyyy-MM-dd', { locale: zhCN })}
-                  </>
-                ) : (
-                  format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
-                )
-              ) : (
-                <span className='text-muted-foreground'>
-                  {t('common.selectDateRange')}
-                </span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className='w-auto p-0' align='start'>
-            <Calendar
-              mode='range'
-              defaultMonth={dateRange.from}
-              selected={{ from: dateRange.from, to: dateRange.to }}
-              onSelect={(range) => {
-                setDateRange({
-                  from: range?.from,
-                  to: range?.to,
-                })
-              }}
-              numberOfMonths={2}
-              locale={zhCN}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+      {/* 日期时间范围 (秒级) */}
+      <div><DateRangePicker
+        startTime={startTime}
+        endTime={endTime}
+        onStartTimeChange={setStartTime}
+        onEndTimeChange={setEndTime}
+      /></div>
 
       {/* 操作按钮 */}
       <div className='mt-0.5 flex gap-2'>

@@ -29,6 +29,9 @@
     "and": "and",
     "product": "Product",
     "selectDateRange": "Select date range",
+    "selectDateTimeRange": "Select time range",
+    "startTime": "Start Time",
+    "endTime": "End Time",
     "selectCurrency": "Select currency",
     "exportTaskCreated": "Export task created",
     "exportFailed": "Export failed",
@@ -340,6 +343,11 @@
     }
   },
   "orders": {
+    "stats": {
+      "totalOrders": "Total Orders",
+      "successOrders": "Successful Orders",
+      "successRate": "Success Rate"
+    },
     "receiveOrders": {
       "title": "Receive Order Details",
       "merchantOrderNo": "Merchant Order No",

@@ -187,23 +187,114 @@ z.coerce.number().min(0).optional()
 
 **Components**: `src/components/data-table/*` (reusable primitives)
 
-**Feature Pattern**:
+**Feature Pattern** (per feature directory):
 - `*-columns.tsx` - Column definitions with `ColumnDef<T>[]`
-- `*-table.tsx` - Table container with toolbar/pagination
+- `*-table.tsx` - Table container using `FeatureDataTable`
 - `*-search.tsx` - Search/filter bar
 - `*-dialogs.tsx` - Add/edit modals
 
-**TanStack Table Config**:
-```typescript
-const table = useReactTable({
-  data,
-  columns,
-  state: { pagination, columnVisibility },
-  getCoreRowModel: getCoreRowModel(),
-  manualPagination: true, // Server-side pagination
-  pageCount: Math.ceil(totalRecord / pageSize)
-})
+#### ⚠️ FeatureDataTable (优先使用)
+
+**Location**: `src/components/data-table/feature-data-table.tsx`
+
+新建表格页面时**必须优先使用** `FeatureDataTable`，它封装了 `useReactTable`、URL 分页同步、骨架屏加载、表格渲染和分页控件，将 ~130 行样板代码缩减到 ~25 行。
+
+**标准用法** (Search 接收 table prop):
+```tsx
+import { useMemo } from 'react'
+import { getRouteApi } from '@tanstack/react-router'
+import { useLanguage } from '@/context/language-provider'
+import { FeatureDataTable } from '@/components/data-table'
+import { useXxxData } from '../hooks/use-xxx-data'
+import { getColumns } from './xxx-columns'
+import { XxxSearch } from './xxx-search'
+
+const route = getRouteApi('/_authenticated/domain/feature-name')
+
+export function XxxTable() {
+  const { data, isLoading, totalRecord } = useXxxData()
+  const { lang } = useLanguage()
+  const columns = useMemo(() => getColumns(lang), [lang])
+
+  return (
+    <FeatureDataTable
+      columns={columns}
+      data={data}
+      totalRecord={totalRecord}
+      isLoading={isLoading}
+      search={route.useSearch()}
+      navigate={route.useNavigate()}
+      renderToolbar={(table) => <XxxSearch table={table} />}
+    />
+  )
+}
 ```
+
+**Search 不需要 table prop 时**:
+```tsx
+renderToolbar={() => <XxxSearch />}
+```
+
+**带弹窗的表格** (dialogs 通过 `children` 传入):
+```tsx
+<FeatureDataTable
+  columns={columns}
+  data={data}
+  totalRecord={totalRecord}
+  isLoading={isLoading}
+  search={route.useSearch()}
+  navigate={route.useNavigate()}
+  renderToolbar={(table) => <XxxSearch table={table} />}
+>
+  <EditDialog open={editOpen} onOpenChange={setEditOpen} record={current} />
+  <DeleteDialog open={deleteOpen} onOpenChange={setDeleteOpen} />
+</FeatureDataTable>
+```
+
+**Props 说明**:
+| Prop | 类型 | 说明 |
+|------|------|------|
+| `columns` | `ColumnDef<TData>[]` | 列定义 |
+| `data` | `TData[]` | 表格数据 |
+| `totalRecord` | `number` | 总记录数（用于分页） |
+| `isLoading` | `boolean` | 加载状态 |
+| `search` | `Record<string, unknown>` | `route.useSearch()` 返回值 |
+| `navigate` | `NavigateFn` | `route.useNavigate()` 返回值 |
+| `renderToolbar` | `(table) => ReactNode` | 搜索/工具栏渲染函数（可选） |
+| `children` | `ReactNode` | 额外内容如弹窗（可选） |
+| `skeletonRows` | `number` | 骨架屏行数，默认 10（可选） |
+| `defaultColumnVisibility` | `VisibilityState` | 默认列可见性（可选） |
+
+**不适合 FeatureDataTable 的场景** (需手动写 `useReactTable`):
+- 自定义合计行 (summary footer row) — 需要在 `<TableBody>` 内追加额外行
+- 自定义单元格渲染 (如 Tooltip 包裹) — 需要修改 cell 渲染逻辑
+- Props-based 表格 — 数据从父组件传入且使用 `useRouter()` 而非 `getRouteApi()`
+- 超复杂弹窗编排 (7+ 个弹窗) — 逻辑密度太高，拆分意义不大
+
+#### createFeatureProvider (优先使用)
+
+**Location**: `src/lib/create-feature-provider.tsx`
+
+当 feature 页面需要跨组件共享「当前行」和「弹窗状态」时，**必须优先使用** `createFeatureProvider` 工厂函数，而非手动编写 Provider + Context + Hook。
+
+```tsx
+// xxx-provider.tsx
+import { createFeatureProvider } from '@/lib/create-feature-provider'
+import { type XxxType } from '../schema'
+
+type DialogType = 'create' | 'edit' | 'delete'
+
+export const {
+  Provider: XxxProvider,
+  useContext: useXxx,
+} = createFeatureProvider<XxxType, DialogType>('Xxx')
+```
+
+**Provider 提供的状态**:
+- `open: TDialog | null` — 当前打开的弹窗类型
+- `setOpen(dialog: TDialog | null)` — 打开/关闭弹窗
+- `currentRow: TRow | null` — 当前操作的行数据
+- `setCurrentRow(row)` — 设置当前行
 
 ### 10. shadcn/ui Components
 
@@ -261,7 +352,9 @@ pnpm lint --fix       # Auto-fix ESLint issues
 3. Create API functions in `src/api/<domain>.ts`
 4. **⚠️ Add i18n keys to `src/lib/i18n.ts` (BOTH `zh` AND `en`)** - This is MANDATORY for all user-facing text
 5. Define schema types in `schema.ts` (use Zod for validation)
-6. Verify all text uses `t()` function - no hardcoded Chinese/English strings
+6. **⚠️ 表格页面必须优先使用 `FeatureDataTable`** — 参考 Section 9，不要手动编写 `useReactTable` + 骨架屏 + 表格渲染 + 分页的样板代码
+7. **⚠️ 需要跨组件共享弹窗/行状态时，使用 `createFeatureProvider`** — 参考 Section 9，不要手动编写 Provider + Context + Hook
+8. Verify all text uses `t()` function - no hardcoded Chinese/English strings
 
 ### API Integration
 
