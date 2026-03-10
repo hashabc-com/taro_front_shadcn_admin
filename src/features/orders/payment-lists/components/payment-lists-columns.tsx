@@ -16,22 +16,58 @@ export const getTasksColumns = (
       cell: ({ row }) => row.getValue('companyName'),
     },
     {
-      accessorKey: 'transactionReferenceNo',
-      header: t('orders.paymentOrders.merchantOrderNo'),
-      cell: ({ row }) => row.getValue('transactionReferenceNo'),
+      accessorKey: 'localSuccessTime',
+      header: `${t('common.create')}/${t('orders.receiveOrders.finishTime')}`,
+      cell: ({ row }) => {
+        const localTime = row.original.localTime
+        const localPaymentDate = row.original.localSuccessTime
+        const updateTime = row.original.updateTime
+        const status = row.original.status
+        return (
+          <div className='text-muted-foreground flex flex-col gap-0.5 text-xs'>
+            <div>{localTime || '-'}</div>
+            <div>{ status == '2' ? updateTime || '-' : localPaymentDate || '-'}</div>
+          </div>
+        )
+      },
     },
     {
-      accessorKey: 'transactionid',
-      header: t('orders.paymentOrders.platformOrderNo'),
+      accessorKey: 'referenceno',
+      header: `${t('common.thirdParty')}/${t('common.platform')}/${t('orders.receiveOrders.merchantOrderNo')}`,
+      cell: ({ row }) => {
+        const transactionReferenceNo = row.original.transactionReferenceNo
+        const transactionid = row.original.transactionid // 平台订单号
+        const certificateId = row.original.certificateId // 三方
+        return (
+          <div className='text-muted-foreground flex flex-col gap-0.5 font-mono text-xs'>
+            <div>{certificateId || '-'}</div>
+            <div>{transactionid || '-'}</div>
+            <div>{transactionReferenceNo || '-'}</div>
+          </div>
+        )
+      },
     },
+    {
+      accessorKey: 'mobile',
+      header: t('common.phone')
+    },
+    {
+      accessorKey: 'userName',
+      header: t('signIn.username')
+    },
+    // {
+    //   accessorKey: 'transactionReferenceNo',
+    //   header: t('orders.paymentOrders.merchantOrderNo'),
+    //   cell: ({ row }) => row.getValue('transactionReferenceNo'),
+    // },
+    // {
+    //   accessorKey: 'transactionid',
+    //   header: t('orders.paymentOrders.platformOrderNo'),
+    // },
     // {
     //   accessorKey: 'certificateId',
     //   header: t('orders.paymentOrders.thirdPartyOrderNo'),
     // },
-    {
-      accessorKey: 'paymentCompany',
-      header: t('orders.paymentOrders.paymentCompany'),
-    },
     {
       accessorKey: 'pickupCenter',
       header: t('orders.paymentOrders.product'),
@@ -39,6 +75,10 @@ export const getTasksColumns = (
       cell: ({ row }) => (
         <Badge variant='outline'>{row.getValue('pickupCenter')}</Badge>
       ),
+    },
+    {
+      accessorKey: 'paymentCompany',
+      header: t('orders.paymentOrders.paymentCompany'),
     },
     {
       accessorKey: 'accountNumber',
@@ -60,24 +100,6 @@ export const getTasksColumns = (
     //   enableSorting: false,
     //   // cell: ({ row }) => row.getValue('updateTime'),
     // },
-
-    {
-      accessorKey: 'localSuccessTime',
-      header: `${t('common.create')}/${t('orders.receiveOrders.finishTime')}`,
-      cell: ({ row }) => {
-        const localTime = row.original.localTime
-        const localPaymentDate = row.original.localSuccessTime
-        // const updateTime = row.original.updateTime
-        // const status = row.original.status
-        return (
-          <div className='text-muted-foreground flex flex-col gap-0.5 text-xs'>
-            <div>{localTime || '-'}</div>
-            <div>{ localPaymentDate || '-'}</div>
-          </div>
-        )
-      },
-    },
-
     {
       accessorKey: 'status',
       header: t('orders.paymentOrders.status'),

@@ -55,6 +55,14 @@ export const getTasksColumns = (
       },
     },
     {
+      accessorKey: 'mobile',
+      header: t('common.phone')
+    },
+    {
+      accessorKey: 'userName',
+      header: t('signIn.username')
+    },
+    {
       accessorKey: 'pickupCenter',
       header: t('orders.receiveOrders.product'),
       cell: ({ row }) => (

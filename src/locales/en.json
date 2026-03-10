@@ -172,6 +172,7 @@
     "platform": "Platform",
     "thirdParty": "Third Party",
     "create": "Create",
+    "accountNumber": "Account Number",
     "countrys": {
       "ID": "Indonesia",
       "BR": "Brazil",

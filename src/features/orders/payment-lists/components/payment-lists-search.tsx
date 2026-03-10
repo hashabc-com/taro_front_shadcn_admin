@@ -37,8 +37,9 @@ export function ReceiveListsSearch<TData>({
   const [startTime, setStartTime] = useState(search.startTime || '')
   const [endTime, setEndTime] = useState(search.endTime || '')
   const [mobile, setMobile] = useState(search.mobile || '')
-
-  const hasFilters = refNo || status || transId || startTime || endTime || mobile
+  const [userName, setUserName] = useState(search.userName || '')
+  const [accountNumber, setAccountNumber] = useState(search.accountNumber || '')
+  const hasFilters = refNo || status || transId || startTime || endTime || mobile || userName || accountNumber
   const handleSearch = () => {
     navigate({
       search: (prev) => ({
@@ -50,6 +51,8 @@ export function ReceiveListsSearch<TData>({
         startTime: startTime || undefined,
         endTime: endTime || undefined,
         mobile: mobile || undefined,
+        userName: userName || undefined,
+        accountNumber:  accountNumber || undefined,
         refresh: Date.now(),
       }),
     })
@@ -62,6 +65,8 @@ export function ReceiveListsSearch<TData>({
     setTransId('')
     setStatus('')
     setMobile('')
+    setUserName('')
+    setAccountNumber('')
     navigate({
       search: (prev) => ({
         pageNum: 1,
@@ -99,12 +104,39 @@ export function ReceiveListsSearch<TData>({
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
-      <div>
+      <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           id='mobile'
           placeholder={t('orders.receiveOrders.mobile')}
           value={mobile}
           onChange={(e) => setMobile(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+        />
+      </div>
+      {/* <div className='max-w-[200px] min-w-[120px] flex-1'>
+        <Input
+          id='userName'
+          placeholder={t('signIn.username')}
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+        />
+      </div> */}
+      <div className='max-w-[200px] min-w-[120px] flex-1'>
+        <Input
+          id='userName'
+          placeholder={t('signIn.username')}
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+        />
+      </div>
+      <div className='max-w-[200px] min-w-[120px] flex-1'>
+        <Input
+          id='accountNumber'
+          placeholder={t('orders.paymentOrders.receivingAccount')}
+          value={accountNumber}
+          onChange={(e) => setAccountNumber(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>

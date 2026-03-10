@@ -42,6 +42,7 @@ export function ReceiveListsSearch<TData>({
   const [pickupCenter, setPickupCenter] = useState(search.pickupCenter || '')
   const [startTime, setStartTime] = useState(search.startTime || '')
   const [endTime, setEndTime] = useState(search.endTime || '')
+  const [userName, setUserName] = useState(search.userName || '')
 
   const { data } = useQuery({
     queryKey: ['product-dict', selectedCountry?.code, selectedMerchant?.appid],
@@ -65,6 +66,7 @@ export function ReceiveListsSearch<TData>({
         pickupCenter: pickupCenter || undefined,
         startTime: startTime || undefined,
         endTime: endTime || undefined,
+        userName: userName || undefined,
         refresh: Date.now(),
       }),
     })
@@ -78,7 +80,7 @@ export function ReceiveListsSearch<TData>({
     setPickupCenter('')
     setStartTime('')
     setEndTime('')
-
+    setUserName('')
     navigate({
       search: (prev) => ({
         pageNum: 1,
@@ -94,10 +96,18 @@ export function ReceiveListsSearch<TData>({
     transId ||
     status ||
     startTime ||
-    endTime
+    endTime || 
+    userName
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
+      {/* 日期时间范围 (秒级) */}
+      <div><DateRangePicker
+        startTime={startTime}
+        endTime={endTime}
+        onStartTimeChange={setStartTime}
+        onEndTimeChange={setEndTime}
+      /></div>
       {/* 商户订单号 */}
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
@@ -126,7 +136,15 @@ export function ReceiveListsSearch<TData>({
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
-
+      <div className='max-w-[200px] min-w-[120px] flex-1'>
+        <Input
+          id='userName'
+          placeholder={t('signIn.username')}
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+        />
+      </div>
       {/* 交易状态 */}
       <Select value={status} onValueChange={setStatus}>
         <SelectTrigger id='status' clearable>
@@ -158,13 +176,6 @@ export function ReceiveListsSearch<TData>({
           </SelectContent>
         </Select>
       </div>
-      {/* 日期时间范围 (秒级) */}
-      <div><DateRangePicker
-        startTime={startTime}
-        endTime={endTime}
-        onStartTimeChange={setStartTime}
-        onEndTimeChange={setEndTime}
-      /></div>
 
       {/* 操作按钮 */}
       <div className='mt-0.5 flex gap-2'>

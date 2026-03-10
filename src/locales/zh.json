@@ -172,6 +172,7 @@
     "platform": "平台",
     "thirdParty": "三方",
     "create": "创建",
+    "accountNumber":"银行卡",
     "countrys": {
       "ID": "印尼",
       "BR": "巴西",

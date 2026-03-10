@@ -10,6 +10,8 @@ const paymentListsSearchSchema = createBaseSearchSchema({
   status: z.string().optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional(),
+  userName: z.string().optional(),
+  accountNumber:z.string().optional(),
   refresh: z.union([z.string(), z.number()]).optional().nullable(),
 })
 
