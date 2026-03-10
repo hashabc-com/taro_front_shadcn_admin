@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
@@ -31,6 +31,12 @@ export function GoogleAuthDialog({
 }: GoogleAuthDialogProps) {
   const { t } = useLanguage()
   const [code, setCode] = useState('')
+
+  // 弹窗关闭时清空验证码
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!open) setCode('')
+  }, [open])
 
   const handleConfirm = async () => {
     if (code.length !== 6) return

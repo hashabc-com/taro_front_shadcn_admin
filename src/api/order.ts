@@ -46,3 +46,15 @@ export const prepareExportPayment = (params: {
 // 获取代收成功率数据
 export const getCollectionSuccessRate = (params: ICollectionRateSearch) =>
   http.get('/admin/collection/v1/orderdata', params)
+
+// 获取收款订单统计
+export const getCollectionOrderStats = (params: {
+  startTime?: string
+  endTime?: string
+}) => http.get('/admin/collection/orderdata', params)
+
+// 获取付款订单统计
+export const getDisbursementOrderStats = (params: {
+  startTime?: string
+  endTime?: string
+}) => http.get('/admin/disbursement/orderdata', params)

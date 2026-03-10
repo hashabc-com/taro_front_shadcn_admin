@@ -182,6 +182,9 @@
       "NG": "尼日利亚",
       "PK": "巴基斯坦"
     },
+    "countryTime": {
+      "beijing": "北京时间"
+    },
     "validation": {
       "required": "此字段为必填项",
       "googleCodeRequired": "请输入谷歌验证码",

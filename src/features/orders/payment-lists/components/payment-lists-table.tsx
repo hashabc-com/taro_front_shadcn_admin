@@ -4,14 +4,15 @@ import { useLanguage } from '@/context/language-provider'
 import { FeatureDataTable } from '@/components/data-table'
 import { OrderStatsCards } from '@/features/orders/components/order-stats-cards'
 import { usePaymentListsData } from '../hooks/use-payment-lists-data'
+import { usePaymentStat } from '../hooks/use-payment-stat'
 import { getTasksColumns } from './payment-lists-columns'
 import { ReceiveListsSearch } from './payment-lists-search'
 
 const route = getRouteApi('/_authenticated/orders/payment-lists')
 
 export function PaymentListsTable() {
-  const { orders: data, isLoading, totalRecord, stats } =
-    usePaymentListsData()
+  const { orders: data, isLoading, totalRecord } = usePaymentListsData()
+  const { stats, isLoading: statsLoading } = usePaymentStat()
   const { lang } = useLanguage()
   const columns = useMemo(() => getTasksColumns(lang), [lang])
 
@@ -26,7 +27,7 @@ export function PaymentListsTable() {
       renderToolbar={(table) => (
         <>
           <ReceiveListsSearch table={table} />
-          <OrderStatsCards stats={stats} isLoading={isLoading} />
+          <OrderStatsCards stats={stats} isLoading={statsLoading} />
         </>
       )}
     />

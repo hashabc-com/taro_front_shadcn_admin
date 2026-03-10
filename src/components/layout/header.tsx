@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { CountryMerchantSelector } from '@/components/country-merchant-selector'
+import { CountryTime } from '@/components/country-time'
 import { LanguageSwitch } from '@/components/language-switch'
 // import { ConfigDrawer } from '@/components/config-drawer'
 import { ProfileDropdown } from '@/components/profile-dropdown'
@@ -55,6 +56,7 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
         <Search className='max-md:hidden' />
         <Separator orientation='vertical' className='h-6 max-md:hidden' />
         <CountryMerchantSelector />
+        <CountryTime />
         <div className='ms-auto flex shrink-0 items-center gap-2 sm:gap-2'>
           <LanguageSwitch />
           <Separator orientation='vertical' className='h-6 max-md:hidden' />

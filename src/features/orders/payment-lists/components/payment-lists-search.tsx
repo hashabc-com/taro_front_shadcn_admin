@@ -30,13 +30,15 @@ export function ReceiveListsSearch<TData>({
   const t = (key: string) => getTranslation(lang, key)
   const navigate = route.useNavigate()
   const search = route.useSearch()
+
   const [refNo, setRefNo] = useState(search.refNo || '')
   const [transId, setTransId] = useState(search.transId || '')
   const [status, setStatus] = useState(search.status || '')
   const [startTime, setStartTime] = useState(search.startTime || '')
   const [endTime, setEndTime] = useState(search.endTime || '')
+  const [mobile, setMobile] = useState(search.mobile || '')
 
-  const hasFilters = refNo || status || transId || startTime || endTime
+  const hasFilters = refNo || status || transId || startTime || endTime || mobile
   const handleSearch = () => {
     navigate({
       search: (prev) => ({
@@ -47,6 +49,7 @@ export function ReceiveListsSearch<TData>({
         status: status || undefined,
         startTime: startTime || undefined,
         endTime: endTime || undefined,
+        mobile: mobile || undefined,
         refresh: Date.now(),
       }),
     })
@@ -58,6 +61,7 @@ export function ReceiveListsSearch<TData>({
     setRefNo('')
     setTransId('')
     setStatus('')
+    setMobile('')
     navigate({
       search: (prev) => ({
         pageNum: 1,
@@ -69,12 +73,14 @@ export function ReceiveListsSearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期时间范围 (秒级) */}
-      <DateRangePicker
+      <div>
+        <DateRangePicker
         startTime={startTime}
         endTime={endTime}
         onStartTimeChange={setStartTime}
         onEndTimeChange={setEndTime}
       />
+      </div>
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           id='transId'
@@ -90,6 +96,15 @@ export function ReceiveListsSearch<TData>({
           placeholder={t('orders.paymentOrders.platformOrderNo')}
           value={refNo}
           onChange={(e) => setRefNo(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+        />
+      </div>
+      <div>
+        <Input
+          id='mobile'
+          placeholder={t('orders.receiveOrders.mobile')}
+          value={mobile}
+          onChange={(e) => setMobile(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>

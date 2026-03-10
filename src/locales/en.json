@@ -182,6 +182,9 @@
       "NG": "Nigeria",
       "PK": "Pakistan"
     },
+    "countryTime": {
+      "beijing": "Beijing"
+    },
     "validation": {
       "required": "This field is required",
       "googleCodeRequired": "Please enter Google auth code",

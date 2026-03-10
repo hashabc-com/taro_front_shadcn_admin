@@ -10,6 +10,7 @@ const paymentListsSearchSchema = createBaseSearchSchema({
   status: z.string().optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional(),
+  refresh: z.union([z.string(), z.number()]).optional().nullable(),
 })
 
 export type IPaymentListsSearch = z.infer<typeof paymentListsSearchSchema>

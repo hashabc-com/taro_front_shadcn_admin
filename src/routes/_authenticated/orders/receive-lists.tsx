@@ -12,6 +12,7 @@ const receiveListsSearchSchema = createBaseSearchSchema({
   status: z.string().optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional(),
+  refresh: z.union([z.string(), z.number()]).optional().nullable(),
 })
 
 export const Route = createFileRoute('/_authenticated/orders/receive-lists')({

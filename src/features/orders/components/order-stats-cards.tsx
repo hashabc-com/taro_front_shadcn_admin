@@ -26,7 +26,6 @@ type StatCardProps = {
 function StatCard({
   label,
   value,
-  subtitle,
   icon,
   iconBg,
   borderColor,
@@ -53,9 +52,6 @@ function StatCard({
         <p className='text-foreground text-lg font-bold leading-tight'>
           {value}
         </p>
-        {subtitle && (
-          <p className='text-muted-foreground text-[10px]'>{subtitle}</p>
-        )}
       </div>
     </div>
   )
@@ -83,9 +79,9 @@ export function OrderStatsCards({ stats, isLoading }: OrderStatsCardsProps) {
       {
         label: t('orders.stats.successRate'),
         value: isLoading ? '-' : `${stats.successRate}%`,
-        subtitle: isLoading
-          ? undefined
-          : `${stats.successOrders} / ${stats.totalOrders}`,
+        // subtitle: isLoading
+        //   ? undefined
+        //   : `${stats.successOrders} / ${stats.totalOrders}`,
         icon: <Percent className='h-4 w-4 text-amber-600' />,
         iconBg: 'bg-amber-100 dark:bg-amber-950',
         borderColor: 'border-l-amber-500',

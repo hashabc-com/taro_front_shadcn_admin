@@ -84,6 +84,9 @@ export const payInNotify = (data: { transId: string; status: number }) =>
 export const updateStatus = (data: FormData) =>
   http.post<ResponseData>(`/admin/collection/payInStatusQuery`,data)
 
+// 代付补单
+export const updatePayOutStatus = (data: FormData) =>
+  http.post<ResponseData>(`/admin/disbursement/payOutStatusQuery`, data)
 
 // 下载图片
 export const downloadImg = async (

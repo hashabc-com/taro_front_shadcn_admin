@@ -20,10 +20,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
-import {
-  OrderStatsCards,
-  type OrderStats,
-} from '@/features/orders/components/order-stats-cards'
+import { OrderStatsCards } from '@/features/orders/components/order-stats-cards'
+import { useReceiveStat } from '../hooks/use-receive-stat'
 import { type Order } from '../schema'
 import { getTasksColumns } from './receive-lists-columns'
 import { ReceiveListsSearch } from './receive-lists-search'
@@ -34,15 +32,14 @@ type DataTableProps = {
   data: Order[]
   totalRecord?: number
   isLoading: boolean
-  stats?: OrderStats
 }
 
 export function ReceiveListsTable({
   data,
   isLoading,
   totalRecord,
-  stats,
 }: DataTableProps) {
+  const { stats, isLoading: statsLoading } = useReceiveStat()
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const { lang } = useLanguage()
   const t = (key: string) => getTranslation(lang, key)
@@ -85,10 +82,7 @@ export function ReceiveListsTable({
   return (
     <div className='flex flex-1 flex-col gap-4'>
       <ReceiveListsSearch table={table} />
-      <OrderStatsCards
-        stats={stats ?? { totalOrders: 0, successOrders: 0, successRate: '0' }}
-        isLoading={isLoading}
-      />
+      <OrderStatsCards stats={stats} isLoading={statsLoading} />
       {isLoading ? (
         <div className='overflow-hidden rounded-md border'>
           <div className='space-y-3 p-4'>

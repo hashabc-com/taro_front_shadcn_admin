@@ -1,8 +1,9 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { CheckCircle, XCircle } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
+import { CheckCircle, RefreshCw, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import { payInNotify } from '@/api/common'
+import { payInNotify, updatePayOutStatus } from '@/api/common'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,6 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { paymentListsSchema, type IPaymentListsType } from '../schema'
 import { usePaymentLists } from './payment-lists-provider'
+import { useGoogleAuthDialog } from '@/hooks/use-google-auth-dialog'
 
 type DataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -25,6 +27,9 @@ export function DataTableRowActions<TData>({
   const task = paymentListsSchema.parse(row.original)
   const { t } = useLanguage()
   const { setOpen, setCurrentRow } = usePaymentLists()
+  const queryClient = useQueryClient()
+
+  const { dialog: googleAuthDialog, withGoogleAuth } = useGoogleAuthDialog()
 
   const handleNotify = async (record: IPaymentListsType, status: number) => {
     try {
@@ -43,7 +48,26 @@ export function DataTableRowActions<TData>({
     }
   }
 
+  const updateStatusHandle = (record: IPaymentListsType) => {
+      withGoogleAuth(async (gauthKey) => {
+        const data = new FormData()
+        data.append('transactionid', record.transactionid || '')
+        data.append('gauthKey', gauthKey)
+  
+        const res = await updatePayOutStatus(data)
+        if (res.code == 200) {
+          toast.success(t('common.statusUpdateSuccess'))
+          queryClient.invalidateQueries({ queryKey: ['orders','payment-lists'] })
+          queryClient.invalidateQueries({ queryKey: ['orders','payment-stat'] })
+        } else {
+          toast.error(res.message || t('common.statusUpdateFailed'))
+        }
+      })
+    }
+
   return (
+    <>
+    {googleAuthDialog}
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
@@ -55,6 +79,16 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[160px]'>
+        {task.status == '1' && (
+            <DropdownMenuItem
+              onClick={() => {
+                updateStatusHandle(task)
+              }}
+            >
+              {t('orders.paymentOrders.updateStatus')}
+              <RefreshCw className='ml-auto h-4 w-4' />
+            </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           onClick={() => {
             handleNotify(task, 0)
@@ -82,5 +116,6 @@ export function DataTableRowActions<TData>({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+    </>
   )
 }

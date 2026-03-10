@@ -58,6 +58,7 @@ export function DataTableRowActions<TData>({
       if (res.code == 200) {
         toast.success(t('common.statusUpdateSuccess'))
         queryClient.invalidateQueries({ queryKey: ['orders', 'receive-lists'] })
+        queryClient.invalidateQueries({ queryKey: ['orders','receive-stat'] })
       } else {
         toast.error(res.message || t('common.statusUpdateFailed'))
       }
