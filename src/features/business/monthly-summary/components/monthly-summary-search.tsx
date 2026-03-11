@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { zhCN } from 'date-fns/locale'
 import { CalendarIcon, Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useSearchForm } from '@/hooks/use-search-form'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -15,11 +15,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { DataTableViewOptions } from '@/components/data-table'
-
-type MonthRange = {
-  from: Date | undefined
-  to: Date | undefined
-}
 
 type IMonthlySummarySearchProps<TData> = {
   table: Table<TData>
@@ -33,39 +28,14 @@ export function MonthlySummarySearch<TData>({
   const navigate = route.useNavigate()
   const search = route.useSearch()
   const { t } = useLanguage()
-  const [businessName, setBusinessName] = useState(search.businessName || '')
-  const [monthRange, setMonthRange] = useState<MonthRange>({
-    from: search.startMonth ? new Date(search.startMonth + '-01') : undefined,
-    to: search.endMonth ? new Date(search.endMonth + '-01') : undefined,
+  const { fields, setField, setFields, handleSearch, handleReset, hasFilters } = useSearchForm({
+    search,
+    navigate,
+    fieldKeys: ['businessName', 'startMonth', 'endMonth'] as const,
   })
 
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        businessName: businessName || undefined,
-        startMonth: monthRange.from
-          ? format(monthRange.from, 'yyyy-MM')
-          : undefined,
-        endMonth: monthRange.to ? format(monthRange.to, 'yyyy-MM') : undefined,
-        pageNum: 1,
-        refresh: Date.now(),
-      }),
-    })
-  }
-
-  const handleReset = () => {
-    setBusinessName('')
-    setMonthRange({ from: undefined, to: undefined })
-    navigate({
-      search: (prev) => ({
-        pageNum: 1,
-        pageSize: prev.pageSize,
-      }),
-    })
-  }
-
-  const hasFilters = businessName || monthRange.from || monthRange.to
+  const monthFrom = fields.startMonth ? new Date(fields.startMonth + '-01') : undefined
+  const monthTo = fields.endMonth ? new Date(fields.endMonth + '-01') : undefined
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
@@ -73,8 +43,8 @@ export function MonthlySummarySearch<TData>({
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           placeholder={t('business.merchantBind.businessUserName')}
-          value={businessName}
-          onChange={(e) => setBusinessName(e.target.value)}
+          value={fields.businessName}
+          onChange={(e) => setField('businessName', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -87,18 +57,15 @@ export function MonthlySummarySearch<TData>({
               variant='outline'
               className={cn(
                 'w-full justify-start text-left font-normal',
-                !monthRange.from && 'text-muted-foreground'
+                !fields.startMonth && 'text-muted-foreground'
               )}
             >
               <CalendarIcon className='mr-2 h-4 w-4' />
-              {monthRange.from ? (
-                monthRange.to ? (
-                  <>
-                    {format(monthRange.from, 'yyyy-MM', { locale: zhCN })} -{' '}
-                    {format(monthRange.to, 'yyyy-MM', { locale: zhCN })}
-                  </>
+              {fields.startMonth ? (
+                fields.endMonth ? (
+                  <>{fields.startMonth} - {fields.endMonth}</>
                 ) : (
-                  format(monthRange.from, 'yyyy-MM', { locale: zhCN })
+                  fields.startMonth
                 )
               ) : (
                 <span>{t('common.selectMonthRange')}</span>
@@ -108,12 +75,12 @@ export function MonthlySummarySearch<TData>({
           <PopoverContent className='w-auto p-0' align='start'>
             <Calendar
               mode='range'
-              defaultMonth={monthRange.from}
-              selected={{ from: monthRange.from, to: monthRange.to }}
+              defaultMonth={monthFrom}
+              selected={{ from: monthFrom, to: monthTo }}
               onSelect={(range) => {
-                setMonthRange({
-                  from: range?.from,
-                  to: range?.to,
+                setFields({
+                  startMonth: range?.from ? format(range.from, 'yyyy-MM') : '',
+                  endMonth: range?.to ? format(range.to, 'yyyy-MM') : '',
                 })
               }}
               numberOfMonths={2}

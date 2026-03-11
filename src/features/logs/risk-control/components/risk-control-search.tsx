@@ -1,8 +1,8 @@
-import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { Search, X } from 'lucide-react'
 import { useLanguage } from '@/context/language-provider'
+import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -25,49 +25,27 @@ export function RiskControlSearch({ table }: RiskControlSearchProps) {
   const navigate = route.useNavigate()
   const search = route.useSearch()
   const { t } = useLanguage()
-  const [ruleName, setRuleName] = useState(search.ruleName || '')
-  const [businessType, setBusinessType] = useState<string | undefined>(
-    search.businessType
-  )
 
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        ruleName: ruleName || undefined,
-        businessType: businessType as 'PAY_PAYIN' | 'PAY_PAYOUT' | undefined,
-        pageNum: 1,
-        refresh: Date.now(),
-      }),
+  const { fields, setField, handleSearch, handleReset, hasFilters } =
+    useSearchForm({
+      search,
+      navigate,
+      fieldKeys: ['ruleName', 'businessType'] as const,
     })
-  }
-
-  const handleReset = () => {
-    setRuleName('')
-    setBusinessType('')
-    navigate({
-      search: (prev) => ({
-        pageNum: 1,
-        pageSize: prev.pageSize,
-      }),
-    })
-  }
-
-  const hasFilters = ruleName || businessType
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           placeholder={t('logs.riskControl.ruleName')}
-          value={ruleName}
-          onChange={(e) => setRuleName(e.target.value)}
+          value={fields.ruleName}
+          onChange={(e) => setField('ruleName', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
 
       <div className='max-w-[160px]'>
-        <Select value={businessType} onValueChange={setBusinessType}>
+        <Select value={fields.businessType} onValueChange={(v) => setField('businessType', v)}>
           <SelectTrigger>
             <SelectValue placeholder={t('logs.riskControl.businessType')} />
           </SelectTrigger>

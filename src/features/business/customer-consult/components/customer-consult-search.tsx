@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import { Search, X } from 'lucide-react'
 import { useLanguage } from '@/context/language-provider'
+import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
@@ -12,49 +12,20 @@ export function CustomerConsultSearch() {
   const navigate = route.useNavigate()
   const search = route.useSearch()
 
-  const [contactPerson, setContactPerson] = useState(
-    search.contactPerson || ''
-  )
-  const [phone, setPhone] = useState(search.phone || '')
-  const [email, setEmail] = useState(search.email || '')
-  const [company, setCompany] = useState(search.company || '')
-
-  const hasFilters = contactPerson || phone || email || company
-
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        pageNum: 1, // 重置到第一页
-        contactPerson: contactPerson || undefined,
-        phone: phone || undefined,
-        email: email || undefined,
-        company: company || undefined,
-        refresh: Date.now(),
-      }),
+  const { fields, setField, handleSearch, handleReset, hasFilters } =
+    useSearchForm({
+      search,
+      navigate,
+      fieldKeys: ['contactPerson', 'phone', 'email', 'company'] as const,
     })
-  }
-
-  const handleReset = () => {
-    setContactPerson('')
-    setPhone('')
-    setEmail('')
-    setCompany('')
-    navigate({
-      search: (prev) => ({
-        pageNum: 1,
-        pageSize: prev.pageSize,
-      }),
-    })
-  }
 
   return (
     <div className='flex flex-wrap items-center gap-2'>
       <div className='max-w-[180px] min-w-[120px] flex-1'>
         <Input
           placeholder={t('business.customerConsult.contactPerson')}
-          value={contactPerson}
-          onChange={(e) => setContactPerson(e.target.value)}
+          value={fields.contactPerson}
+          onChange={(e) => setField('contactPerson', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -62,8 +33,8 @@ export function CustomerConsultSearch() {
       <div className='max-w-[180px] min-w-[120px] flex-1'>
         <Input
           placeholder={t('business.customerConsult.phone')}
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          value={fields.phone}
+          onChange={(e) => setField('phone', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -71,8 +42,8 @@ export function CustomerConsultSearch() {
       <div className='max-w-[180px] min-w-[120px] flex-1'>
         <Input
           placeholder={t('business.customerConsult.email')}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={fields.email}
+          onChange={(e) => setField('email', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -80,8 +51,8 @@ export function CustomerConsultSearch() {
       <div className='max-w-[180px] min-w-[120px] flex-1'>
         <Input
           placeholder={t('business.customerConsult.company')}
-          value={company}
-          onChange={(e) => setCompany(e.target.value)}
+          value={fields.company}
+          onChange={(e) => setField('company', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>

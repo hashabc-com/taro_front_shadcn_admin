@@ -1,8 +1,8 @@
-import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { RefreshCcw } from 'lucide-react'
 import { useLanguage } from '@/context/language-provider'
+import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -27,55 +27,27 @@ export function MerchantRequestSearch<TData>({
   const { t } = useLanguage()
   const search = route.useSearch()
 
-  const [transactionId, setTransactionId] = useState(search.transactionId || '')
-  const [transactionType, setTransactionType] = useState<string | undefined>(
-    search.transactionType
-  )
-  const [status, setStatus] = useState<string | undefined>(
-    search.status !== undefined ? String(search.status) : undefined
-  )
-
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        transactionId: transactionId || undefined,
-        transactionType: transactionType || undefined,
-        status: status !== undefined ? Number(status) : undefined,
-        pageNum: 1,
-        refresh: Date.now(),
-      }),
+  const { fields, setField, handleSearch, handleReset, hasFilters } =
+    useSearchForm({
+      search,
+      navigate,
+      fieldKeys: ['transactionId', 'transactionType', 'status'] as const,
     })
-  }
-
-  const handleReset = () => {
-    setTransactionId('')
-    setTransactionType('')
-    setStatus('')
-    navigate({
-      search: (prev) => ({
-        pageNum: 1,
-        pageSize: prev.pageSize,
-      }),
-    })
-  }
-
-  const hasFilters = transactionId || transactionType || status
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
       <div className='max-w-[280px] min-w-[180px]'>
         <Input
           placeholder={t('logs.merchantRequest.transactionId')}
-          value={transactionId}
-          onChange={(e) => setTransactionId(e.target.value)}
+          value={fields.transactionId}
+          onChange={(e) => setField('transactionId', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
 
       <Select
-        value={transactionType}
-        onValueChange={setTransactionType}
+        value={fields.transactionType}
+        onValueChange={(v) => setField('transactionType', v)}
       >
         <SelectTrigger className='h-9 w-[160px]'>
           <SelectValue
@@ -93,8 +65,8 @@ export function MerchantRequestSearch<TData>({
       </Select>
 
       <Select
-        value={status}
-        onValueChange={setStatus}
+        value={fields.status}
+        onValueChange={(v) => setField('status', v)}
       >
         <SelectTrigger className='h-9 w-[160px]'>
           <SelectValue placeholder={t('logs.merchantRequest.status')} />

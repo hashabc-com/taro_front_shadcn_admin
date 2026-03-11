@@ -1,8 +1,8 @@
-import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import type { Table } from '@tanstack/react-table'
 import { Search, X } from 'lucide-react'
 import { useLanguage } from '@/context/language-provider'
+import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -27,53 +27,28 @@ export function RuleConfigSearch<TData>({
   const navigate = route.useNavigate()
   const search = route.useSearch()
   const { t } = useLanguage()
-  const [ruleName, setRuleName] = useState(search.ruleName || '')
-  const [sceneCode, setSceneCode] = useState<string | undefined>(
-    search.sceneCode || undefined
-  )
-  const [status, setStatus] = useState<string | undefined>(search.status)
 
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        pageNum: 1,
-        ruleName: ruleName || undefined,
-        sceneCode: sceneCode || undefined,
-        status: status,
-        refresh: Date.now(),
-      }),
+  const { fields, setField, handleSearch, handleReset, hasFilters } =
+    useSearchForm({
+      search,
+      navigate,
+      fieldKeys: ['ruleName', 'sceneCode', 'status'] as const,
     })
-  }
-
-  const handleReset = () => {
-    setRuleName('')
-    setSceneCode('')
-    setStatus('')
-    navigate({
-      search: (prev) => ({
-        pageNum: 1,
-        pageSize: prev.pageSize,
-      }),
-    })
-  }
-
-  const hasFilters = ruleName || sceneCode || status
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
       <div className='flex flex-col gap-2'>
         <Input
           placeholder={t('config.riskControlRule.ruleName')}
-          value={ruleName}
-          onChange={(e) => setRuleName(e.target.value)}
+          value={fields.ruleName}
+          onChange={(e) => setField('ruleName', e.target.value)}
           className='w-[160px]'
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
 
       <div className='flex flex-col gap-2'>
-        <Select value={sceneCode} onValueChange={setSceneCode}>
+        <Select value={fields.sceneCode} onValueChange={(v) => setField('sceneCode', v)}>
           <SelectTrigger className='w-[160px]'>
             <SelectValue placeholder={t('config.riskControlRule.ruleScene')} />
           </SelectTrigger>
@@ -89,8 +64,8 @@ export function RuleConfigSearch<TData>({
 
       <div className='flex flex-col gap-2'>
         <Select
-          value={status?.toString()}
-          onValueChange={(value) => setStatus(value)}
+          value={fields.status}
+          onValueChange={(v) => setField('status', v)}
         >
           <SelectTrigger className='w-[120px]'>
             <SelectValue placeholder={t('config.riskControlRule.status')} />
@@ -107,7 +82,7 @@ export function RuleConfigSearch<TData>({
           <Search className='mr-2 h-4 w-4' />
           {t('common.search')}
         </Button>
-        {!!hasFilters && (
+        {hasFilters && (
           <Button onClick={handleReset} variant='outline' size='sm'>
             <X className='mr-2 h-4 w-4' />
             {t('common.reset')}

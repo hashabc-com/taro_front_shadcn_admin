@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
@@ -6,6 +5,7 @@ import { useCountryStore, useMerchantStore } from '@/stores'
 import { Search, X } from 'lucide-react'
 import { getProductDict } from '@/api/common'
 import { useLanguage } from '@/context/language-provider'
+import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { Input } from '@/components/ui/input'
@@ -35,14 +35,12 @@ export function ReceiveListsSearch<TData>({
   const { selectedCountry } = useCountryStore()
   const { selectedMerchant } = useMerchantStore()
 
-  const [referenceno, setMerchantOrderNo] = useState(search.referenceno || '')
-  const [transId, setTransId] = useState(search.transId || '')
-  const [mobile, setMobile] = useState(search.mobile || '')
-  const [status, setStatus] = useState(search.status || '')
-  const [pickupCenter, setPickupCenter] = useState(search.pickupCenter || '')
-  const [startTime, setStartTime] = useState(search.startTime || '')
-  const [endTime, setEndTime] = useState(search.endTime || '')
-  const [userName, setUserName] = useState(search.userName || '')
+  const { fields, setField, handleSearch, handleReset, hasFilters } =
+    useSearchForm({
+      search,
+      navigate,
+      fieldKeys: ['referenceno', 'transId', 'mobile', 'status', 'pickupCenter', 'startTime', 'endTime', 'userName'] as const,
+    })
 
   const { data } = useQuery({
     queryKey: ['product-dict', selectedCountry?.code, selectedMerchant?.appid],
@@ -54,67 +52,22 @@ export function ReceiveListsSearch<TData>({
 
   const statuses = getStatuses(t)
 
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        pageNum: 1,
-        referenceno: referenceno || undefined,
-        transId: transId || undefined,
-        mobile: mobile || undefined,
-        status: status || undefined,
-        pickupCenter: pickupCenter || undefined,
-        startTime: startTime || undefined,
-        endTime: endTime || undefined,
-        userName: userName || undefined,
-        refresh: Date.now(),
-      }),
-    })
-  }
-
-  const handleReset = () => {
-    setMerchantOrderNo('')
-    setTransId('')
-    setMobile('')
-    setStatus('')
-    setPickupCenter('')
-    setStartTime('')
-    setEndTime('')
-    setUserName('')
-    navigate({
-      search: (prev) => ({
-        pageNum: 1,
-        pageSize: prev.pageSize,
-      }),
-    })
-  }
-
-  const hasFilters =
-    pickupCenter ||
-    referenceno ||
-    mobile ||
-    transId ||
-    status ||
-    startTime ||
-    endTime || 
-    userName
-
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期时间范围 (秒级) */}
       <div><DateRangePicker
-        startTime={startTime}
-        endTime={endTime}
-        onStartTimeChange={setStartTime}
-        onEndTimeChange={setEndTime}
+        startTime={fields.startTime}
+        endTime={fields.endTime}
+        onStartTimeChange={(v) => setField('startTime', v)}
+        onEndTimeChange={(v) => setField('endTime', v)}
       /></div>
       {/* 商户订单号 */}
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           id='referenceno'
           placeholder={t('orders.receiveOrders.merchantOrderNo')}
-          value={referenceno}
-          onChange={(e) => setMerchantOrderNo(e.target.value)}
+          value={fields.referenceno}
+          onChange={(e) => setField('referenceno', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -122,8 +75,8 @@ export function ReceiveListsSearch<TData>({
         <Input
           id='transId'
           placeholder={t('orders.receiveOrders.platformOrderNo')}
-          value={transId}
-          onChange={(e) => setTransId(e.target.value)}
+          value={fields.transId}
+          onChange={(e) => setField('transId', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -131,8 +84,8 @@ export function ReceiveListsSearch<TData>({
         <Input
           id='mobile'
           placeholder={t('orders.receiveOrders.mobile')}
-          value={mobile}
-          onChange={(e) => setMobile(e.target.value)}
+          value={fields.mobile}
+          onChange={(e) => setField('mobile', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -140,13 +93,13 @@ export function ReceiveListsSearch<TData>({
         <Input
           id='userName'
           placeholder={t('signIn.username')}
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
+          value={fields.userName}
+          onChange={(e) => setField('userName', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
       {/* 交易状态 */}
-      <Select value={status} onValueChange={setStatus}>
+      <Select value={fields.status} onValueChange={(v) => setField('status', v)}>
         <SelectTrigger id='status' clearable>
           <SelectValue placeholder={t('orders.receiveOrders.status')} />
         </SelectTrigger>
@@ -163,7 +116,7 @@ export function ReceiveListsSearch<TData>({
       </Select>
       {/* 产品 */}
       <div className='max-w-[120px]'>
-        <Select value={pickupCenter} onValueChange={setPickupCenter}>
+        <Select value={fields.pickupCenter} onValueChange={(v) => setField('pickupCenter', v)}>
           <SelectTrigger id='pickupCenter' clearable>
             <SelectValue placeholder={t('common.product')} />
           </SelectTrigger>

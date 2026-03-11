@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { Search, X } from 'lucide-react'
@@ -15,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
+import { useSearchForm } from '@/hooks/use-search-form'
 import { statuses } from '../schema'
 
 const route = getRouteApi('/_authenticated/orders/payment-lists')
@@ -31,67 +31,29 @@ export function ReceiveListsSearch<TData>({
   const navigate = route.useNavigate()
   const search = route.useSearch()
 
-  const [refNo, setRefNo] = useState(search.refNo || '')
-  const [transId, setTransId] = useState(search.transId || '')
-  const [status, setStatus] = useState(search.status || '')
-  const [startTime, setStartTime] = useState(search.startTime || '')
-  const [endTime, setEndTime] = useState(search.endTime || '')
-  const [mobile, setMobile] = useState(search.mobile || '')
-  const [userName, setUserName] = useState(search.userName || '')
-  const [accountNumber, setAccountNumber] = useState(search.accountNumber || '')
-  const hasFilters = refNo || status || transId || startTime || endTime || mobile || userName || accountNumber
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        pageNum: 1,
-        refNo: refNo || undefined,
-        transId: transId || undefined,
-        status: status || undefined,
-        startTime: startTime || undefined,
-        endTime: endTime || undefined,
-        mobile: mobile || undefined,
-        userName: userName || undefined,
-        accountNumber:  accountNumber || undefined,
-        refresh: Date.now(),
-      }),
-    })
-  }
-
-  const handleReset = () => {
-    setStartTime('')
-    setEndTime('')
-    setRefNo('')
-    setTransId('')
-    setStatus('')
-    setMobile('')
-    setUserName('')
-    setAccountNumber('')
-    navigate({
-      search: (prev) => ({
-        pageNum: 1,
-        pageSize: prev.pageSize,
-      }),
-    })
-  }
+  const { fields, setField, handleSearch, handleReset, hasFilters } = useSearchForm({
+    search,
+    navigate,
+    fieldKeys: ['refNo', 'transId', 'status', 'startTime', 'endTime', 'mobile', 'userName', 'accountNumber'] as const,
+  })
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期时间范围 (秒级) */}
       <div>
         <DateRangePicker
-        startTime={startTime}
-        endTime={endTime}
-        onStartTimeChange={setStartTime}
-        onEndTimeChange={setEndTime}
+        startTime={fields.startTime}
+        endTime={fields.endTime}
+        onStartTimeChange={(v) => setField('startTime', v)}
+        onEndTimeChange={(v) => setField('endTime', v)}
       />
       </div>
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           id='transId'
           placeholder={t('orders.paymentOrders.merchantOrderNo')}
-          value={transId}
-          onChange={(e) => setTransId(e.target.value)}
+          value={fields.transId}
+          onChange={(e) => setField('transId', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -99,8 +61,8 @@ export function ReceiveListsSearch<TData>({
         <Input
           id='refNo'
           placeholder={t('orders.paymentOrders.platformOrderNo')}
-          value={refNo}
-          onChange={(e) => setRefNo(e.target.value)}
+          value={fields.refNo}
+          onChange={(e) => setField('refNo', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -108,8 +70,8 @@ export function ReceiveListsSearch<TData>({
         <Input
           id='mobile'
           placeholder={t('orders.receiveOrders.mobile')}
-          value={mobile}
-          onChange={(e) => setMobile(e.target.value)}
+          value={fields.mobile}
+          onChange={(e) => setField('mobile', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -126,8 +88,8 @@ export function ReceiveListsSearch<TData>({
         <Input
           id='userName'
           placeholder={t('signIn.username')}
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
+          value={fields.userName}
+          onChange={(e) => setField('userName', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
@@ -135,15 +97,15 @@ export function ReceiveListsSearch<TData>({
         <Input
           id='accountNumber'
           placeholder={t('orders.paymentOrders.receivingAccount')}
-          value={accountNumber}
-          onChange={(e) => setAccountNumber(e.target.value)}
+          value={fields.accountNumber}
+          onChange={(e) => setField('accountNumber', e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
       </div>
 
       {/* 交易状态 */}
       <div>
-        <Select value={status} onValueChange={setStatus}>
+        <Select value={fields.status} onValueChange={(v) => setField('status', v)}>
           <SelectTrigger id='status' clearable>
             <SelectValue placeholder={t('orders.paymentOrders.status')} />
           </SelectTrigger>

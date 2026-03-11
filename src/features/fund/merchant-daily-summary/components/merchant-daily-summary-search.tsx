@@ -1,35 +1,16 @@
-import { useState } from 'react'
-import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
-import { zhCN } from 'date-fns/locale'
-import { CalendarIcon, Search, X } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from '@/components/ui/select'
+import { DateRangePicker } from '@/components/date-range-picker'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
+import { useSearchForm } from '@/hooks/use-search-form'
 
 const route = getRouteApi('/_authenticated/fund/merchant-daily-summary')
 
 type MerchantDailySummarySearchProps<TData> = {
   table: Table<TData>
-}
-
-type DateRange = {
-  from: Date | undefined
-  to: Date | undefined
 }
 
 export function MerchantDailySummarySearch<TData>({
@@ -38,81 +19,24 @@ export function MerchantDailySummarySearch<TData>({
   const navigate = route.useNavigate()
   const search = route.useSearch()
   const { t } = useLanguage()
-  const [dateRange, setDateRange] = useState<DateRange>({
-    from: search.startTime ? new Date(search.startTime) : undefined,
-    to: search.endTime ? new Date(search.endTime) : undefined,
-  })
 
-  const hasFilters = dateRange.from || dateRange.to
-
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        pageNum: 1,
-        startTime: dateRange.from
-          ? format(dateRange.from, 'yyyy-MM-dd')
-          : undefined,
-        endTime: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-        refresh: Date.now(),
-      }),
+  const { fields, setField, handleSearch, handleReset, hasFilters } =
+    useSearchForm({
+      search,
+      navigate,
+      fieldKeys: ['startTime', 'endTime'] as const,
     })
-  }
-
-  const handleReset = () => {
-    setDateRange({ from: undefined, to: undefined })
-    navigate({
-      search: (prev) => ({
-        pageNum: 1,
-        pageSize: prev.pageSize,
-      }),
-    })
-  }
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期范围 */}
-      <div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant='outline'
-              className='w-full justify-start text-left font-normal'
-            >
-              <CalendarIcon className='text-muted-foreground mr-2 h-4 w-4' />
-              {dateRange.from ? (
-                dateRange.to ? (
-                  <>
-                    {format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })} -{' '}
-                    {format(dateRange.to, 'yyyy-MM-dd', { locale: zhCN })}
-                  </>
-                ) : (
-                  format(dateRange.from, 'yyyy-MM-dd', { locale: zhCN })
-                )
-              ) : (
-                <span className='text-muted-foreground'>
-                  {t('common.selectDateRange')}
-                </span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className='w-auto p-0' align='start'>
-            <Calendar
-              mode='range'
-              defaultMonth={dateRange.from}
-              selected={{ from: dateRange.from, to: dateRange.to }}
-              onSelect={(range) => {
-                setDateRange({
-                  from: range?.from,
-                  to: range?.to,
-                })
-              }}
-              numberOfMonths={2}
-              locale={zhCN}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+      <DateRangePicker
+        mode='date'
+        startTime={fields.startTime}
+        endTime={fields.endTime}
+        onStartTimeChange={(v) => setField('startTime', v)}
+        onEndTimeChange={(v) => setField('endTime', v)}
+      />
 
       {/* 操作按钮 */}
       <div className='mt-0.5 flex gap-2'>

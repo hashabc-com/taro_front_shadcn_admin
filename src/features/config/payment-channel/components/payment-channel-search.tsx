@@ -12,7 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
+import { useSearchForm } from '@/hooks/use-search-form'
 // import { queryClient } from '@/main'
 import { type Country } from '@/stores/country-store'
 // import {type ResponseData } from '@/lib/http'
@@ -30,61 +31,37 @@ export function PaymentChannelSearch(_props: PaymentChannelSearchProps) {
   const { setOpen } = usePaymentChannel()
   const navigate = route.useNavigate()
   const { t } = useLanguage()
-  const [country, setCountry] = useState<string | undefined>(undefined)
-  const [channelCode, setChannelCode] = useState<string>('')
-  
+  const { fields, setField, handleSearch, handleReset, hasFilters } = useSearchForm({
+    search: route.useSearch(),
+    navigate,
+    fieldKeys: ['country', 'channelCode'] as const,
+  })
+
   const { data: countriesData } = useCountries()
 
   const countries = useMemo<Country[]>(
       () => (countriesData?.result || countriesData?.data || []) as Country[],
       [countriesData]
   )
-
-
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        pageNum: 1,
-        country,
-        channelCode,
-        refresh: Date.now(),
-      }),
-    })
-  }
-
-  const handleReset = () => {
-    setCountry('')
-    setChannelCode('')
-    navigate({
-      search: (prev) => ({
-        pageNum: 1,
-        pageSize: prev.pageSize,
-      }),
-    })
-  }
-
-  const hasFilters = country || channelCode
-  console.log('country=====>222',country)
   return (
     <div className='flex items-center gap-2'>
       <Select
-        value={country}
-        onValueChange={setCountry}
+        value={fields.country}
+        onValueChange={(v) => setField('country', v)}
       >
         <SelectTrigger className='h-9 w-full sm:w-[140px]' clearable={false}>
           <SelectValue placeholder='选择国家'>
-            {country && (
+            {fields.country && (
               <div className='flex items-center gap-2'>
                 <img
-                  src={`/images/${country}.svg`}
-                  alt={country}
+                  src={`/images/${fields.country}.svg`}
+                  alt={fields.country}
                   className='h-4 w-4'
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'
                   }}
                 />
-                <span>{t(`common.countrys.${country}`)}</span>
+                <span>{t(`common.countrys.${fields.country}`)}</span>
               </div>
             )}
           </SelectValue>
@@ -110,8 +87,8 @@ export function PaymentChannelSearch(_props: PaymentChannelSearchProps) {
       <div className='flex flex-col gap-2'>
         <Input
           placeholder={t('config.paymentChannel.channelCode')}
-          value={channelCode}
-          onChange={(e) => setChannelCode(e.target.value)}
+          value={fields.channelCode}
+          onChange={(e) => setField('channelCode', e.target.value)}
           className='w-[160px]'
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />

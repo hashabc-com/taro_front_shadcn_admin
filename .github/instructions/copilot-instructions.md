@@ -296,6 +296,61 @@ export const {
 - `currentRow: TRow | null` — 当前操作的行数据
 - `setCurrentRow(row)` — 设置当前行
 
+#### useSearchForm (搜索组件必须使用)
+
+**Location**: `src/hooks/use-search-form.ts`
+
+搜索组件**必须使用** `useSearchForm` hook，消除重复的 `useState` / `handleSearch` / `handleReset` 样板代码。新增搜索字段只需在 `fieldKeys` 数组中添加一个字符串。
+
+**标准用法**:
+```tsx
+import { getRouteApi } from '@tanstack/react-router'
+import { useSearchForm } from '@/hooks/use-search-form'
+
+const route = getRouteApi('/_authenticated/domain/feature-name')
+
+export function XxxSearch() {
+  const search = route.useSearch()
+  const navigate = route.useNavigate()
+
+  const { fields, setField, handleSearch, handleReset, hasFilters } =
+    useSearchForm({
+      search,
+      navigate,
+      fieldKeys: ['keyword', 'status', 'startTime', 'endTime'] as const,
+    })
+
+  return (
+    <div className='flex flex-wrap items-center gap-3'>
+      <Input value={fields.keyword} onChange={(e) => setField('keyword', e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSearch()} />
+      <DateRangePicker mode='date'
+        startTime={fields.startTime} endTime={fields.endTime}
+        onStartTimeChange={(v) => setField('startTime', v)}
+        onEndTimeChange={(v) => setField('endTime', v)} />
+      <Button onClick={handleSearch}>{t('common.search')}</Button>
+      {hasFilters && <Button onClick={handleReset}>{t('common.reset')}</Button>}
+    </div>
+  )
+}
+```
+
+**Hook 返回值**:
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `fields` | `Record<K, string>` | 所有字段当前值 |
+| `setField` | `(key, value) => void` | 更新单个字段 |
+| `setFields` | `(patch) => void` | 批量更新字段 |
+| `handleSearch` | `() => void` | 执行搜索（空值自动转 undefined） |
+| `handleReset` | `() => void` | 重置所有字段并清除 URL 参数 |
+| `hasFilters` | `boolean` | 是否有任何非空筛选条件 |
+
+**⚠️ 关键规则**:
+- 新建搜索组件时**禁止**手写 `useState` + `handleSearch` + `handleReset` 样板
+- 日期范围用 `DateRangePicker` 组件（`src/components/date-range-picker.tsx`），字段名加入 `fieldKeys`
+- 额外按钮（导出/创建/刷新）、`useQuery`、`DataTableViewOptions` 等保持独立不受影响
+- 添加新搜索字段只需：① `fieldKeys` 加字符串 ② JSX 加输入控件绑定 `fields.xxx` / `setField`
+
 ### 10. shadcn/ui Components
 
 **Location**: `src/components/ui/*` (generated via CLI)
@@ -354,7 +409,8 @@ pnpm lint --fix       # Auto-fix ESLint issues
 5. Define schema types in `schema.ts` (use Zod for validation)
 6. **⚠️ 表格页面必须优先使用 `FeatureDataTable`** — 参考 Section 9，不要手动编写 `useReactTable` + 骨架屏 + 表格渲染 + 分页的样板代码
 7. **⚠️ 需要跨组件共享弹窗/行状态时，使用 `createFeatureProvider`** — 参考 Section 9，不要手动编写 Provider + Context + Hook
-8. Verify all text uses `t()` function - no hardcoded Chinese/English strings
+8. **⚠️ 搜索组件必须使用 `useSearchForm`** — 参考 Section 9，不要手写 `useState` + `handleSearch` + `handleReset` 样板代码
+9. Verify all text uses `t()` function - no hardcoded Chinese/English strings
 
 ### API Integration
 
