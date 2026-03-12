@@ -170,7 +170,7 @@ export function DataTableRowActions<TData>({
         exchangeRate: values.exchangeRate,
         costRate: values.costRate,
         rechargeAmount: +data.rechargeAmount.replace(/,/g, ''),
-        finalAmount: calculatedAmount,
+        finalAmount: data.rechargeAmountTemp,
         withdrawalType: data.withdrawalType || '',
         type: data.type,
         status: 1,
@@ -310,7 +310,7 @@ export function DataTableRowActions<TData>({
                   <InputGroupAddon align='inline-end'>
                     {data.type == '充值'
                       ? data?.currencyType || ''
-                      : data.withdrawalType}
+                      : selectedCountry?.currency}
                   </InputGroupAddon>
                 </InputGroup>
               </div>

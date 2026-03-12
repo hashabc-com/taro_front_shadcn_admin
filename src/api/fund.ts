@@ -9,7 +9,7 @@ interface IRechargeWithdrawal {
   id: number
   exchangeRate?: string
   rechargeAmount: number
-  finalAmount?: string
+  finalAmount?: string | number
   withdrawalType: string
   type?: string
   status: number

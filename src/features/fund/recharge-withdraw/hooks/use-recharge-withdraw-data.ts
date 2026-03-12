@@ -36,6 +36,7 @@ export function useRechargeWithdrawData() {
       data?.result?.listRecord?.map((item: IRechargeWithdrawType) => ({
         ...item,
         rechargeAmount: convertAmount(item.rechargeAmount, false),
+        rechargeAmountTemp: item.rechargeAmount,
         finalAmount: convertAmount(item.finalAmount, false),
       })) || [],
     [data?.result?.listRecord, convertAmount]
