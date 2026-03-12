@@ -86,6 +86,12 @@ export const deleteSubChannel = (params: { id: number }) =>
     autoAddCountry: false,
   })
 
+// 更新子渠道状态
+export const updateSubChannelStatus = (data: { id: number; subChannelStatus: number }) =>
+  http.post('/admin/paymentChannel/updateSubStatus', data, {
+    autoAddCountry: false,
+  })
+
 // ======================== 商户渠道配置 API (旧) ========================
 
 // 获取支付渠道列表

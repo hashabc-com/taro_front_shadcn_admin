@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Trash2, Plus } from 'lucide-react'
+import { Trash2, Plus, PowerOff, Power } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   getSubChannelList,
   addSubChannel,
   deleteSubChannel,
+  updateSubChannelStatus,
 } from '@/api/config'
 import { useLanguage } from '@/context/language-provider'
 import {
@@ -77,6 +78,10 @@ export function SubChannelDrawer() {
     null
   )
   const [showAddDialog, setShowAddDialog] = useState(false)
+  const [showStatusDialog, setShowStatusDialog] = useState(false)
+  const [statusTarget, setStatusTarget] = useState<PaymentSubChannel | null>(
+    null
+  )
 
   const isOpen = open === 'subChannel'
 
@@ -124,6 +129,31 @@ export function SubChannelDrawer() {
     },
   })
 
+  // 更新子渠道状态
+  const statusMutation = useMutation({
+    mutationFn: (params: { id: number; subChannelStatus: number }) => {
+      // const formData = new FormData()
+      // formData.append('id', params.id.toString())
+      // formData.append('subChannelStatus', params.subChannelStatus.toString())
+      return updateSubChannelStatus(params)
+    },
+    onSuccess: (res) => {
+      if (res.code == 200) {
+        toast.success(t('common.statusUpdateSuccess'))
+        queryClient.invalidateQueries({
+          queryKey: ['sub-channels', currentRow?.channelCode],
+        })
+        setShowStatusDialog(false)
+        setStatusTarget(null)
+      } else {
+        toast.error(res.message || t('common.operationFailed'))
+      }
+    },
+    onError: (error: unknown) => {
+      toast.error((error as Error).message || t('common.operationFailed'))
+    },
+  })
+
   // 删除子渠道
   const deleteMutation = useMutation({
     mutationFn: (id: number) => deleteSubChannel({ id }),
@@ -159,11 +189,25 @@ export function SubChannelDrawer() {
     }
   }
 
+  const handleToggleStatus = (subChannel: PaymentSubChannel) => {
+    setStatusTarget(subChannel)
+    setShowStatusDialog(true)
+  }
+
+  const confirmToggleStatus = () => {
+    if (statusTarget) {
+      const newStatus = statusTarget.subChannelStatus === 1 ? 2 : 1
+      statusMutation.mutate({ id: statusTarget.id, subChannelStatus: newStatus })
+    }
+  }
+
   // 当 drawer 关闭时重置表单
   useEffect(() => {
     if (!isOpen) {
       const timer = setTimeout(() => {
         setShowAddDialog(false)
+        setShowStatusDialog(false)
+        setStatusTarget(null)
         form.reset()
       }, 300)
       return () => clearTimeout(timer)
@@ -249,7 +293,7 @@ export function SubChannelDrawer() {
                       {t('config.paymentChannel.subChannelType')}
                     </TableHead>
                     <TableHead>{t('config.paymentChannel.status')}</TableHead>
-                    <TableHead className='text-right'>
+                    <TableHead>
                       {t('common.action')}
                     </TableHead>
                   </TableRow>
@@ -281,16 +325,33 @@ export function SubChannelDrawer() {
                         <TableCell>
                           {getStatusBadge(subChannel.subChannelStatus)}
                         </TableCell>
-                        <TableCell className='text-right'>
-                          <Button
-                            type='button'
-                            variant='ghost'
-                            size='sm'
-                            onClick={() => handleDelete(subChannel)}
-                            disabled={deleteMutation.isPending}
-                          >
-                            <Trash2 className='text-destructive h-4 w-4' />
-                          </Button>
+                        <TableCell>
+                          <div className='flex items-center gap-1'>
+                            {(subChannel.subChannelStatus === 1 || subChannel.subChannelStatus === 2) && (
+                              <Button
+                                type='button'
+                                variant='ghost'
+                                size='sm'
+                                onClick={() => handleToggleStatus(subChannel)}
+                                disabled={statusMutation.isPending}
+                              >
+                                {subChannel.subChannelStatus === 1 ? (
+                                  <PowerOff className='h-4 w-4 text-destructive' />
+                                ) : (
+                                  <Power className='h-4 w-4 text-green-500' />
+                                )}
+                              </Button>
+                            )}
+                            <Button
+                              type='button'
+                              variant='ghost'
+                              size='sm'
+                              onClick={() => handleDelete(subChannel)}
+                              disabled={deleteMutation.isPending}
+                            >
+                              <Trash2 className='text-destructive h-4 w-4' />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
@@ -439,6 +500,34 @@ export function SubChannelDrawer() {
           </Form>
         </DialogContent>
       </Dialog>
+
+      {/* 状态切换确认对话框 */}
+      <AlertDialog open={showStatusDialog} onOpenChange={setShowStatusDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {statusTarget?.subChannelStatus === 1
+                ? t('config.paymentChannel.disableSubChannel')
+                : t('config.paymentChannel.enableSubChannel')}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {(statusTarget?.subChannelStatus === 1
+                ? t('config.paymentChannel.disableSubChannelConfirmation')
+                : t('config.paymentChannel.enableSubChannelConfirmation')
+              ).replace('{name}', statusTarget?.subChannelName || '')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmToggleStatus}
+              disabled={statusMutation.isPending}
+            >
+              {t('common.confirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* 删除确认对话框 */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

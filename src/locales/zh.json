@@ -956,7 +956,11 @@
       "noSubChannels": "暂无子渠道",
       "deleteSubChannelConfirmation": "确定要删除子渠道\"{name}\"吗？此操作不可撤销。",
       "subChannelCodePlaceholder": "请输入子渠道编码",
-      "subChannelNamePlaceholder": "请输入子渠道名称"
+      "subChannelNamePlaceholder": "请输入子渠道名称",
+      "enableSubChannel": "打开",
+      "disableSubChannel": "关闭",
+      "enableSubChannelConfirmation": "确定要打开子渠道\"{name}\"吗？",
+      "disableSubChannelConfirmation": "确定要关闭子渠道\"{name}\"吗？"
     },
     "riskControlRule": {
       "title": "风控规则配置",
