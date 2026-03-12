@@ -367,6 +367,7 @@
       "pendingPayment": "待支付",
       "paymentFailed": "支付失败",
       "partialPayment": "部分支付",
+      "expired": "已失效",
       "orderDetails": "订单详情",
       "viewReceiveOrderDetails": "查看收款订单的详细信息",
       "merchant": "商户",

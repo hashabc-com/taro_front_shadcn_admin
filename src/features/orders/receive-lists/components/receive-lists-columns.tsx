@@ -1,5 +1,5 @@
 import { type ColumnDef } from '@tanstack/react-table'
-import { CheckCircle, Clock, XCircle, Wallet } from 'lucide-react'
+import { CheckCircle, Clock, XCircle, Wallet, Ban } from 'lucide-react'
 import { getTranslation, type Language } from '@/lib/i18n'
 import { Badge } from '@/components/ui/badge'
 import { type Order } from '../schema'
@@ -93,46 +93,22 @@ export const getTasksColumns = (
       header: t('orders.receiveOrders.status'),
       cell: ({ row }) => {
         const value = row.getValue('status') as string
-
-        if (value == '0') {
-          return (
-            <div className='flex items-center text-green-600'>
-              <CheckCircle className='mr-1.5 h-4 w-4' />
-              <span className='font-medium'>
-                {t('orders.receiveOrders.paymentSuccess')}
-              </span>
-            </div>
-          )
-        } else if (value == '1') {
-          return (
-            <div className='flex items-center text-blue-600'>
-              <Clock className='mr-1.5 h-4 w-4' />
-              <span className='font-medium'>
-                {t('orders.receiveOrders.pendingPayment')}
-              </span>
-            </div>
-          )
-        } else if (value == '2') {
-          return (
-            <div className='flex items-center text-red-600'>
-              <XCircle className='mr-1.5 h-4 w-4' />
-              <span className='font-medium'>
-                {t('orders.receiveOrders.paymentFailed')}
-              </span>
-            </div>
-          )
-        } else if (value == '4') {
-          return (
-            <div className='flex items-center text-yellow-600'>
-              <Wallet className='mr-1.5 h-4 w-4' />
-              <span className='font-medium'>
-                {t('orders.receiveOrders.partialPayment')}
-              </span>
-            </div>
-          )
+        const statusMap: Record<string, { icon: React.ElementType; color: string; label: string }> = {
+          '0': { icon: CheckCircle, color: 'text-green-600', label: t('orders.receiveOrders.paymentSuccess') },
+          '1': { icon: Clock, color: 'text-blue-600', label: t('orders.receiveOrders.pendingPayment') },
+          '2': { icon: XCircle, color: 'text-red-600', label: t('orders.receiveOrders.paymentFailed') },
+          '3': { icon: Ban, color: 'text-gray-500', label: t('orders.receiveOrders.expired') },
+          '4': { icon: Wallet, color: 'text-yellow-600', label: t('orders.receiveOrders.partialPayment') },
         }
-
-        return <span>{value}</span>
+        const status = statusMap[value]
+        if (!status) return <span>{value}</span>
+        const Icon = status.icon
+        return (
+          <div className={`flex items-center ${status.color}`}>
+            <Icon className='mr-1.5 h-4 w-4' />
+            <span className='font-medium'>{status.label}</span>
+          </div>
+        )
       },
     },
     {

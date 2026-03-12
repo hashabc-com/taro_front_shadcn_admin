@@ -367,6 +367,7 @@
       "pendingPayment": "Pending Payment",
       "paymentFailed": "Payment Failed",
       "partialPayment": "Partial Payment",
+      "expired": "Expired",
       "orderDetails": "Order Details",
       "viewReceiveOrderDetails": "View detailed information of receive order",
       "merchant": "Merchant",
