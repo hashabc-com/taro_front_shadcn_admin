@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { CheckCircle, Clock, XCircle } from 'lucide-react'
+import { Ban, CheckCircle, Clock, XCircle } from 'lucide-react'
 
 // 订单数据结构
 export const orderSchema = z.object({
@@ -52,6 +52,11 @@ export function getStatuses(t: (key: string) => string) {
       label: t('orders.receiveOrders.paymentFailed'),
       value: '2' as const,
       icon: XCircle,
+    },
+    {
+      label: t('orders.receiveOrders.expired'),
+      value: '3' as const,
+      icon: Ban,
     },
   ]
 }
