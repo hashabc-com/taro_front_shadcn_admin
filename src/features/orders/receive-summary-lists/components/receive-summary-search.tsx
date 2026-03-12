@@ -9,7 +9,6 @@ import { prepareExportReceive } from '@/api/order'
 import { useLanguage } from '@/context/language-provider'
 import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
-import { DateRangePicker } from '@/components/date-range-picker'
 import {
   Select,
   SelectContent,
@@ -18,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
+import { DateRangePicker } from '@/components/date-range-picker'
 
 const route = getRouteApi('/_authenticated/orders/receive-summary-lists')
 
@@ -67,17 +67,21 @@ export function ReceiveListsSearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期范围 */}
-      <DateRangePicker
-        mode='date'
-        startTime={fields.startTime}
-        endTime={fields.endTime}
-        onStartTimeChange={(v) => setField('startTime', v)}
-        onEndTimeChange={(v) => setField('endTime', v)}
-      />
-
+      <div>
+        <DateRangePicker
+          mode='date'
+          startTime={fields.startTime}
+          endTime={fields.endTime}
+          onStartTimeChange={(v) => setField('startTime', v)}
+          onEndTimeChange={(v) => setField('endTime', v)}
+        />
+      </div>
       {/* 交易状态 */}
       <div className='max-w-[200px]'>
-        <Select value={fields.channel} onValueChange={(v) => setField('channel', v)}>
+        <Select
+          value={fields.channel}
+          onValueChange={(v) => setField('channel', v)}
+        >
           <SelectTrigger id='channel' clearable>
             <SelectValue
               placeholder={t('orders.receiveSummary.paymentChannel')}

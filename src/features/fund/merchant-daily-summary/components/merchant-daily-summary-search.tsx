@@ -30,14 +30,15 @@ export function MerchantDailySummarySearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期范围 */}
-      <DateRangePicker
+      <div>
+        <DateRangePicker
         mode='date'
         startTime={fields.startTime}
         endTime={fields.endTime}
         onStartTimeChange={(v) => setField('startTime', v)}
         onEndTimeChange={(v) => setField('endTime', v)}
       />
-
+      </div>
       {/* 操作按钮 */}
       <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>

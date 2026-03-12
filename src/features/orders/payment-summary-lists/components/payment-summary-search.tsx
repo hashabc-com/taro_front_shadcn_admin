@@ -67,13 +67,15 @@ export function PaymentSummarySearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期范围 */}
-      <DateRangePicker
+      <div>
+        <DateRangePicker
         mode='date'
         startTime={fields.startTime}
         endTime={fields.endTime}
         onStartTimeChange={(v) => setField('startTime', v)}
         onEndTimeChange={(v) => setField('endTime', v)}
       />
+      </div>
 
       {/* 交易状态 */}
       <div className='max-w-[200px]'>

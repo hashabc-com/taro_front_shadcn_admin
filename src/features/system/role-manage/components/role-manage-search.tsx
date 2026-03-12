@@ -21,13 +21,15 @@ export function RoleManageSearch() {
   return (
     <>
       <div className='flex flex-wrap items-end gap-2'>
-        <DateRangePicker
+        <div>
+          <DateRangePicker
           mode='date'
           startTime={fields.createTimeBegin}
           endTime={fields.createTimeEnd}
           onStartTimeChange={(v) => setField('createTimeBegin', v)}
           onEndTimeChange={(v) => setField('createTimeEnd', v)}
         />
+        </div>
 
         <div className='mt-0.5 flex gap-2'>
           <Button onClick={handleSearch} size='sm'>

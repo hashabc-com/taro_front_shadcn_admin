@@ -22,7 +22,8 @@ export function AccountSearch() {
 
   return (
     <div className='flex flex-wrap items-center gap-2'>
-      <DateRangePicker
+      <div>
+        <DateRangePicker
         mode='date'
         startTime={fields.createTimeBegin}
         endTime={fields.createTimeEnd}
@@ -30,6 +31,7 @@ export function AccountSearch() {
         onEndTimeChange={(v) => setField('createTimeEnd', v)}
       />
 
+      </div>
       <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />

@@ -29,6 +29,16 @@ export function DailySummarySearch<TData>({
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
+      <div>
+        <DateRangePicker
+        mode='date'
+        startTime={fields.startTime}
+        endTime={fields.endTime}
+        onStartTimeChange={(v) => setField('startTime', v)}
+        onEndTimeChange={(v) => setField('endTime', v)}
+      />
+
+      </div>
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
           placeholder={t('business.merchantBind.businessUserName')}
@@ -39,14 +49,7 @@ export function DailySummarySearch<TData>({
         />
       </div>
 
-      <DateRangePicker
-        mode='date'
-        startTime={fields.startTime}
-        endTime={fields.endTime}
-        onStartTimeChange={(v) => setField('startTime', v)}
-        onEndTimeChange={(v) => setField('endTime', v)}
-      />
-
+      
       <div className='mt-0.5 flex gap-2'>
         <Button onClick={handleSearch} size='sm'>
           <Search className='mr-2 h-4 w-4' />

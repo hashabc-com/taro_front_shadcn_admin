@@ -38,6 +38,7 @@ export function RechargeWithdrawSearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期范围 */}
+      <div>
       <DateRangePicker
         mode='date'
         startTime={fields.startTime}
@@ -45,7 +46,7 @@ export function RechargeWithdrawSearch<TData>({
         onStartTimeChange={(v) => setField('startTime', v)}
         onEndTimeChange={(v) => setField('endTime', v)}
       />
-
+      </div>
       <Select value={fields.status} onValueChange={(v) => setField('status', v)}>
         <SelectTrigger id='status'>
           <SelectValue placeholder={t('orders.receiveOrders.status')} />

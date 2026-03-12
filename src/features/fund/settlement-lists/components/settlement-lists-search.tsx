@@ -38,13 +38,16 @@ export function SettlementListsSearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期范围 */}
-      <DateRangePicker
+      <div>
+        <DateRangePicker
         mode='date'
         startTime={fields.startTime}
         endTime={fields.endTime}
         onStartTimeChange={(v) => setField('startTime', v)}
         onEndTimeChange={(v) => setField('endTime', v)}
       />
+      </div>
+      
 
       <div className='max-w-[120px]'>
         <Select value={fields.type} onValueChange={(v) => setField('type', v)}>
