@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { useAuthStore } from '@/stores'
 import { toast } from 'sonner'
 import { addRechargeRecord } from '@/api/fund'
-import { useCountryStore } from '@/stores/country-store'
+import { type Country, useCountryStore } from '@/stores/country-store'
 import { useMerchantStore } from '@/stores/merchant-store'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
@@ -17,17 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-
-const CURRENCY_TYPES = [
-  { title: '美金', value: 'USD' },
-  { title: '人民币', value: 'CNY' },
-  { title: '印尼盾', value: 'IDR' },
-  { title: '越南盾', value: 'VHD' },
-  { title: '塔卡', value: 'BDT' },
-  { title: '墨西哥比索', value: 'MXN' },
-  { title: '雷亚尔', value: 'BRL' },
-  { title: '菲律宾比索', value: 'PHP' },
-]
+import { useCountries } from '@/hooks/use-countries'
 
 interface RechargeFormProps {
   onSuccess?: () => void
@@ -38,6 +28,7 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
   const { selectedMerchant } = useMerchantStore()
   const { selectedCountry } = useCountryStore()
   const { userInfo } = useAuthStore()
+  const { data: countriesData } = useCountries()
   const [form, setForm] = useState({
     currencyType: 'USD',
     exchangeRate: '',
@@ -48,6 +39,11 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const CURRENCY_TYPES = useMemo(() => {
+    const a = (countriesData?.result || []) as Country[]
+    return [{ country: 'USDT', currency: 'USD' },...a]
+  },[countriesData])
 
   // 计算实际存款金额
   const finalAmount = useMemo(() => {
@@ -149,8 +145,8 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
               </SelectTrigger>
               <SelectContent>
                 {CURRENCY_TYPES.map((item) => (
-                  <SelectItem key={item.value} value={item.value}>
-                    {item.title}
+                  <SelectItem key={item.currency} value={item.currency}>
+                    {item.country}
                   </SelectItem>
                 ))}
               </SelectContent>
