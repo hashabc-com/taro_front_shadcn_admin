@@ -42,7 +42,7 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
 
   const CURRENCY_TYPES = useMemo(() => {
     const a = (countriesData?.result || []) as Country[]
-    return [{ country: 'USDT', currency: 'USD' },...a]
+    return [{ country: 'USDT', currency: 'USDT' },...a]
   },[countriesData])
 
   // 计算实际存款金额
@@ -146,7 +146,7 @@ export function RechargeForm({ onSuccess }: RechargeFormProps) {
               <SelectContent>
                 {CURRENCY_TYPES.map((item) => (
                   <SelectItem key={item.currency} value={item.currency}>
-                    {item.country}
+                    {item.country}({item.currency})
                   </SelectItem>
                 ))}
               </SelectContent>
