@@ -183,7 +183,50 @@ z.coerce.number().min(0).optional()
    defaultValues: { amount: 0 } // NOT: { amount: null }
    ```
 
-### 9. Data Tables
+### 9. Google Auth Dialog (谷歌验证码弹窗)
+
+**组件**: `src/components/google-auth-dialog.tsx`
+**Hook**: `src/hooks/use-google-auth-dialog.tsx`
+
+凡是需要用户输入 Google 验证码（`gauthKey`）的场景，**必须优先使用** `useGoogleAuthDialog` hook，而非自行编写验证码弹窗或表单。
+
+**⚠️ 关键规则**:
+- ❌ **禁止**自行创建 Google 验证码输入弹窗（Dialog + InputOTP / Input）
+- ❌ **禁止**在表单 schema 中添加 `gauthKey` 字段来收集验证码
+- ✅ 使用 `useGoogleAuthDialog()` 返回的 `withGoogleAuth` 包裹需要验证码的操作
+- ✅ 将 `dialog` 渲染到组件 JSX 中
+
+**标准用法**:
+```tsx
+import { useGoogleAuthDialog } from '@/hooks/use-google-auth-dialog'
+
+export function MyComponent() {
+  const { dialog, withGoogleAuth } = useGoogleAuthDialog()
+
+  const handleAction = () => {
+    withGoogleAuth(async (gauthKey) => {
+      const res = await someApi({ gauthKey, ...otherParams })
+      if (res.code == 200) {
+        toast.success(t('common.operationSuccess'))
+      }
+    })
+  }
+
+  return (
+    <>
+      <Button onClick={handleAction}>需要验证的操作</Button>
+      {dialog}
+    </>
+  )
+}
+```
+
+**工作原理**:
+- `withGoogleAuth(callback)` — 打开验证码弹窗，用户输入 6 位 OTP 码后执行回调
+- `dialog` — 弹窗 JSX，必须渲染到组件中
+- 弹窗内置 loading 状态管理，回调执行完毕后自动关闭弹窗
+
+### 10. Data Tables
 
 **Components**: `src/components/data-table/*` (reusable primitives)
 
@@ -351,7 +394,7 @@ export function XxxSearch() {
 - 额外按钮（导出/创建/刷新）、`useQuery`、`DataTableViewOptions` 等保持独立不受影响
 - 添加新搜索字段只需：① `fieldKeys` 加字符串 ② JSX 加输入控件绑定 `fields.xxx` / `setField`
 
-### 10. shadcn/ui Components
+### 11. shadcn/ui Components
 
 **Location**: `src/components/ui/*` (generated via CLI)
 
@@ -407,9 +450,9 @@ pnpm lint --fix       # Auto-fix ESLint issues
 3. Create API functions in `src/api/<domain>.ts`
 4. **⚠️ Add i18n keys to `src/lib/i18n.ts` (BOTH `zh` AND `en`)** - This is MANDATORY for all user-facing text
 5. Define schema types in `schema.ts` (use Zod for validation)
-6. **⚠️ 表格页面必须优先使用 `FeatureDataTable`** — 参考 Section 9，不要手动编写 `useReactTable` + 骨架屏 + 表格渲染 + 分页的样板代码
-7. **⚠️ 需要跨组件共享弹窗/行状态时，使用 `createFeatureProvider`** — 参考 Section 9，不要手动编写 Provider + Context + Hook
-8. **⚠️ 搜索组件必须使用 `useSearchForm`** — 参考 Section 9，不要手写 `useState` + `handleSearch` + `handleReset` 样板代码
+6. **⚠️ 表格页面必须优先使用 `FeatureDataTable`** — 参考 Section 10，不要手动编写 `useReactTable` + 骨架屏 + 表格渲染 + 分页的样板代码
+7. **⚠️ 需要跨组件共享弹窗/行状态时，使用 `createFeatureProvider`** — 参考 Section 10，不要手动编写 Provider + Context + Hook
+8. **⚠️ 搜索组件必须使用 `useSearchForm`** — 参考 Section 10，不要手写 `useState` + `handleSearch` + `handleReset` 样板代码
 9. Verify all text uses `t()` function - no hardcoded Chinese/English strings
 
 ### API Integration

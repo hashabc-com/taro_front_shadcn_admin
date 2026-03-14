@@ -1,10 +1,11 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Row } from '@tanstack/react-table'
-import { DollarSign, Edit, Power, PowerOff, List } from 'lucide-react'
+import { DollarSign, Edit, Power, PowerOff, List, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
-import { updatePaymentChannelStatus } from '@/api/config'
+import { updatePaymentChannelStatus, queryPaymentChannelBalance } from '@/api/config'
 import { useLanguage } from '@/context/language-provider'
+import { useGoogleAuthDialog } from '@/hooks/use-google-auth-dialog'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -27,6 +28,24 @@ export function DataTableRowActions<TData>({
   const { setOpen, setCurrentRow } = usePaymentChannel()
   const queryClient = useQueryClient()
   const { t } = useLanguage()
+  const { dialog: googleAuthDialog, withGoogleAuth } = useGoogleAuthDialog()
+
+  const handleQueryBalance = () => {
+    withGoogleAuth(async (gauthKey) => {
+      const res = await queryPaymentChannelBalance({
+        id: channel.id,
+        gauthKey,
+        channelCode: channel.channelCode,
+        country: channel.country ?? '',
+      })
+      if (res.code == 200) {
+        queryClient.invalidateQueries({ queryKey: ['payment-channels'] })
+        toast.success(t('config.paymentChannel.queryBalanceSuccess'))
+      } else {
+        toast.error(res.message || t('common.operationFailed'))
+      }
+    })
+  }
 
   const statusMutation = useMutation({
     mutationFn: (status: number) => {
@@ -115,6 +134,11 @@ export function DataTableRowActions<TData>({
             {t('config.paymentChannel.manageSubChannels')}
             <List className='ml-auto h-4 w-4' />
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={handleQueryBalance}>
+            {t('config.paymentChannel.queryBalance')}
+            <RefreshCw className='ml-auto h-4 w-4' />
+          </DropdownMenuItem>
           {/* <DropdownMenuItem
             onClick={() => setShowDeleteDialog(true)}
             className='text-destructive'
@@ -124,6 +148,8 @@ export function DataTableRowActions<TData>({
           </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {googleAuthDialog}
 
       {/* <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>

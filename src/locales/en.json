@@ -901,6 +901,7 @@
       "addMerchantConfig": "Add Merchant Config",
       "oneClickConfig": "One-Click Config",
       "paymentChannel": "Payment Channel",
+      "balance": "Balance",
       "subChannel": "Sub Channel",
       "configSuccess": "Config successful",
       "type": "Type",
@@ -953,7 +954,12 @@
       "enableSubChannel": "Enable",
       "disableSubChannel": "Disable",
       "enableSubChannelConfirmation": "Are you sure you want to enable sub channel \"{name}\"?",
-      "disableSubChannelConfirmation": "Are you sure you want to disable sub channel \"{name}\"?"
+      "disableSubChannelConfirmation": "Are you sure you want to disable sub channel \"{name}\"?",
+      "queryBalance": "Update Balance",
+      "queryBalanceSuccess": "Balance updated successfully",
+      "gauthKey": "Google Auth Code",
+      "gauthKeyPlaceholder": "Enter Google Auth code",
+      "gauthKeyRequired": "Please enter Google Auth code"
     },
     "riskControlRule": {
       "title": "Risk Control Rule Config",

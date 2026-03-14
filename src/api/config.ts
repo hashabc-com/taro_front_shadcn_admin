@@ -58,6 +58,17 @@ export const updatePaymentChannelStatus = (data: {
     autoAddCountry: false,
   })
 
+// 查询渠道余额
+export const queryPaymentChannelBalance = (data: {
+  id: number
+  gauthKey: string
+  channelCode: string
+  country: string
+}) =>
+  http.post('/admin/paymentChannel/queryBalance', data, {
+    autoAddCountry: false,
+  })
+
 // ======================== 子渠道配置 API ========================
 
 // 获取子渠道列表

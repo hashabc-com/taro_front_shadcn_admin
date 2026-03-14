@@ -908,6 +908,7 @@
       "editMerchantConfig": "编辑商户配置",
       "addMerchantConfig": "添加商户配置",
       "paymentChannel": "支付渠道",
+      "balance":"通道余额",
       "oneClickConfig": "一键配置",
       "subChannel": "子渠道",
       "configSuccess": "配置成功",
@@ -961,7 +962,12 @@
       "enableSubChannel": "打开",
       "disableSubChannel": "关闭",
       "enableSubChannelConfirmation": "确定要打开子渠道\"{name}\"吗？",
-      "disableSubChannelConfirmation": "确定要关闭子渠道\"{name}\"吗？"
+      "disableSubChannelConfirmation": "确定要关闭子渠道\"{name}\"吗？",
+      "queryBalance": "更新余额",
+      "queryBalanceSuccess": "余额更新成功",
+      "gauthKey": "Google 验证码",
+      "gauthKeyPlaceholder": "请输入 Google 验证码",
+      "gauthKeyRequired": "请输入 Google 验证码"
     },
     "riskControlRule": {
       "title": "风控规则配置",

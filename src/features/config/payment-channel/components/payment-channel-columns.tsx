@@ -22,6 +22,18 @@ export const getPaymentChannelColumns = (
       header: t('config.paymentChannel.channelName'),
     },
     {
+      accessorKey: 'balance',
+      header: t('config.paymentChannel.balance'),
+    },
+    {
+      accessorKey: 'country',
+      header: t('common.country'),
+      cell: ({ row }) => {
+        const country = row.getValue('country') as string | null
+        return country || '-'
+      },
+    },
+    {
       accessorKey: 'fundType',
       header: t('config.paymentChannel.fundType'),
       cell: ({ row }) => {
@@ -106,14 +118,6 @@ export const getPaymentChannelColumns = (
     {
       accessorKey: 'runTimeRange',
       header: t('config.paymentChannel.runTimeRange'),
-    },
-    {
-      accessorKey: 'country',
-      header: t('common.country'),
-      cell: ({ row }) => {
-        const country = row.getValue('country') as string | null
-        return country || '-'
-      },
     },
     {
       id: 'actions',
