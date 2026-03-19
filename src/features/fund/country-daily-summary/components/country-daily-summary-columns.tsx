@@ -18,6 +18,13 @@ export const getCountryDailySummaryColumns = (
       enableHiding: false,
     },
     {
+      accessorKey: 'inBills',
+      header: t('logs.riskControl.payin')+t('orders.stats.successOrders'),
+      meta: {
+        className: 'text-center',
+      },
+    },
+    {
       accessorKey: 'inAmount',
       header: t('fund.countryDailySummary.collectionAmount'),
       meta: {
@@ -34,6 +41,13 @@ export const getCountryDailySummaryColumns = (
     {
       accessorKey: 'inAmountProfit',
       header: t('business.dailySummary.inAmountProfit'),
+      meta: {
+        className: 'text-center',
+      },
+    },
+    {
+      accessorKey: 'outBills',
+      header: t('logs.riskControl.payout')+t('orders.stats.successOrders'),
       meta: {
         className: 'text-center',
       },
