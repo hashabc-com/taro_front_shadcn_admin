@@ -130,7 +130,7 @@ export const getColumns = (
       header: t('common.action'),
       cell: ({ row }) => (
         <div
-          className='flex cursor-pointer items-center justify-center gap-1'
+          className='flex cursor-pointer items-center justify-start gap-1'
           onClick={() => onViewDetail(row.original)}
         >
           <Eye className='h-4 w-4' />

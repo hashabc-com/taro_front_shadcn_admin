@@ -8,6 +8,7 @@ const messageRecordSearchSchema = createBaseSearchSchema({
   correlationId: z.string().optional(),
   queueName: z.string().optional(),
   consumerService: z.string().optional(),
+  consumeStatus: z.string().optional(),
 })
 
 export type IMessageRecordSearch = z.infer<typeof messageRecordSearchSchema>

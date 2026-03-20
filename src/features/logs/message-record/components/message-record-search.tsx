@@ -1,11 +1,19 @@
-// import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
-import { RefreshCcw } from 'lucide-react'
+import { Plus, Search, X } from 'lucide-react'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
-// import { Input } from '@/components/ui/input'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table'
+import { useSearchForm } from '@/hooks/use-search-form'
+import { useMessageRecord } from './message-record-provider'
 
 const route = getRouteApi('/_authenticated/logs/message-record')
 
@@ -16,98 +24,105 @@ type MessageRecordSearchProps<T> = {
 export function MessageRecordSearch<TData>({
   table,
 }: MessageRecordSearchProps<TData>) {
+  const search = route.useSearch()
   const navigate = route.useNavigate()
   const { t } = useLanguage()
-  //   const search = route.useSearch()
+  const { setOpen } = useMessageRecord()
 
-  //   const [messageId, setMessageId] = useState(search.messageId || '')
-  //   const [correlationId, setCorrelationId] = useState(
-  //     search.correlationId || ''
-  //   )
-  //   const [queueName, setQueueName] = useState(search.queueName || '')
-  //   const [consumerService, setConsumerService] = useState(
-  //     search.consumerService || ''
-  //   )
-
-  const handleSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        // messageId: messageId || undefined,
-        // correlationId: correlationId || undefined,
-        // queueName: queueName || undefined,
-        // consumerService: consumerService || undefined,
-        pageNum: 1,
-        refresh: Date.now(),
-      }),
+  const { fields, setField, handleSearch, handleReset, hasFilters } =
+    useSearchForm({
+      search,
+      navigate,
+      fieldKeys: [
+        'messageId',
+        'correlationId',
+        'queueName',
+        'consumerService',
+        'consumeStatus',
+      ] as const,
     })
-  }
 
-  //   const handleReset = () => {
-  //     setMessageId('')
-  //     setCorrelationId('')
-  //     setQueueName('')
-  //     setConsumerService('')
-  //     navigate({
-  //       search: (prev) => ({
-  //         pageNum: 1,
-  //         pageSize: prev.pageSize,
-  //       }),
-  //     })
-  //   }
-
-  //   const hasFilters = messageId || correlationId || queueName || consumerService
+  // const handleRefresh = () => {
+  //   navigate({
+  //     search: (prev) => ({
+  //       ...prev,
+  //       pageNum: 1,
+  //       refresh: Date.now(),
+  //     }),
+  //   })
+  // }
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
-      {/* <div className='max-w-[200px] min-w-[120px]'>
-        <Input
-          placeholder='消息ID'
-          value={messageId}
-          onChange={(e) => setMessageId(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
+      <Input
+        className='h-8 max-w-[180px]'
+        placeholder={t('logs.messageRecord.messageId')}
+        value={fields.messageId}
+        onChange={(e) => setField('messageId', e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+      />
+      <Input
+        className='h-8 max-w-[180px]'
+        placeholder={t('logs.messageRecord.businessId')}
+        value={fields.correlationId}
+        onChange={(e) => setField('correlationId', e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+      />
+      <Input
+        className='h-8 max-w-[180px]'
+        placeholder={t('logs.messageRecord.queueName')}
+        value={fields.queueName}
+        onChange={(e) => setField('queueName', e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+      />
+      <Input
+        className='h-8 max-w-[160px]'
+        placeholder={t('logs.messageRecord.consumerService')}
+        value={fields.consumerService}
+        onChange={(e) => setField('consumerService', e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+      />
+      <Select
+        value={fields.consumeStatus}
+        onValueChange={(v) => setField('consumeStatus', v)}
+      >
+        <SelectTrigger clearable={false} className='h-8 w-[130px]'>
+          <SelectValue placeholder={t('logs.messageRecord.consumeStatus')} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value='0'>
+            {t('logs.messageRecord.statusFailed')}
+          </SelectItem>
+          <SelectItem value='1'>
+            {t('logs.messageRecord.statusSuccess')}
+          </SelectItem>
+          <SelectItem value='2'>
+            {t('logs.messageRecord.statusRetrying')}
+          </SelectItem>
+        </SelectContent>
+      </Select>
 
-      <div className='max-w-[160px] min-w-[120px]'>
-        <Input
-          placeholder='业务关联ID'
-          value={correlationId}
-          onChange={(e) => setCorrelationId(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-
-      <div className='max-w-[200px] min-w-[120px]'>
-        <Input
-          placeholder='队列名称'
-          value={queueName}
-          onChange={(e) => setQueueName(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-
-      <div className='max-w-[160px] min-w-[120px]'>
-        <Input
-          placeholder='消费服务'
-          value={consumerService}
-          onChange={(e) => setConsumerService(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div> */}
-
-      <div className='mt-0.5 flex gap-2'>
-        <Button onClick={handleSearch} size='sm'>
-          <RefreshCcw className='mr-2 h-4 w-4' />
-          {t('common.refresh')}
+      <Button onClick={handleSearch} size='sm'>
+        <Search className='mr-2 h-4 w-4' />
+        {t('common.search')}
+      </Button>
+      {hasFilters && (
+        <Button onClick={handleReset} variant='outline' size='sm'>
+          <X className='mr-2 h-4 w-4' />
+          {t('common.reset')}
         </Button>
-        {/* {hasFilters && (
-          <Button onClick={handleReset} variant='outline' size='sm'>
-            <X className='mr-2 h-4 w-4' />
-            重置
-          </Button>
-        )} */}
-      </div>
+      )}
+      {/* <Button onClick={handleRefresh} variant='outline' size='sm'>
+        <RefreshCcw className='mr-1 h-4 w-4' />
+        {t('common.refresh')}
+      </Button> */}
+      <Button
+        onClick={() => setOpen('add')}
+        size='sm'
+      >
+        <Plus className='mr-1 h-4 w-4' />
+        {t('logs.messageRecord.addMessage')}
+      </Button>
 
       <DataTableViewOptions table={table} />
     </div>

@@ -11,8 +11,10 @@ export const messageRecordSchema = z.object({
   messageBody: z.string(),
   consumerService: z.string().optional(),
   consumerIp: z.string().optional(),
-  errorMsg: z.string().optional(),
   consumeTime: z.string(),
+  consumeStatus: z.number().nullable().optional(),
+  retryCount: z.number().optional(),
+  errorMsg: z.string().optional(),
   createTime: z.string(),
   updateTime: z.string(),
 })
