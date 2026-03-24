@@ -11,6 +11,9 @@ export const getMessageRecordList = (params: IMessageRecordSearch) => {
 /**
  * 添加消息
  */
-export const addConsumeRecord = (data: { jsonMessage: string }) => {
+export const addConsumeRecord = (data: {
+  jsonMessage: string
+  gauthCode: string
+}) => {
   return http.post('/admin/consumeRecord/add', data)
 }

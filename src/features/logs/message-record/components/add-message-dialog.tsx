@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { addConsumeRecord } from '@/api/message-record'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,18 +11,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { addConsumeRecord } from '@/api/message-record'
 
 type AddMessageDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function AddMessageDialog({ open, onOpenChange }: AddMessageDialogProps) {
+export function AddMessageDialog({
+  open,
+  onOpenChange,
+}: AddMessageDialogProps) {
   const { t } = useLanguage()
   const queryClient = useQueryClient()
   const [jsonMessage, setJsonMessage] = useState('')
+  const [gauthCode, setGauthCode] = useState('')
 
   const mutation = useMutation({
     mutationFn: addConsumeRecord,
@@ -30,7 +35,7 @@ export function AddMessageDialog({ open, onOpenChange }: AddMessageDialogProps) 
         toast.success(t('logs.messageRecord.addSuccess'))
         queryClient.invalidateQueries({ queryKey: ['messageRecord'] })
         handleClose()
-      }else{
+      } else {
         toast.error(res.message || t('logs.messageRecord.addFailed'))
       }
     },
@@ -38,12 +43,16 @@ export function AddMessageDialog({ open, onOpenChange }: AddMessageDialogProps) 
 
   const handleClose = () => {
     setJsonMessage('')
+    setGauthCode('')
     onOpenChange(false)
   }
 
   const handleSubmit = () => {
-    if (!jsonMessage.trim()) return
-    mutation.mutate({ jsonMessage: jsonMessage.trim() })
+    if (!jsonMessage.trim() || !gauthCode.trim()) return
+    mutation.mutate({
+      jsonMessage: jsonMessage.trim(),
+      gauthCode: gauthCode.trim(),
+    })
   }
 
   return (
@@ -54,11 +63,16 @@ export function AddMessageDialog({ open, onOpenChange }: AddMessageDialogProps) 
         </DialogHeader>
         <div className='space-y-2 overflow-hidden'>
           <Textarea
-            className='min-h-[240px] w-full break-all font-mono text-sm'
+            className='min-h-[240px] w-full font-mono text-sm break-all'
             style={{ wordBreak: 'break-all', overflowWrap: 'anywhere' }}
             placeholder={t('logs.messageRecord.messageBodyPlaceholder')}
             value={jsonMessage}
             onChange={(e) => setJsonMessage(e.target.value)}
+          />
+          <Input
+            placeholder={t('common.googleAuthCode')}
+            value={gauthCode}
+            onChange={(e) => setGauthCode(e.target.value)}
           />
         </div>
         <DialogFooter>
