@@ -222,12 +222,12 @@ export function RateConfigDialog({
 
       const res = await updateMerchantRate(submitData)
       if (res) {
-        toast.success(t('merchant.info.success.rateUpdateSuccess'))
+        toast.success(t('merchant.info.success.rateConfigUpdated'))
         onOpenChange(false)
         onSuccess()
       }
     } catch (_error) {
-      toast.error(t('merchant.info.error.rateUpdateFailed'))
+      toast.error(t('merchant.info.error.rateConfigUpdateFailed'))
     } finally {
       setIsSubmitting(false)
     }
