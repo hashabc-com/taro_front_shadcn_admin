@@ -15,10 +15,18 @@ export function useReceiveStat() {
   const params = useMemo(
     () => ({
       startTime: search.startTime,
+      status: search.status,
+      pickupCenter: search.pickupCenter,
       endTime: search.endTime,
-      refresh: search.refresh
+      refresh: search.refresh,
     }),
-    [search.startTime, search.endTime, search.refresh]
+    [
+      search.startTime,
+      search.status,
+      search.pickupCenter,
+      search.endTime,
+      search.refresh,
+    ]
   )
 
   const { data, isLoading } = useQuery({

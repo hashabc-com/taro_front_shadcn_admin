@@ -1,10 +1,13 @@
+import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
+import { useCountryStore, useMerchantStore } from '@/stores'
 import { Search, X } from 'lucide-react'
+import { getProductDict } from '@/api/common'
 import { getTranslation } from '@/lib/i18n'
 import { useLanguage } from '@/context/language-provider'
+import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
-import { DateRangePicker } from '@/components/date-range-picker'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -14,7 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
-import { useSearchForm } from '@/hooks/use-search-form'
+import { DateRangePicker } from '@/components/date-range-picker'
 import { statuses } from '../schema'
 
 const route = getRouteApi('/_authenticated/orders/payment-lists')
@@ -30,23 +33,44 @@ export function ReceiveListsSearch<TData>({
   const t = (key: string) => getTranslation(lang, key)
   const navigate = route.useNavigate()
   const search = route.useSearch()
+  const { selectedCountry } = useCountryStore()
+  const { selectedMerchant } = useMerchantStore()
 
-  const { fields, setField, handleSearch, handleReset, hasFilters } = useSearchForm({
-    search,
-    navigate,
-    fieldKeys: ['refNo', 'transId', 'status', 'startTime', 'endTime', 'mobile', 'userName', 'accountNumber'] as const,
+  const { fields, setField, handleSearch, handleReset, hasFilters } =
+    useSearchForm({
+      search,
+      navigate,
+      fieldKeys: [
+        'refNo',
+        'transId',
+        'status',
+        'startTime',
+        'endTime',
+        'mobile',
+        'userName',
+        'accountNumber',
+        'pickupCenter',
+      ] as const,
+    })
+
+  const { data } = useQuery({
+    queryKey: ['product-dict', selectedCountry?.code, selectedMerchant?.appid],
+    queryFn: () => getProductDict(),
+    enabled: !!selectedCountry,
   })
+
+  const payinChannel = data?.result?.payoutChannel || []
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期时间范围 (秒级) */}
       <div>
         <DateRangePicker
-        startTime={fields.startTime}
-        endTime={fields.endTime}
-        onStartTimeChange={(v) => setField('startTime', v)}
-        onEndTimeChange={(v) => setField('endTime', v)}
-      />
+          startTime={fields.startTime}
+          endTime={fields.endTime}
+          onStartTimeChange={(v) => setField('startTime', v)}
+          onEndTimeChange={(v) => setField('endTime', v)}
+        />
       </div>
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
@@ -105,7 +129,10 @@ export function ReceiveListsSearch<TData>({
 
       {/* 交易状态 */}
       <div>
-        <Select value={fields.status} onValueChange={(v) => setField('status', v)}>
+        <Select
+          value={fields.status}
+          onValueChange={(v) => setField('status', v)}
+        >
           <SelectTrigger id='status' clearable>
             <SelectValue placeholder={t('orders.paymentOrders.status')} />
           </SelectTrigger>
@@ -124,6 +151,21 @@ export function ReceiveListsSearch<TData>({
           </SelectContent>
         </Select>
       </div>
+      <Select
+        value={fields.pickupCenter}
+        onValueChange={(v) => setField('pickupCenter', v)}
+      >
+        <SelectTrigger id='pickupCenter' clearable>
+          <SelectValue placeholder={t('common.product')} />
+        </SelectTrigger>
+        <SelectContent>
+          {payinChannel.map((item) => (
+            <SelectItem key={item} value={item}>
+              <div className='flex items-center gap-2'>{item}</div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       {/* 操作按钮 */}
       <div className='mt-0.5 flex gap-2'>

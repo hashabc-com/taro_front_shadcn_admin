@@ -16,9 +16,17 @@ export function usePaymentStat() {
     () => ({
       startTime: search.startTime,
       endTime: search.endTime,
-      refresh: search?.refresh
+      status: search.status,
+      pickupCenter: search.pickupCenter,
+      refresh: search?.refresh,
     }),
-    [search.startTime, search.endTime, search.refresh]
+    [
+      search.startTime,
+      search.endTime,
+      search.refresh,
+      search.status,
+      search.pickupCenter,
+    ]
   )
 
   const { data, isLoading } = useQuery({
