@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
-import { useCountryStore, useMerchantStore } from '@/stores'
+import { useCountryStore } from '@/stores'
 import { getOrderList } from '@/api/order'
 import { useLanguage } from '@/context/language-provider'
 import { useConvertAmount } from '@/hooks/use-convert-amount'
@@ -18,7 +18,6 @@ export function ReceiveLists() {
   const convertAmount = useConvertAmount()
 
   const { selectedCountry } = useCountryStore()
-  const { selectedMerchant } = useMerchantStore()
 
   const { data, isLoading } = useQuery({
     queryKey: ['orders', 'receive-lists', search],

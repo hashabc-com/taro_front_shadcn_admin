@@ -29,7 +29,6 @@ export function useSearchForm<K extends string>({
   navigate,
   fieldKeys,
   pageKey = 'pageNum',
-  pageSizeKey = 'pageSize',
 }: {
   /** Route search params object (from `route.useSearch()`) */
   search: SearchRecord
@@ -44,6 +43,7 @@ export function useSearchForm<K extends string>({
 }) {
   type Fields = Record<K, string>
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizedFieldKeys = useMemo(() => fieldKeys, [fieldKeys.join(',')])
 
   // Initialise all field values from URL search params
