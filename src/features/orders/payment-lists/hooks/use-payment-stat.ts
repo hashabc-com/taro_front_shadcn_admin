@@ -30,13 +30,7 @@ export function usePaymentStat() {
   )
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      'orders',
-      'payment-stat',
-      params,
-      selectedCountry?.code,
-      selectedMerchant?.appid,
-    ],
+    queryKey: ['orders', 'payment-stat', params],
     queryFn: () => getDisbursementOrderStats(params),
     enabled: !!selectedCountry,
     placeholderData: (prev) => prev ?? undefined,

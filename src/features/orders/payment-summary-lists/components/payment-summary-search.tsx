@@ -78,7 +78,7 @@ export function PaymentSummarySearch<TData>({
         />
       </div>
 
-      {/* 交易状态 */}
+      {/* 支付渠道 */}
       <div className='max-w-[200px]'>
         <Select
           value={fields.channel}

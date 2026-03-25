@@ -21,13 +21,7 @@ export function ReceiveLists() {
   const { selectedMerchant } = useMerchantStore()
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      'orders',
-      'receive-lists',
-      search,
-      selectedCountry?.code,
-      selectedMerchant?.appid,
-    ],
+    queryKey: ['orders', 'receive-lists', search],
     queryFn: () => getOrderList(search),
     enabled: !!selectedCountry,
     placeholderData: (prev) => prev ?? undefined,

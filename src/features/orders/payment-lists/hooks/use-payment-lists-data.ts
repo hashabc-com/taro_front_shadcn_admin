@@ -14,13 +14,7 @@ export function usePaymentListsData() {
   const convertAmount = useConvertAmount()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: [
-      'orders',
-      'payment-lists',
-      search,
-      selectedCountry?.code,
-      selectedMerchant?.appid,
-    ],
+    queryKey: ['orders', 'payment-lists', search],
     queryFn: () => getPaymentLists(search),
     enabled: !!selectedCountry,
     placeholderData: (prev) => prev ?? undefined,

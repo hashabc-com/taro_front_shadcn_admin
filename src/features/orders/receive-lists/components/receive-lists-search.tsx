@@ -7,7 +7,6 @@ import { getProductDict } from '@/api/common'
 import { useLanguage } from '@/context/language-provider'
 import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
-import { DateRangePicker } from '@/components/date-range-picker'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -17,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
+import { DateRangePicker } from '@/components/date-range-picker'
 import { getStatuses } from '../schema'
 
 const route = getRouteApi('/_authenticated/orders/receive-lists')
@@ -39,7 +39,16 @@ export function ReceiveListsSearch<TData>({
     useSearchForm({
       search,
       navigate,
-      fieldKeys: ['referenceno', 'transId', 'mobile', 'status', 'pickupCenter', 'startTime', 'endTime', 'userName'] as const,
+      fieldKeys: [
+        'referenceno',
+        'transId',
+        'mobile',
+        'status',
+        'pickupCenter',
+        'startTime',
+        'endTime',
+        'userName',
+      ] as const,
     })
 
   const { data } = useQuery({
@@ -55,12 +64,14 @@ export function ReceiveListsSearch<TData>({
   return (
     <div className='flex flex-wrap items-center gap-3'>
       {/* 日期时间范围 (秒级) */}
-      <div><DateRangePicker
-        startTime={fields.startTime}
-        endTime={fields.endTime}
-        onStartTimeChange={(v) => setField('startTime', v)}
-        onEndTimeChange={(v) => setField('endTime', v)}
-      /></div>
+      <div>
+        <DateRangePicker
+          startTime={fields.startTime}
+          endTime={fields.endTime}
+          onStartTimeChange={(v) => setField('startTime', v)}
+          onEndTimeChange={(v) => setField('endTime', v)}
+        />
+      </div>
       {/* 商户订单号 */}
       <div className='max-w-[200px] min-w-[120px] flex-1'>
         <Input
@@ -99,7 +110,10 @@ export function ReceiveListsSearch<TData>({
         />
       </div>
       {/* 交易状态 */}
-      <Select value={fields.status} onValueChange={(v) => setField('status', v)}>
+      <Select
+        value={fields.status}
+        onValueChange={(v) => setField('status', v)}
+      >
         <SelectTrigger id='status' clearable>
           <SelectValue placeholder={t('orders.receiveOrders.status')} />
         </SelectTrigger>
@@ -116,7 +130,10 @@ export function ReceiveListsSearch<TData>({
       </Select>
       {/* 产品 */}
       <div className='max-w-[120px]'>
-        <Select value={fields.pickupCenter} onValueChange={(v) => setField('pickupCenter', v)}>
+        <Select
+          value={fields.pickupCenter}
+          onValueChange={(v) => setField('pickupCenter', v)}
+        >
           <SelectTrigger id='pickupCenter' clearable>
             <SelectValue placeholder={t('common.product')} />
           </SelectTrigger>

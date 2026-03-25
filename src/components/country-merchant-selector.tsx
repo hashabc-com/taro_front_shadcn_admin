@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { getMerchantList } from '@/api/common'
 import { useCountryStore, type Country } from '@/stores/country-store'
 import { useMerchantStore, type Merchant } from '@/stores/merchant-store'
 import { useLanguage } from '@/context/language-provider'
+import { useCountries } from '@/hooks/use-countries'
 import {
   Select,
   SelectContent,
@@ -14,12 +16,12 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { CurrencySelector } from './currency-selector'
-import { useCountries } from '@/hooks/use-countries'
 
 export function CountryMerchantSelector() {
   const { selectedCountry, setSelectedCountry, setRates } = useCountryStore()
   const { selectedMerchant, setSelectedMerchant } = useMerchantStore()
   const { t } = useLanguage()
+  const navigate = useNavigate()
 
   const { data: countriesData } = useCountries()
 
@@ -66,9 +68,25 @@ export function CountryMerchantSelector() {
         }
         setSelectedCountry(country)
         setSelectedMerchant(null) // 清空商户选择
+
+        // 切换国家时清空 URL 参数
+        navigate({
+          to: '.',
+          search: () => ({
+            pageSize:10,
+            pageNum: 1,
+            refresh: Date.now(),
+          }),
+        })
       }
     },
-    [countries, setRates, setSelectedCountry, setSelectedMerchant]
+    [
+      countries,
+      setRates,
+      setSelectedCountry,
+      setSelectedMerchant,
+      navigate,
+    ]
   )
 
   // 第一次进来默认选中第一个国家
@@ -83,6 +101,15 @@ export function CountryMerchantSelector() {
     const merchant =
       merchants.find((m) => m.appid?.toString() === merchantId) || null
     setSelectedMerchant(merchant)
+
+    navigate({
+      to: '.',
+      search: (prev) => ({
+        ...prev,
+        pageNum: 1,
+        refresh: Date.now(),
+      }),
+    })
   }
 
   return (

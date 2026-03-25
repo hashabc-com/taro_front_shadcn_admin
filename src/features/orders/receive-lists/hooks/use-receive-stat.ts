@@ -30,13 +30,7 @@ export function useReceiveStat() {
   )
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      'orders',
-      'receive-stat',
-      params,
-      selectedCountry?.code,
-      selectedMerchant?.appid,
-    ],
+    queryKey: ['orders', 'receive-stat', params],
     queryFn: () => getCollectionOrderStats(params),
     enabled: !!selectedCountry,
     placeholderData: (prev) => prev ?? undefined,

@@ -14,13 +14,7 @@ export function useReceiveSummaryData() {
   const convertAmount = useConvertAmount()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: [
-      'orders',
-      'receive-summary',
-      search,
-      selectedCountry?.code,
-      selectedMerchant?.appid,
-    ],
+    queryKey: ['orders', 'receive-summary', search],
     queryFn: () => getReceiveSummary(search),
     enabled: !!selectedCountry,
     placeholderData: (prev) => prev ?? undefined,

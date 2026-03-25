@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
@@ -52,6 +53,20 @@ export function ReceiveListsSearch<TData>({
         'pickupCenter',
       ] as const,
     })
+
+  useEffect(() => {
+    setField('pickupCenter', '')
+    if (search.pickupCenter) {
+      navigate({
+        search: (prev) => ({
+          ...prev,
+          pickupCenter: undefined,
+          pageNum: 1,
+          refresh: Date.now(),
+        }),
+      })
+    }
+  }, [navigate, search.pickupCenter, selectedCountry, setField])
 
   const { data } = useQuery({
     queryKey: ['product-dict', selectedCountry?.code, selectedMerchant?.appid],

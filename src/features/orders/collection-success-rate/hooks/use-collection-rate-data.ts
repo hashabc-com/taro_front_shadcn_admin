@@ -11,13 +11,7 @@ export function useCollectionRateData() {
   const { selectedMerchant } = useMerchantStore()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: [
-      'orders',
-      'collection-success-rate',
-      search,
-      selectedCountry?.code,
-      selectedMerchant?.appid,
-    ],
+    queryKey: ['orders', 'collection-success-rate', search],
     queryFn: () => getCollectionSuccessRate(search),
     enabled: !!selectedCountry,
     placeholderData: (prev) => prev ?? undefined,
