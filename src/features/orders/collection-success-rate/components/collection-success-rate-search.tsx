@@ -3,15 +3,10 @@ import { getRouteApi } from '@tanstack/react-router'
 import { type Table } from '@tanstack/react-table'
 import { useCountryStore, useMerchantStore } from '@/stores'
 import { Search, X } from 'lucide-react'
-import {
-  getPaymentChannels,
-  getProductDict,
-  type IPaymentChannel,
-} from '@/api/common'
+import { getChannelByCountry, getProductDict } from '@/api/common'
 import { useLanguage } from '@/context/language-provider'
 import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
-import { DateRangePicker } from '@/components/date-range-picker'
 import {
   Select,
   SelectContent,
@@ -20,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
+import { DateRangePicker } from '@/components/date-range-picker'
 
 const route = getRouteApi('/_authenticated/orders/collection-success-rate')
 
@@ -57,7 +53,8 @@ export function CollectionSuccessRateSearch<TData>({
       selectedCountry?.code,
       selectedMerchant?.appid,
     ],
-    queryFn: () => getPaymentChannels('pay_channel'),
+    queryFn: getChannelByCountry,
+    select: (data) => data?.result || [],
   })
 
   const payinChannel = productDict?.result?.payinChannel || []
@@ -67,17 +64,20 @@ export function CollectionSuccessRateSearch<TData>({
       {/* 日期范围 */}
       <div>
         <DateRangePicker
-        mode='date'
-        startTime={fields.startTime}
-        endTime={fields.endTime}
-        onStartTimeChange={(v) => setField('startTime', v)}
-        onEndTimeChange={(v) => setField('endTime', v)}
-      />
+          mode='date'
+          startTime={fields.startTime}
+          endTime={fields.endTime}
+          onStartTimeChange={(v) => setField('startTime', v)}
+          onEndTimeChange={(v) => setField('endTime', v)}
+        />
       </div>
 
       {/* 产品 */}
       <div className='max-w-[200px]'>
-        <Select value={fields.pickupCenter} onValueChange={(v) => setField('pickupCenter', v)}>
+        <Select
+          value={fields.pickupCenter}
+          onValueChange={(v) => setField('pickupCenter', v)}
+        >
           <SelectTrigger id='pickupCenter' clearable>
             <SelectValue
               placeholder={t('orders.collectionRate.pickupCenter')}
@@ -93,16 +93,19 @@ export function CollectionSuccessRateSearch<TData>({
         </Select>
       </div>
 
-      {/* 交易状态 */}
+      {/* 支付渠道 */}
       <div className='max-w-[200px]'>
-        <Select value={fields.channel} onValueChange={(v) => setField('channel', v)}>
+        <Select
+          value={fields.channel}
+          onValueChange={(v) => setField('channel', v)}
+        >
           <SelectTrigger id='channel' clearable>
             <SelectValue placeholder={t('orders.collectionRate.channel')} />
           </SelectTrigger>
           <SelectContent>
-            {receiveChannels?.result.map((item: IPaymentChannel) => (
-              <SelectItem key={item.itemValue} value={item.itemValue}>
-                {item.itemName}
+            {receiveChannels?.map((item: string) => (
+              <SelectItem key={item} value={item}>
+                {item}
               </SelectItem>
             ))}
           </SelectContent>

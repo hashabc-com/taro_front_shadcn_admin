@@ -2,18 +2,18 @@ import type { Country } from '@/stores/country-store'
 import type { Merchant } from '@/stores/merchant-store'
 import http, { type ResponseData } from '@/lib/http'
 
-export interface IPaymentChannel {
-  id: number
-  dictType: string
-  itemName: string
-  itemValue: string
-  sort: number
-  status: boolean
-  expression: string
-  remark: string
-  createTime: string
-  children: Children[]
-}
+// export interface IPaymentChannel {
+//   id: number
+//   dictType: string
+//   itemName: string
+//   itemValue: string
+//   sort: number
+//   status: boolean
+//   expression: string
+//   remark: string
+//   createTime: string
+//   children: Children[]
+// }
 
 export interface Children {
   id: number
@@ -51,6 +51,9 @@ export const getMerchantListBySend = (country: string) =>
 // 获取支付渠道
 export const getPaymentChannels = (type: 'withdraw_channel' | 'pay_channel') =>
   http.get(`/admin/interface/v1/channelDetails?type=${type}`)
+// 获取支付渠道（新版）
+export const getChannelByCountry = () =>
+  http.get(`/admin/paymentChannel/getChannelByCountry`)
 
 // 获取产品类型字典
 export const getProductDict = () =>
@@ -82,7 +85,7 @@ export const payInNotify = (data: { transId: string; status: number }) =>
 
 // 更新状态 - 补单
 export const updateStatus = (data: FormData) =>
-  http.post<ResponseData>(`/admin/collection/payInStatusQuery`,data)
+  http.post<ResponseData>(`/admin/collection/payInStatusQuery`, data)
 
 // 代付补单
 export const updatePayOutStatus = (data: FormData) =>

@@ -4,7 +4,7 @@ import { type Table } from '@tanstack/react-table'
 import { useCountryStore, useMerchantStore } from '@/stores'
 import { Download, Search, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { getPaymentChannels, type IPaymentChannel } from '@/api/common'
+import { getChannelByCountry } from '@/api/common'
 import { prepareExportReceive } from '@/api/order'
 import { useLanguage } from '@/context/language-provider'
 import { useSearchForm } from '@/hooks/use-search-form'
@@ -49,7 +49,8 @@ export function ReceiveListsSearch<TData>({
       selectedCountry?.code,
       selectedMerchant?.appid,
     ],
-    queryFn: () => getPaymentChannels('pay_channel'),
+    queryFn: getChannelByCountry,
+    select: (data) => data.result,
   })
 
   const handleExport = async () => {
@@ -88,9 +89,9 @@ export function ReceiveListsSearch<TData>({
             />
           </SelectTrigger>
           <SelectContent>
-            {receiveChannels?.result.map((item: IPaymentChannel) => (
-              <SelectItem key={item.itemValue} value={item.itemValue}>
-                {item.itemName}
+            {receiveChannels?.map((item: string) => (
+              <SelectItem key={item} value={item}>
+                {item}
               </SelectItem>
             ))}
           </SelectContent>

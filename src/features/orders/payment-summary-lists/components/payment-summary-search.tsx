@@ -4,12 +4,11 @@ import { type Table } from '@tanstack/react-table'
 import { useCountryStore, useMerchantStore } from '@/stores'
 import { Download, Search, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { getPaymentChannels, type IPaymentChannel } from '@/api/common'
+import { getChannelByCountry } from '@/api/common'
 import { prepareExportPayment } from '@/api/order'
 import { useLanguage } from '@/context/language-provider'
 import { useSearchForm } from '@/hooks/use-search-form'
 import { Button } from '@/components/ui/button'
-import { DateRangePicker } from '@/components/date-range-picker'
 import {
   Select,
   SelectContent,
@@ -18,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DataTableViewOptions } from '@/components/data-table/view-options'
+import { DateRangePicker } from '@/components/date-range-picker'
 
 const route = getRouteApi('/_authenticated/orders/payment-summary-lists')
 
@@ -49,7 +49,8 @@ export function PaymentSummarySearch<TData>({
       selectedCountry?.code,
       selectedMerchant?.appid,
     ],
-    queryFn: () => getPaymentChannels('withdraw_channel'),
+    queryFn: getChannelByCountry,
+    select: (data) => data.result,
   })
 
   const handleExport = async () => {
@@ -69,26 +70,29 @@ export function PaymentSummarySearch<TData>({
       {/* 日期范围 */}
       <div>
         <DateRangePicker
-        mode='date'
-        startTime={fields.startTime}
-        endTime={fields.endTime}
-        onStartTimeChange={(v) => setField('startTime', v)}
-        onEndTimeChange={(v) => setField('endTime', v)}
-      />
+          mode='date'
+          startTime={fields.startTime}
+          endTime={fields.endTime}
+          onStartTimeChange={(v) => setField('startTime', v)}
+          onEndTimeChange={(v) => setField('endTime', v)}
+        />
       </div>
 
       {/* 交易状态 */}
       <div className='max-w-[200px]'>
-        <Select value={fields.channel} onValueChange={(v) => setField('channel', v)}>
+        <Select
+          value={fields.channel}
+          onValueChange={(v) => setField('channel', v)}
+        >
           <SelectTrigger id='channel' clearable>
             <SelectValue
               placeholder={t('orders.paymentSummary.paymentChannel')}
             />
           </SelectTrigger>
           <SelectContent>
-            {paymentChannels?.result.map((item: IPaymentChannel) => (
-              <SelectItem key={item.itemValue} value={item.itemValue}>
-                {item.itemName}
+            {paymentChannels?.map((item: string) => (
+              <SelectItem key={item} value={item}>
+                {item}
               </SelectItem>
             ))}
           </SelectContent>
