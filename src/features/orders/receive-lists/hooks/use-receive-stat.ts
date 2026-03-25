@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
-import { useCountryStore, useMerchantStore } from '@/stores'
+import { useCountryStore } from '@/stores'
 import { getCollectionOrderStats } from '@/api/order'
 import { type OrderStats } from '@/features/orders/components/order-stats-cards'
 
@@ -10,7 +10,6 @@ const route = getRouteApi('/_authenticated/orders/receive-lists')
 export function useReceiveStat() {
   const search = route.useSearch()
   const { selectedCountry } = useCountryStore()
-  const { selectedMerchant } = useMerchantStore()
 
   const params = useMemo(
     () => ({

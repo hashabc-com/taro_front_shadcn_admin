@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
-import { useCountryStore, useMerchantStore } from '@/stores'
+import { useCountryStore } from '@/stores'
 import { getCollectionSuccessRate } from '@/api/order'
 
 const route = getRouteApi('/_authenticated/orders/collection-success-rate')
@@ -8,7 +8,6 @@ const route = getRouteApi('/_authenticated/orders/collection-success-rate')
 export function useCollectionRateData() {
   const search = route.useSearch()
   const { selectedCountry } = useCountryStore()
-  const { selectedMerchant } = useMerchantStore()
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['orders', 'collection-success-rate', search],
