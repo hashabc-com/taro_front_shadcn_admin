@@ -22,6 +22,7 @@ export const paymentListsSchema = z.object({
   updateTime: z.string().optional(),
   accountNumber: z.string().optional(),
   address: z.string().optional().nullable(),
+  country: z.string().optional(),
 })
 
 export type IPaymentListsType = z.infer<typeof paymentListsSchema>

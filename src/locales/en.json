@@ -401,7 +401,8 @@
       "transactionSummary": "Transaction Summary",
       "product": "Product",
       "paymentCompany": "Payment Company",
-      "updateStatus": "Merchant re-ordering"
+      "updateStatus": "Merchant re-ordering",
+      "reject": "Reject"
     },
     "receiveSummary": {
       "title": "Receive Summary",

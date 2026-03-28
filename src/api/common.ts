@@ -91,6 +91,10 @@ export const updateStatus = (data: FormData) =>
 export const updatePayOutStatus = (data: FormData) =>
   http.post<ResponseData>(`/admin/disbursement/payOutStatusQuery`, data)
 
+// 代付驳回
+export const payOutReject = (data: FormData) =>
+  http.post<ResponseData>(`/admin/disbursement/payOutReject`, data)
+
 // 下载图片
 export const downloadImg = async (
   params: { mediaId: string; type: boolean },
