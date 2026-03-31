@@ -58,6 +58,11 @@ export function getStatuses(t: (key: string) => string) {
       value: '3' as const,
       icon: Ban,
     },
+    {
+      label: t('orders.receiveOrders.partialPayment'),
+      value: '4' as const,
+      icon: Clock,
+    }
   ]
 }
 
