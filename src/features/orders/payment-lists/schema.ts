@@ -20,7 +20,7 @@ export const paymentListsSchema = z.object({
   pickupCenter: z.string().optional(),
   transactionid: z.string().optional(),
   updateTime: z.string().optional(),
-  accountNumber: z.string().optional(),
+  accountNumber: z.string().optional().nullable(),
   address: z.string().optional().nullable(),
   country: z.string().optional(),
 })
